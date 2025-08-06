@@ -3,8 +3,6 @@ import { getWheels } from "@/src/services/wheels";
 import { DataEmpty, DataError } from "./DataFetchingStates";
 
 export default async function LatestSystemActivities() {
-  // simulate 3 seconds delay
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   try {
     const [tires, wheels] = await Promise.all([getTires({}), getWheels({})]);
 

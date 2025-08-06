@@ -14,9 +14,6 @@ import GlassCard from "./GlassCard";
 
 export default async function GlassCardsCollection() {
   try {
-    // simulate 3 seconds delay
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const [categories, makes, drivingTypes, years, trims, users, brands, models] = await Promise.all([
       getCategories(undefined),
       getMakes({}),
