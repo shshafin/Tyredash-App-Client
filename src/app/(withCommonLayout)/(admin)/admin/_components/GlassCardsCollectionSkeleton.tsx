@@ -17,13 +17,15 @@ const GlassCardSkeleton = () => {
   );
 };
 
-export default function GlassCardsCollectionSkeleton() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-      {/* Generate 8 skeleton cards to match the original component */}
-      {Array.from({ length: 8 }).map((_, index) => (
-        <GlassCardSkeleton key={index} />
-      ))}
-    </div>
-  );
-}
+export default GlassCardSkeleton;
+
+// export default function GlassCardsCollectionSkeleton() {
+//   return (
+//     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+//       {/* Generate 8 skeleton cards to match the original component */}
+//       {Array.from({ length: 8 }).map((_, index) => (
+//         <GlassCardSkeleton key={index} />
+//       ))}
+//     </div>
+//   );
+// }

@@ -11,9 +11,7 @@ const Page = async () => {
     <div className="w-full">
       <h1 className="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white">Tiresdash Management Dashboard</h1>
 
-      <Suspense fallback={<GlassCardsCollectionSkeleton />}>
-        <GlassCardsCollection />
-      </Suspense>
+      <GlassCardsCollection />
 
       <div className="mt-10">
         <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Latest System Activities</h2>
