@@ -14,17 +14,6 @@ const GlassCard = async ({
 }) => {
   const data = await dataFetchingPromise;
 
-  // give a random delay between 1 to 3 seconds
-
-  await new Promise<void>((resolve) =>
-    setTimeout(
-      () => {
-        resolve();
-      },
-      Math.random() * 3000 + 1000
-    )
-  );
-
   // console.log(data);
 
   return (

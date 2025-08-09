@@ -3,20 +3,17 @@ import { getCategories } from "@/src/services/Categories";
 import { getDrivingTypes } from "@/src/services/DrivingTypes";
 import { getMakes } from "@/src/services/Makes";
 import { getModels } from "@/src/services/Models";
-import { getTires } from "@/src/services/Tires";
 import { getTrims } from "@/src/services/Trims";
 import { getUsers } from "@/src/services/Users";
-import { getWheels } from "@/src/services/wheels";
 import { getYears } from "@/src/services/Years";
 import { BarChart3, Boxes, Calendar, Car, Layers3, Scissors, Signature, Users } from "lucide-react";
+import { Suspense } from "react";
 import { DataError } from "./DataFetchingStates";
 import GlassCard from "./GlassCard";
-import { Suspense } from "react";
 import GlassCardSkeleton from "./GlassCardsCollectionSkeleton";
 
 export default async function GlassCardsCollection() {
   try {
-
     const getCategoriesPromise = getCategories(undefined);
     const getMakesPromise = getMakes({});
     const getDrivingTypesPromise = getDrivingTypes();
