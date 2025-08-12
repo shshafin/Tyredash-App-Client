@@ -12,6 +12,7 @@ import {
   ScissorsLineDashed,
   Settings2,
   SettingsIcon,
+  ShipWheel,
   ShoppingBag,
   Signature,
   TruckIcon,
@@ -148,6 +149,12 @@ export const adminLinks = [
         href: "/admin/tyre-diameter",
         label: "Tyre Diameter",
         icon: React.createElement(Diameter, { className: "w-5 h-5" }),
+      },
+      {
+        // wheel-ratio
+        href: "/admin/wheel-ratio",
+        label: "Wheel Ratio",
+        icon: React.createElement(ShipWheel, { className: "w-5 h-5" }),
       },
     ],
   },
