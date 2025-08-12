@@ -11,7 +11,7 @@ export const createVehicleType = async (vehicleTypeData: any): Promise<any> => {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     return data;
@@ -23,7 +23,7 @@ export const createVehicleType = async (vehicleTypeData: any): Promise<any> => {
 
 export const updateVehicleType = async (
   id: string,
-  vehicleTypeData: any,
+  vehicleTypeData: any
 ): Promise<any> => {
   try {
     const { data } = await axiosInstance.patch(
@@ -33,7 +33,7 @@ export const updateVehicleType = async (
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     return data;

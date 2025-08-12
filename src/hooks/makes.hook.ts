@@ -44,5 +44,6 @@ export const useGetMakes = (params: any) => {
   return useQuery({
     queryKey: ["GET_MAKES"],
     queryFn: async () => await getMakes(params),
+    suspense: true,
   });
 };

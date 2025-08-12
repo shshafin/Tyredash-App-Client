@@ -1,7 +1,6 @@
 "use server";
 
 import { axiosInstance } from "@/src/lib/AxiosInstance";
-import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -43,7 +42,7 @@ export const loginUser = async (userData: FieldValues) => {
   } catch (error: any) {
     console.error("Login error: ", error);
     throw new Error(
-      error?.response?.data?.message || "An error occurred during login.",
+      error?.response?.data?.message || "An error occurred during login."
     );
   }
 };
@@ -90,7 +89,8 @@ export const getCurrentUser = async () => {
   }
 
   // Fetch the user data from API
-  const { data } = await axiosInstance.get(`/users/${decodedToken.userEmail}`) || {};
+  const { data } =
+    (await axiosInstance.get(`/users/${decodedToken.userEmail}`)) || {};
 
   // if (data?.data) {
   //   cachedUser = data.data; // Cache the user data
@@ -99,13 +99,17 @@ export const getCurrentUser = async () => {
   return data?.data;
 };
 
-export const changePassword = async ( passwordData: any): Promise<any> => {
+export const changePassword = async (passwordData: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.post(`/auth/change-password`, {...passwordData}, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const { data } = await axiosInstance.post(
+      `/auth/change-password`,
+      { ...passwordData },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return data;
   } catch (error) {

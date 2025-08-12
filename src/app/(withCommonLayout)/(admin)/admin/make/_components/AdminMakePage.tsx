@@ -33,7 +33,6 @@ import {
   DataError,
   DataLoading,
 } from "../../_components/DataFetchingStates";
-import { useGetYears } from "@/src/hooks/years.hook";
 import { UploadCloud } from "lucide-react";
 import { Divider } from "@heroui/divider";
 
@@ -88,7 +87,7 @@ export default function AdminMakePage() {
       },
       id: selectedMake?._id,
     }); // make deletion handler
-  const { data: makes, isLoading, isError } = useGetMakes({}); // Get existing makes
+  const { data: makes, isLoading, isError } = useGetMakes({}) as any; // Get existing makes
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -144,8 +143,7 @@ export default function AdminMakePage() {
         <Button
           color="primary"
           className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          onPress={onOpen}
-        >
+          onPress={onOpen}>
           + Add Make
         </Button>
       </div>
@@ -208,7 +206,9 @@ const AddMakeModal = ({
   handleImageChange,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -217,19 +217,20 @@ const AddMakeModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* make & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Make" name="make" />
+                        <FXInput
+                          label="Make"
+                          name="make"
+                        />
                       </div>
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                        >
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                           <span className="text-md font-medium">
                             Upload Images
                           </span>
@@ -251,15 +252,14 @@ const AddMakeModal = ({
                           (imageDataUrl: string, index: number) => (
                             <div
                               key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                            >
+                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                               <img
                                 alt={`Preview ${index}`}
                                 className="h-full w-full object-cover rounded-md"
                                 src={imageDataUrl}
                               />
                             </div>
-                          ),
+                          )
                         )}
                       </div>
                     )}
@@ -270,8 +270,7 @@ const AddMakeModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createMakePending}
-                  >
+                    disabled={createMakePending}>
                     {createMakePending ? "Creating..." : "Create Make"}
                   </Button>
                 </form>
@@ -302,8 +301,7 @@ const EditMakeModal = ({
       onOpenChange={() => {
         onOpenChange();
         methods.reset();
-      }}
-    >
+      }}>
       <ModalContent>
         {() => (
           <>
@@ -312,8 +310,7 @@ const EditMakeModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* make & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
@@ -327,8 +324,7 @@ const EditMakeModal = ({
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                        >
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                           <span className="text-md font-medium">
                             Upload Images
                           </span>
@@ -350,15 +346,14 @@ const EditMakeModal = ({
                           (imageDataUrl: string, index: number) => (
                             <div
                               key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                            >
+                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                               <img
                                 alt={`Preview ${index}`}
                                 className="h-full w-full object-cover rounded-md"
                                 src={imageDataUrl}
                               />
                             </div>
-                          ),
+                          )
                         )}
                       </div>
                     )}
@@ -370,8 +365,7 @@ const EditMakeModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateMakePending}
-                  >
+                    disabled={updateMakePending}>
                     {updateMakePending ? "Updating..." : "Update Make"}
                   </Button>
                 </form>
@@ -391,7 +385,9 @@ const DeleteMakeModal = ({
   deleteMakePending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -410,16 +406,14 @@ const DeleteMakeModal = ({
               <Button
                 variant="bordered"
                 className="rounded"
-                onPress={onOpenChange}
-              >
+                onPress={onOpenChange}>
                 Cancel
               </Button>
               <Button
                 color="danger"
                 onPress={handleDeleteMake}
                 disabled={deleteMakePending}
-                className="rounded"
-              >
+                className="rounded">
                 {deleteMakePending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
@@ -429,29 +423,3 @@ const DeleteMakeModal = ({
     </Modal>
   );
 };
-
-// const YearSelectForMake = ({ defaultValue, register }: any) => {
-//   const { data: year, isLoading, isError } = useGetYears({});
-//   console.log("year", year?.data);
-
-//   return (
-//     <div className="flex-1 min-w-[150px]">
-//       <select
-//         {...register("year", { required: true })}
-//         defaultValue={defaultValue ? defaultValue?._id : ""}
-//         className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
-//         <option value="">Select Year</option>
-//         {isLoading && <option value="">Loading Years...</option>}
-//         {isError && <option value="">Failed to load Years</option>}
-//         {year?.data?.length === 0 && <option value="">No Years found</option>}
-//         {year?.data?.map((y: any) => (
-//           <option
-//             key={y?.year}
-//             value={y?._id}>
-//             {y?.year}
-//           </option>
-//         ))}
-//       </select>
-//     </div>
-//   );
-// };

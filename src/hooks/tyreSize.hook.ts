@@ -45,6 +45,7 @@ export const useGetTyreSizes = (params: any) => {
   return useQuery({
     queryKey: ["GET_TYRE_SIZES"],
     queryFn: async () => await getTyreSizes(params),
+    suspense: true,
   });
 };
 
@@ -52,7 +53,7 @@ export const useGetFilteredTyreSizes = (
   yearId: string,
   makeId: string,
   modelId: string,
-  trimId: string,
+  trimId: string
 ) => {
   return useQuery({
     queryKey: ["GET_FILTERED_TYRE_SIZES", yearId, makeId, modelId, trimId],

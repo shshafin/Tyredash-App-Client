@@ -44,5 +44,6 @@ export const useGetYears = (params: any) => {
   return useQuery({
     queryKey: ["GET_YEARS"],
     queryFn: async () => await getYears(params),
+    suspense: true,
   });
 };

@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createUser, deleteUser, getUsers, updateUser } from "../services/Users";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+} from "../services/Users";
 
 export const useDeleteUser = ({ onSuccess, id }: any) => {
   return useMutation<any, Error, FormData>({
@@ -17,6 +22,7 @@ export const useGetUsers = () => {
   return useQuery({
     queryKey: ["GET_USERS"],
     queryFn: async () => await getUsers(),
+    suspense: true,
   });
 };
 

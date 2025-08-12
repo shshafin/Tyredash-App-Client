@@ -19,23 +19,21 @@ import {
 
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  useCreateYear,
-  useDeleteYear,
-  useGetYears,
-  useUpdateYear,
-} from "@/src/hooks/years.hook";
-import { YearSelect } from "@/src/components/form/YearSelect";
-import YearsTable from "./YearsTable";
-import { IYear } from "@/src/types";
 import { useState } from "react";
 import {
   DataEmpty,
   DataError,
   DataLoading,
 } from "../../_components/DataFetchingStates";
+import {
+  useCreateVehicleType,
+  useDeleteVehicleType,
+  useGetVehicleTypes,
+  useUpdateVehicleType,
+} from "@/src/hooks/vehicleType.hook";
+import VehiclesTable from "./VehiclesTable";
 
-export default function AdminYearPage() {
+export default function AdminVehiclePage() {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure(); // Modal open state
   const {
@@ -52,131 +50,113 @@ export default function AdminYearPage() {
   } = useDisclosure();
   const methods = useForm(); // Hook form methods
   const { handleSubmit } = methods;
-  const [selectedYear, setSelectedYear] = useState<IYear | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<any | null>(null);
 
-  const { mutate: handleCreateYear, isPending: createYearPending } =
-    useCreateYear({
+  const { mutate: handleCreateVehicle, isPending: createVehiclePending } =
+    useCreateVehicleType({
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_YEARS"] });
-        toast.success("Year created successfully");
+        queryClient.invalidateQueries({ queryKey: ["GET_VEHICLE_TYPES"] });
+        toast.success("Vehicle Type created successfully");
         methods.reset();
         onClose();
       },
-    }); // Year creation handler
-  const { mutate: handleUpdateYear, isPending: updateYearPending } =
-    useUpdateYear({
+    }); // make creation handler
+  const { mutate: handleUpdateVehicle, isPending: updateVehiclePending } =
+    useUpdateVehicleType({
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_YEARS"] });
-        toast.success("Year updated successfully");
+        queryClient.invalidateQueries({ queryKey: ["GET_VEHICLE_TYPES"] });
+        toast.success("Vehicle Type updated successfully");
         methods.reset();
-        setSelectedYear(null);
+        setSelectedVehicle(null);
         onEditClose();
       },
-      id: selectedYear?._id,
-    }); // Year update handler
-  const { mutate: handleDeleteYear, isPending: deleteYearPending } =
-    useDeleteYear({
+      id: selectedVehicle?._id,
+    }); // make update handler
+  const { mutate: handleDeleteVehicle, isPending: deleteVehiclePending } =
+    useDeleteVehicleType({
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_YEARS"] });
-        toast.success("Year deleted successfully");
-        setSelectedYear(null);
+        queryClient.invalidateQueries({ queryKey: ["GET_VEHICLE_TYPES"] });
+        toast.success("Vehicle Type deleted successfully");
+        setSelectedVehicle(null);
         onDeleteClose();
       },
-      id: selectedYear?._id,
-    }); // Year deletion handler
-  const { data: years, isLoading, isError, refetch } = useGetYears({}) as any; // Get existing Years
+      id: selectedVehicle?._id,
+    });
+
+  const { data: vehicles, isLoading, isError } = useGetVehicleTypes({}) as any; // Get existing makes
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const YearData = {
-      year: Number(data.year?.numeric),
-    };
-
-    if (!YearData.year || isNaN(YearData.year)) {
-      toast.error("Please select a valid year.");
-      return;
-    }
-
-    handleCreateYear(YearData as any); // Send DrivingType data
+    handleCreateVehicle(data as any); // Send make data
   };
-
   const onEditSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const YearData = {
-      year: Number(data.year?.numeric),
-    };
-
-    if (!YearData.year || isNaN(YearData.year)) {
-      toast.error("Please select a valid year.");
-      return;
-    }
-
-    handleUpdateYear(YearData as any); // Send DrivingType data
+    handleUpdateVehicle(data as any); // update make data
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
-          Year
+          Vehicle Type
         </h1>
         <Button
           color="primary"
           className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
           onPress={onOpen}>
-          + Add Year
+          + Add Vehicle Type
         </Button>
       </div>
 
       {isLoading && <DataLoading />}
       {isError && <DataError />}
-      {years?.data?.length === 0 && <DataEmpty />}
+      {vehicles?.data?.length === 0 && <DataEmpty />}
 
-      {!isLoading && years?.data?.length > 0 && (
-        <YearsTable
-          years={years}
-          setSelectedYear={setSelectedYear}
-          onEditOpen={onEditOpen}
+      {!isLoading && vehicles?.data?.length > 0 && (
+        <VehiclesTable
+          vehicles={vehicles}
           onDeleteOpen={onDeleteOpen}
+          onEditOpen={onEditOpen}
+          setSelectedVehicle={setSelectedVehicle}
         />
       )}
 
-      {/* Modal for adding a new Year */}
-      <AddYearModal
+      {/* Modal for adding a new make */}
+      <AddVehicleModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         methods={methods}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        createYearPending={createYearPending}
+        createMakePending={createVehiclePending}
       />
-      {/* Modal for editing a Year */}
-      <EditYearModal
+      {/* Modal for editing a make */}
+      <EditVehicleModal
         isOpen={isEditOpen}
         onOpenChange={onEditOpenChange}
         methods={methods}
         handleSubmit={handleSubmit}
         onSubmit={onEditSubmit}
-        updateYearPending={updateYearPending}
-        defaultValues={selectedYear}
+        updateVehiclePending={updateVehiclePending}
+        defaultValues={selectedVehicle}
       />
-      {/* Modal for deleting a Year */}
-      <DeleteYearModal
+      {/* Modal for deleting a make */}
+      <DeleteVehicleModal
         isOpen={isDeleteOpen}
         onOpenChange={onDeleteOpenChange}
-        handleDeleteYear={handleDeleteYear}
-        deleteYearPending={deleteYearPending}
+        handleDeleteVehicle={handleDeleteVehicle}
+        deleteVehiclePending={deleteVehiclePending}
       />
     </div>
   );
 }
 
-const AddYearModal = ({
+const AddVehicleModal = ({
   isOpen,
   onOpenChange,
   methods,
   handleSubmit,
   onSubmit,
-  createYearPending,
+  createVehiclePending,
 }: any) => {
   return (
     <Modal
@@ -185,23 +165,33 @@ const AddYearModal = ({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Add Year</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">
+              Add Vehicle Type
+            </ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="max-w-xl mx-auto space-y-6">
-                  {/* Year & logo Inputs */}
-                  <div className=" w-full py-2">
-                    <YearSelect />
+                  <div className="flex flex-wrap gap-4 py-2">
+                    {/* make & logo Inputs */}
+                    <div className="flex flex-wrap gap-2 w-full">
+                      <div className="flex-1 min-w-[150px]">
+                        <FXInput
+                          label="Vehicle Type"
+                          name="vehicleType"
+                        />
+                      </div>
+                    </div>
                   </div>
-
                   <Button
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createYearPending}>
-                    {createYearPending ? "Creating..." : "Create Year"}
+                    disabled={createVehiclePending}>
+                    {createVehiclePending
+                      ? "Creating..."
+                      : "Create Vehicle Type"}
                   </Button>
                 </form>
               </FormProvider>
@@ -213,13 +203,13 @@ const AddYearModal = ({
   );
 };
 
-const EditYearModal = ({
+const EditVehicleModal = ({
   isOpen,
   onOpenChange,
   methods,
   handleSubmit,
   onSubmit,
-  updateYearPending,
+  updateVehiclePending,
   defaultValues,
 }: any) => {
   if (!defaultValues) return null;
@@ -233,26 +223,35 @@ const EditYearModal = ({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Edit Year</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">
+              Edit Vehicle Type
+            </ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
-                    {/* Year & logo Inputs */}
+                    {/* make & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <YearSelect defaultValue={defaultValues.year.numeric} />
+                        <FXInput
+                          label="Vehicle Type"
+                          name="vehicleType"
+                          defaultValue={defaultValues.vehicleType}
+                        />
                       </div>
                     </div>
                   </div>
+
                   <Button
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateYearPending}>
-                    {updateYearPending ? "Updating..." : "Update Year"}
+                    disabled={updateVehiclePending}>
+                    {updateVehiclePending
+                      ? "Updating..."
+                      : "Update Vehicle Type"}
                   </Button>
                 </form>
               </FormProvider>
@@ -264,11 +263,11 @@ const EditYearModal = ({
   );
 };
 
-const DeleteYearModal = ({
+const DeleteVehicleModal = ({
   isOpen,
   onOpenChange,
-  handleDeleteYear,
-  deleteYearPending,
+  handleDeleteVehicle,
+  deleteVehiclePending,
 }: any) => {
   return (
     <Modal
@@ -283,8 +282,8 @@ const DeleteYearModal = ({
 
             <ModalBody>
               <p className="text-sm text-red-500">
-                ⚠️ Are you sure you want to delete this year? This action cannot
-                be undone.
+                ⚠️ Are you sure you want to delete this Vehicle Type? This
+                action cannot be undone.
               </p>
             </ModalBody>
 
@@ -297,10 +296,10 @@ const DeleteYearModal = ({
               </Button>
               <Button
                 color="danger"
-                onPress={handleDeleteYear}
-                disabled={deleteYearPending}
+                onPress={handleDeleteVehicle}
+                disabled={deleteVehiclePending}
                 className="rounded">
-                {deleteYearPending ? "Deleting..." : "Delete"}
+                {deleteVehiclePending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
           </>

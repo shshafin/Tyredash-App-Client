@@ -146,8 +146,7 @@ export default function AdminBrandPage() {
         <Button
           color="primary"
           className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          onPress={onOpen}
-        >
+          onPress={onOpen}>
           + Add Brand
         </Button>
       </div>
@@ -210,7 +209,9 @@ const AddBrandModal = ({
   handleImageChange,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -219,22 +220,26 @@ const AddBrandModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Brand & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Brand Name" name="name" />
+                        <FXInput
+                          label="Brand Name"
+                          name="name"
+                        />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Description" name="description" />
+                        <FXInput
+                          label="Description"
+                          name="description"
+                        />
                       </div>
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                        >
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                           <span className="text-md font-medium">
                             Upload Images
                           </span>
@@ -256,15 +261,14 @@ const AddBrandModal = ({
                           (imageDataUrl: string, index: number) => (
                             <div
                               key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                            >
+                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                               <img
                                 alt={`Preview ${index}`}
                                 className="h-full w-full object-cover rounded-md"
                                 src={imageDataUrl}
                               />
                             </div>
-                          ),
+                          )
                         )}
                       </div>
                     )}
@@ -275,8 +279,7 @@ const AddBrandModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createBrandPending}
-                  >
+                    disabled={createBrandPending}>
                     {createBrandPending ? "Creating..." : "Create Brand"}
                   </Button>
                 </form>
@@ -307,8 +310,7 @@ const EditBrandModal = ({
       onOpenChange={() => {
         onOpenChange();
         methods.reset();
-      }}
-    >
+      }}>
       <ModalContent>
         {() => (
           <>
@@ -319,8 +321,7 @@ const EditBrandModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Brand & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
@@ -342,8 +343,7 @@ const EditBrandModal = ({
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                        >
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                           <span className="text-md font-medium">
                             Upload Images
                           </span>
@@ -365,15 +365,14 @@ const EditBrandModal = ({
                           (imageDataUrl: string, index: number) => (
                             <div
                               key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                            >
+                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                               <img
                                 alt={`Preview ${index}`}
                                 className="h-full w-full object-cover rounded-md"
                                 src={imageDataUrl}
                               />
                             </div>
-                          ),
+                          )
                         )}
                       </div>
                     )}
@@ -385,8 +384,7 @@ const EditBrandModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateBrandPending}
-                  >
+                    disabled={updateBrandPending}>
                     {updateBrandPending ? "Updating..." : "Update Brand"}
                   </Button>
                 </form>
@@ -406,7 +404,9 @@ const DeleteBrandModal = ({
   deleteBrandPending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -425,16 +425,14 @@ const DeleteBrandModal = ({
               <Button
                 variant="bordered"
                 className="rounded"
-                onPress={onOpenChange}
-              >
+                onPress={onOpenChange}>
                 Cancel
               </Button>
               <Button
                 color="danger"
                 onPress={handleDeleteBrand}
                 disabled={deleteBrandPending}
-                className="rounded"
-              >
+                className="rounded">
                 {deleteBrandPending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>

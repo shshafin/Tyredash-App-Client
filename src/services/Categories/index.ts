@@ -11,7 +11,7 @@ export const createCategory = async (categoryData: any): Promise<any> => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
 
     return data;
@@ -23,7 +23,7 @@ export const createCategory = async (categoryData: any): Promise<any> => {
 
 export const updateCategory = async (
   id: string,
-  categoryData: any,
+  categoryData: any
 ): Promise<any> => {
   try {
     const { data } = await axiosInstance.patch(
@@ -33,7 +33,7 @@ export const updateCategory = async (
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
 
     return data;

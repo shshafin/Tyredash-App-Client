@@ -22,19 +22,26 @@ export default async function LatestSystemActivities() {
                 .map((item: any, index: number) => (
                   <div
                     key={`product-${index}`}
-                    className="p-4 border border-white/20 bg-white/10 backdrop-blur-md rounded-xl shadow-lg text-white"
-                  >
+                    className="p-4 border border-white/20 bg-white/10 backdrop-blur-md rounded-xl shadow-lg text-white">
                     <div className="flex items-start justify-between  shadow-sm ">
                       {/* Left section */}
                       <div className="flex flex-col space-y-1 text-left">
-                        <h3 className="text-base font-semibold text-default-900">{item?.name || "Unnamed Product"}</h3>
-                        <p className="text-sm text-default-600">{item?.brand?.name || "N/A"}</p>
+                        <h3 className="text-base font-semibold text-default-900">
+                          {item?.name || "Unnamed Product"}
+                        </h3>
+                        <p className="text-sm text-default-600">
+                          {item?.brand?.name || "N/A"}
+                        </p>
                       </div>
 
                       {/* Right section */}
                       <div className="flex flex-col items-end space-y-1 text-right">
-                        <p className="text-sm text-default-900">{item?.category?.name || "N/A"}</p>
-                        <p className="text-sm font-medium text-rose-700">${item?.price || "0.00"}</p>
+                        <p className="text-sm text-default-900">
+                          {item?.category?.name || "N/A"}
+                        </p>
+                        <p className="text-sm font-medium text-rose-700">
+                          ${item?.price || "0.00"}
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -43,6 +43,7 @@ export default function CategoriesTable({
                 width={40}
                 height={40}
                 className="w-10 h-10 rounded-full object-cover"
+                unoptimized
               />
             ) : (
               <span className="text-sm text-gray-400">No Image</span>
@@ -58,19 +59,19 @@ export default function CategoriesTable({
                   setSelectedCategory(category);
                   onEditOpen();
                 }}
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Delete" className="bg-rose-600">
+            <Tooltip
+              content="Delete"
+              className="bg-rose-600">
               <span
                 onClick={() => {
                   setSelectedCategory(category);
                   onDeleteOpen();
                 }}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -84,20 +85,23 @@ export default function CategoriesTable({
   return (
     <div className="w-full overflow-x-auto rounded-xl shadow-md">
       <div className="min-w-[600px]">
-        <Table aria-label="Categories Table" isStriped>
+        <Table
+          aria-label="Categories Table"
+          isStriped>
           <TableHeader columns={columns}>
             {(column: any) => (
               <TableColumn
                 key={column.uid}
-                align={column.uid === "actions" ? "center" : "start"}
-              >
+                align={column.uid === "actions" ? "center" : "start"}>
                 {column.name}
               </TableColumn>
             )}
           </TableHeader>
           <TableBody items={categories.data}>
             {(item: any) => (
-              <TableRow key={item._id} className="bg-default-50">
+              <TableRow
+                key={item._id}
+                className="bg-default-50">
                 {(columnKey: any) => (
                   <TableCell>{renderCell(item, columnKey)}</TableCell>
                 )}

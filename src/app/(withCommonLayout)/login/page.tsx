@@ -19,6 +19,7 @@ const LoginPage = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+  console.log(isSuccess);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     userLoading(true);
@@ -40,8 +41,7 @@ const LoginPage = () => {
         <div className="w-full max-w-md">
           <FXForm
             onSubmit={onSubmit}
-            resolver={zodResolver(loginValidationSchema)}
-          >
+            resolver={zodResolver(loginValidationSchema)}>
             <div className="py-3">
               <FXInput
                 name="email"
@@ -63,8 +63,7 @@ const LoginPage = () => {
             <Button
               className="my-3 w-full rounded-md bg-default-900 font-semibold text-default"
               size="lg"
-              type="submit"
-            >
+              type="submit">
               Login
             </Button>
           </FXForm>

@@ -11,31 +11,22 @@ import { Tooltip } from "@heroui/tooltip";
 import { DeleteIcon, EditIcon } from "@/src/icons";
 
 export const columns = [
-  { name: "TRIM", uid: "trim" },
-  { name: "MAKE", uid: "make" },
-  { name: "MODEL", uid: "model" },
-  { name: "YEAR", uid: "year" },
+  { name: "VEHICLE TYPE", uid: "vehicleType" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
-export default function TrimsTable({
-  trims,
-  setSelectedTrim,
+export default function VehiclesTable({
+  vehicles,
+  setSelectedVehicle,
   onDeleteOpen,
   onEditOpen,
 }: any) {
-  const renderCell = (trim: any, columnKey: any) => {
-    const cellValue = trim[columnKey];
+  const renderCell = (vehicle: any, columnKey: any) => {
+    const cellValue = vehicle[columnKey];
 
     switch (columnKey) {
-      case "trim":
-        return trim?.trim;
-      case "make":
-        return trim.make?.make;
-      case "model":
-        return trim.model?.model;
-      case "year":
-        return trim.year?.year;
+      case "vehicleType":
+        return vehicle?.vehicleType;
 
       case "actions":
         return (
@@ -43,7 +34,7 @@ export default function TrimsTable({
             <Tooltip content="Edit">
               <span
                 onClick={() => {
-                  setSelectedTrim(trim);
+                  setSelectedVehicle(vehicle);
                   onEditOpen();
                 }}
                 className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -55,7 +46,7 @@ export default function TrimsTable({
               className="bg-rose-600">
               <span
                 onClick={() => {
-                  setSelectedTrim(trim);
+                  setSelectedVehicle(vehicle);
                   onDeleteOpen();
                 }}
                 className="text-lg text-danger cursor-pointer active:opacity-50">
@@ -71,7 +62,7 @@ export default function TrimsTable({
 
   return (
     <div className="overflow-x-auto shadow-md rounded-lg">
-      <Table aria-label="trims Table">
+      <Table aria-label="makes Table">
         <TableHeader columns={columns}>
           {(column: any) => (
             <TableColumn
@@ -81,7 +72,7 @@ export default function TrimsTable({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={trims.data}>
+        <TableBody items={vehicles?.data}>
           {(item: any) => (
             <TableRow key={item._id}>
               {(columnKey: any) => (

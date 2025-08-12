@@ -58,7 +58,7 @@ export default function AdminCategoryPage() {
   // const methods as editMethods = useForm();
   const { handleSubmit } = methods;
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
-    null,
+    null
   );
 
   const { mutate: handleCreateCategory, isPending: createCategoryPending } =
@@ -92,7 +92,11 @@ export default function AdminCategoryPage() {
       },
       id: selectedCategory?._id,
     });
-  const { data: categories, isLoading, isError } = useGetCategories(); // Get existing categories
+  const {
+    data: categories,
+    isLoading,
+    isError,
+  } = useGetCategories(undefined) as any; // Get existing categories
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -155,8 +159,7 @@ export default function AdminCategoryPage() {
         <Button
           color="primary"
           className="px-7 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          onPress={onOpen}
-        >
+          onPress={onOpen}>
           + Add Category
         </Button>
       </div>
@@ -225,7 +228,9 @@ const AddCategoryModal = ({
   createCategoryPending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -236,16 +241,21 @@ const AddCategoryModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Name & Slug Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Name" name="name" />
+                        <FXInput
+                          label="Name"
+                          name="name"
+                        />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Slug" name="slug" />
+                        <FXInput
+                          label="Slug"
+                          name="slug"
+                        />
                       </div>
                     </div>
 
@@ -253,8 +263,7 @@ const AddCategoryModal = ({
                     <div className="w-full">
                       <label
                         htmlFor="image"
-                        className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                      >
+                        className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                         <span className="text-md font-medium">
                           Upload Images
                         </span>
@@ -277,15 +286,14 @@ const AddCategoryModal = ({
                         (imageDataUrl: string, index: number) => (
                           <div
                             key={index}
-                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                          >
+                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                             <img
                               alt={`Preview ${index}`}
                               className="h-full w-full object-cover rounded-md"
                               src={imageDataUrl}
                             />
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   )}
@@ -296,8 +304,7 @@ const AddCategoryModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createCategoryPending}
-                  >
+                    disabled={createCategoryPending}>
                     {createCategoryPending ? "Creating..." : "Create Category"}
                   </Button>
                 </form>
@@ -328,8 +335,7 @@ const EditCategoryModal = ({
       onOpenChange={() => {
         onOpenChange();
         methods.reset();
-      }}
-    >
+      }}>
       <ModalContent>
         {() => (
           <>
@@ -340,8 +346,7 @@ const EditCategoryModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Name & Slug Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
@@ -376,8 +381,7 @@ const EditCategoryModal = ({
                     <div className="w-full">
                       <label
                         htmlFor="image"
-                        className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-                      >
+                        className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                         <span className="text-md font-medium">
                           Upload Images
                         </span>
@@ -400,15 +404,14 @@ const EditCategoryModal = ({
                         (imageDataUrl: string, index: number) => (
                           <div
                             key={index}
-                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                          >
+                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                             <img
                               alt={`Preview ${index}`}
                               className="h-full w-full object-cover rounded-md"
                               src={imageDataUrl}
                             />
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   )}
@@ -419,8 +422,7 @@ const EditCategoryModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateCategoryPending}
-                  >
+                    disabled={updateCategoryPending}>
                     {updateCategoryPending ? "Updating..." : "Update Category"}
                   </Button>
                 </form>
@@ -440,7 +442,9 @@ const DeleteCategoryModal = ({
   deleteCategoryPending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -459,16 +463,14 @@ const DeleteCategoryModal = ({
               <Button
                 variant="bordered"
                 className="rounded"
-                onPress={onOpenChange}
-              >
+                onPress={onOpenChange}>
                 Cancel
               </Button>
               <Button
                 color="danger"
                 onPress={handleDeleteCategory}
                 disabled={deleteCategoryPending}
-                className="rounded"
-              >
+                className="rounded">
                 {deleteCategoryPending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>

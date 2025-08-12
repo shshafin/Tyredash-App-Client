@@ -16,6 +16,7 @@ import {
   PlusCircle,
   ShoppingBag,
   Lock,
+  Car,
 } from "lucide-react"; // Import necessary icons
 import React from "react";
 
@@ -135,6 +136,11 @@ export const adminLinks = [
         href: "/admin/brand",
         label: "Brand",
         icon: React.createElement(Signature, { className: "w-5 h-5" }), // File icon for vehicle
+      },
+      {
+        href: "/admin/vehicle-type",
+        label: "Vehicle Type",
+        icon: React.createElement(Car, { className: "w-5 h-5" }), // File icon for vehicle
       },
     ],
   },

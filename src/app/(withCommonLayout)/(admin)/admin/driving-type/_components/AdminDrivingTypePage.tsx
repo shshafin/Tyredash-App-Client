@@ -103,7 +103,7 @@ export default function AdminDrivingTypePage() {
     isLoading,
     isError,
     refetch,
-  } = useGetDrivingTypes(); // Get existing DrivingTypes
+  } = useGetDrivingTypes() as any; // Get existing DrivingTypes
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -131,8 +131,7 @@ export default function AdminDrivingTypePage() {
         <Button
           color="primary"
           className="px-7 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          onPress={onOpen}
-        >
+          onPress={onOpen}>
           + Add Driving Type
         </Button>
       </div>
@@ -202,8 +201,7 @@ const AddDrivingTypeModal = ({
       onOpenChange={() => {
         onOpenChange();
         methods.reset();
-      }}
-    >
+      }}>
       <ModalContent>
         {() => (
           <>
@@ -214,16 +212,21 @@ const AddDrivingTypeModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Title & subTitle Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Title" name="title" />
+                        <FXInput
+                          label="Title"
+                          name="title"
+                        />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="Sub Title" name="subTitle" />
+                        <FXInput
+                          label="Sub Title"
+                          name="subTitle"
+                        />
                       </div>
                     </div>
                   </div>
@@ -232,7 +235,9 @@ const AddDrivingTypeModal = ({
                   <div className="space-y-4 border p-4 rounded-xl bg-muted/30">
                     {fields.length ? (
                       fields.map((field: any, index: number) => (
-                        <div key={field.id} className="flex gap-2 items-center">
+                        <div
+                          key={field.id}
+                          className="flex gap-2 items-center">
                           <FXInput
                             label="Option"
                             name={`options.${index}.value`}
@@ -240,8 +245,7 @@ const AddDrivingTypeModal = ({
                           <Button
                             isIconOnly
                             className="h-14 w-16"
-                            onPress={() => remove(index)}
-                          >
+                            onPress={() => remove(index)}>
                             <Trash2 />
                           </Button>
                         </div>
@@ -254,8 +258,7 @@ const AddDrivingTypeModal = ({
 
                     <Button
                       className="w-full"
-                      onPress={() => append({ name: "options" })}
-                    >
+                      onPress={() => append({ name: "options" })}>
                       + Add Option
                     </Button>
                   </div>
@@ -264,8 +267,7 @@ const AddDrivingTypeModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createDrivingTypePending}
-                  >
+                    disabled={createDrivingTypePending}>
                     {createDrivingTypePending
                       ? "Creating..."
                       : "Create Driving Type"}
@@ -299,8 +301,7 @@ const EditDrivingTypeModal = ({
         onOpenChange();
         methods.reset();
         setOptions([]);
-      }}
-    >
+      }}>
       <ModalContent>
         {() => (
           <>
@@ -311,8 +312,7 @@ const EditDrivingTypeModal = ({
               <FormProvider {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6"
-                >
+                  className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Title & subTitle Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
@@ -337,13 +337,15 @@ const EditDrivingTypeModal = ({
                   <div className="space-y-4 border p-4 rounded-xl bg-muted/30">
                     {options.length ? (
                       options?.map((field: any, index: number) => (
-                        <div key={index} className="flex gap-2 items-center">
+                        <div
+                          key={index}
+                          className="flex gap-2 items-center">
                           <Input
                             onChange={(e) => {
                               const val = e.target.value;
                               const newOptions = options.map(
                                 (opt: string, i: number) =>
-                                  i === index ? val : opt,
+                                  i === index ? val : opt
                               );
                               setOptions(newOptions);
                             }}
@@ -356,11 +358,10 @@ const EditDrivingTypeModal = ({
                             className="h-14 w-16"
                             onPress={() => {
                               const newOptions = options.filter(
-                                (_: any, i: number) => i !== index,
+                                (_: any, i: number) => i !== index
                               );
                               setOptions(newOptions);
-                            }}
-                          >
+                            }}>
                             <Trash2 />
                           </Button>
                         </div>
@@ -376,8 +377,7 @@ const EditDrivingTypeModal = ({
                       onPress={() => {
                         const newOptions = [...options, ""];
                         setOptions(newOptions);
-                      }}
-                    >
+                      }}>
                       + Add Option
                     </Button>
                   </div>
@@ -386,8 +386,7 @@ const EditDrivingTypeModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateDrivingTypePending}
-                  >
+                    disabled={updateDrivingTypePending}>
                     {updateDrivingTypePending
                       ? "Updating..."
                       : "Update Driving Type"}
@@ -409,7 +408,9 @@ const DeleteDrivingTypeModal = ({
   deleteDrivingTypePending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -428,16 +429,14 @@ const DeleteDrivingTypeModal = ({
               <Button
                 variant="bordered"
                 className="rounded"
-                onPress={onOpenChange}
-              >
+                onPress={onOpenChange}>
                 Cancel
               </Button>
               <Button
                 color="danger"
                 onPress={handleDeleteDrivingType}
                 disabled={deleteDrivingTypePending}
-                className="rounded"
-              >
+                className="rounded">
                 {deleteDrivingTypePending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
