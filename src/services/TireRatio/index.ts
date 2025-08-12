@@ -4,15 +4,11 @@ import { axiosInstance } from "@/src/lib/AxiosInstance";
 
 export const createTireRatio = async (tireRatioData: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.post(
-      "/tire-ratio/create",
-      tireRatioData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const { data } = await axiosInstance.post("/tire-ratio/create", tireRatioData, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
 
     return data;
   } catch (error) {
@@ -21,20 +17,13 @@ export const createTireRatio = async (tireRatioData: any): Promise<any> => {
   }
 };
 
-export const updateTireRatio = async (
-  id: string,
-  tireRatioData: any,
-): Promise<any> => {
+export const updateTireRatio = async (id: string, tireRatioData: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.patch(
-      `/tire-ratio/${id}`,
-      tireRatioData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const { data } = await axiosInstance.patch(`/tire-ratio/${id}`, tireRatioData, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
 
     return data;
   } catch (error) {

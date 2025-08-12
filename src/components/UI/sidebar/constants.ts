@@ -1,21 +1,21 @@
 import {
-  UserIcon,
-  SettingsIcon,
-  HomeIcon,
-  TruckIcon,
-  Settings2,
   Blend,
   CalendarCog,
-  ScissorsLineDashed,
   Grid2X2Plus,
-  LoaderPinwheel,
-  User,
-  Signature,
+  HomeIcon,
   List,
-  Edit,
-  PlusCircle,
-  ShoppingBag,
+  LoaderPinwheel,
   Lock,
+  PlusCircle,
+  Ratio,
+  ScissorsLineDashed,
+  Settings2,
+  SettingsIcon,
+  ShoppingBag,
+  Signature,
+  TruckIcon,
+  User,
+  UserIcon,
 } from "lucide-react"; // Import necessary icons
 import React from "react";
 
@@ -135,6 +135,12 @@ export const adminLinks = [
         href: "/admin/brand",
         label: "Brand",
         icon: React.createElement(Signature, { className: "w-5 h-5" }), // File icon for vehicle
+      },
+      {
+        // Tyre-ratio
+        href: "/admin/tyre-ratio",
+        label: "Tyre Ratio",
+        icon: React.createElement(Ratio, { className: "w-5 h-5" }),
       },
     ],
   },
