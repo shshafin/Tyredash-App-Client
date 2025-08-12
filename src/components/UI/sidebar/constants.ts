@@ -7,6 +7,7 @@ import {
   List,
   LoaderPinwheel,
   Lock,
+  PencilRuler,
   PlusCircle,
   Ratio,
   ScissorsLineDashed,
@@ -155,6 +156,12 @@ export const adminLinks = [
         href: "/admin/wheel-ratio",
         label: "Wheel Ratio",
         icon: React.createElement(ShipWheel, { className: "w-5 h-5" }),
+      },
+      {
+        //wheel-width
+        href: "/admin/wheel-width",
+        label: "Wheel Width",
+        icon: React.createElement(PencilRuler, { className: "w-5 h-5" }),
       },
     ],
   },
