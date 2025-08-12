@@ -1,6 +1,7 @@
 import {
   Blend,
   CalendarCog,
+  Diameter,
   Grid2X2Plus,
   HomeIcon,
   List,
@@ -141,6 +142,12 @@ export const adminLinks = [
         href: "/admin/tyre-ratio",
         label: "Tyre Ratio",
         icon: React.createElement(Ratio, { className: "w-5 h-5" }),
+      },
+      {
+        // tyre diameter
+        href: "/admin/tyre-diameter",
+        label: "Tyre Diameter",
+        icon: React.createElement(Diameter, { className: "w-5 h-5" }),
       },
     ],
   },
