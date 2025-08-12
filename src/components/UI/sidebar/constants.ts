@@ -163,6 +163,13 @@ export const adminLinks = [
         label: "Wheel Width",
         icon: React.createElement(PencilRuler, { className: "w-5 h-5" }),
       },
+
+      {
+        // wheel diameter
+        href: "/admin/wheel-diameter",
+        label: "Wheel Diameter",
+        icon: React.createElement(Diameter, { className: "w-5 h-5" }),
+      },
     ],
   },
   {
