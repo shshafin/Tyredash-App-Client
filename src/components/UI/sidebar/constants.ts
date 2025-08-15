@@ -1,22 +1,26 @@
 import {
-  UserIcon,
-  SettingsIcon,
-  HomeIcon,
-  TruckIcon,
-  Settings2,
   Blend,
   CalendarCog,
-  ScissorsLineDashed,
+  Diameter,
   Grid2X2Plus,
-  LoaderPinwheel,
-  User,
-  Signature,
+  HomeIcon,
   List,
-  Edit,
-  PlusCircle,
-  ShoppingBag,
+  LoaderPinwheel,
   Lock,
   Car,
+  PencilRuler,
+  PlusCircle,
+  Ratio,
+  ScissorsLineDashed,
+  Settings2,
+  SettingsIcon,
+  ShipWheel,
+  ShoppingBag,
+  Signature,
+  TruckIcon,
+  User,
+  UserIcon,
+  LifeBuoy,
 } from "lucide-react"; // Import necessary icons
 import React from "react";
 
@@ -141,6 +145,43 @@ export const adminLinks = [
         href: "/admin/vehicle-type",
         label: "Vehicle Type",
         icon: React.createElement(Car, { className: "w-5 h-5" }), // File icon for vehicle
+      },
+      {
+        // Tyre-ratio
+        href: "/admin/tyre-ratio",
+        label: "Tyre Ratio",
+        icon: React.createElement(Ratio, { className: "w-5 h-5" }),
+      },
+      {
+        // tyre diameter
+        href: "/admin/tyre-diameter",
+        label: "Tyre Diameter",
+        icon: React.createElement(Diameter, { className: "w-5 h-5" }),
+      },
+      {
+        // wheel-ratio
+        href: "/admin/wheel-ratio",
+        label: "Wheel Ratio",
+        icon: React.createElement(ShipWheel, { className: "w-5 h-5" }),
+      },
+      {
+        //wheel-width
+        href: "/admin/wheel-width",
+        label: "Wheel Width",
+        icon: React.createElement(PencilRuler, { className: "w-5 h-5" }),
+      },
+      {
+        //wheel-width
+        href: "/admin/wheel-width-type",
+        label: "Wheel Width Type",
+        icon: React.createElement(LifeBuoy, { className: "w-5 h-5" }),
+      },
+
+      {
+        // wheel diameter
+        href: "/admin/wheel-diameter",
+        label: "Wheel Diameter",
+        icon: React.createElement(Diameter, { className: "w-5 h-5" }),
       },
     ],
   },
