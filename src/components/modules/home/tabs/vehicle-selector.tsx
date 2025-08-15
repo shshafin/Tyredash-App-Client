@@ -15,31 +15,15 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
   const [step, setStep] = useState(1);
   const [vehicleSaved, setVehicleSaved] = useState(false);
 
-  const {
-    data: years,
-    isLoading: isYearsLoading,
-    isError: isYearsError,
-  } = useGetYears({});
-  const {
-    data: makes,
-    isLoading: isMakesLoading,
-    isError: isMakesError,
-  } = useGetMakes({year: vehicle.year});
-  const {
-    data: models,
-    isLoading: isModelsLoading,
-    isError: isModelsError,
-  } = useGetModels({make: vehicle.make});
-  const {
-    data: trims,
-    isLoading: isTrimsLoading,
-    isError: isTrimsError,
-  } = useGetTrims({model: vehicle.model});
+  const { data: years, isLoading: isYearsLoading, isError: isYearsError } = useGetYears({});
+  const { data: makes, isLoading: isMakesLoading, isError: isMakesError } = useGetMakes({ year: vehicle.year });
+  const { data: models, isLoading: isModelsLoading, isError: isModelsError } = useGetModels({ make: vehicle.make });
+  const { data: trims, isLoading: isTrimsLoading, isError: isTrimsError } = useGetTrims({ model: vehicle.model });
   const {
     data: tyreSizes,
     isLoading: isTyreSizesLoading,
     isError: isTyreSizesError,
-  } = useGetTyreSizes({trim: vehicle.trim})
+  } = useGetTyreSizes({ trim: vehicle.trim });
   // const {
   //   data: tyreSizes,
   //   isLoading: isTyreSizesLoading,
@@ -51,6 +35,8 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
   //   vehicle.trim,
   // );
   const steps = ["Year", "Make", "Model", "Trim", "Tire Size"];
+
+  console.log(tyreSizes);
 
   const handleStepClick = (stepIndex: number) => {
     // Only allow going back to previous steps or current step
@@ -86,9 +72,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
           // Parse existing vehicles
           const existingVehicles = JSON.parse(existingVehiclesJSON);
           // Check if it's an array or a single object
-          vehicles = Array.isArray(existingVehicles)
-            ? existingVehicles
-            : [existingVehicles];
+          vehicles = Array.isArray(existingVehicles) ? existingVehicles : [existingVehicles];
         }
 
         // Check if this vehicle already exists (by comparing all fields)
@@ -98,7 +82,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
             v.make === vehicleData.make &&
             v.model === vehicleData.model &&
             v.trim === vehicleData.trim &&
-            v.tireSize === vehicleData.tireSize,
+            v.tireSize === vehicleData.tireSize
         );
 
         if (!vehicleExists) {
@@ -147,18 +131,12 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
             {steps.map((label, index) => (
               <div
                 key={index}
-                className={`flex items-center cursor-pointer ${
-                  step >= index + 1 ? "text-green-500" : "text-gray-400"
-                }`}
+                className={`flex items-center cursor-pointer ${step >= index + 1 ? "text-green-500" : "text-gray-400"}`}
                 onClick={() => handleStepClick(index + 1)}
               >
                 <div
                   className={`w-6 h-6 flex items-center justify-center rounded-full border-2 ${
-                    step === index + 1
-                      ? "border-orange-500"
-                      : step > index + 1
-                        ? "border-green-500"
-                        : "border-gray-400"
+                    step === index + 1 ? "border-orange-500" : step > index + 1 ? "border-green-500" : "border-gray-400"
                   }`}
                 >
                   {index + 1}
@@ -175,9 +153,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
             <h2 className="text-lg md:text-xl font-bold mb-2">
               {vehicle?.model} {vehicle?.trim}
             </h2>
-            <h2 className="text-lg md:text-xl font-bold mb-4">
-              Tire Size: {vehicle?.tireSize}
-            </h2>
+            <h2 className="text-lg md:text-xl font-bold mb-4">Tire Size: {vehicle?.tireSize}</h2>
 
             {step !== 6 && (
               <p className="mb-2">
@@ -202,9 +178,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
                 >
                   <option value="">*Year</option>
                   {isYearsLoading && <option value="">Loading Years...</option>}
-                  {isYearsError && (
-                    <option value="">Failed to load Years</option>
-                  )}
+                  {isYearsError && <option value="">Failed to load Years</option>}
                   {years?.data?.map((y: any, index: number) => (
                     <option key={index} value={y?.year}>
                       {y?.year}
@@ -220,9 +194,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
                 >
                   <option value="">*Make</option>
                   {isMakesLoading && <option value="">Loading Makes...</option>}
-                  {isMakesError && (
-                    <option value="">Failed to load Makes</option>
-                  )}
+                  {isMakesError && <option value="">Failed to load Makes</option>}
                   {makes?.data?.map((m: any, index: number) => (
                     <option key={index} value={m?.make}>
                       {m?.make}
@@ -237,17 +209,20 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
                   onChange={(e) => handleSelectChange("model", e.target.value)}
                 >
                   <option value="">*Model</option>
-                  {isModelsLoading && (
-                    <option value="">Loading Models...</option>
-                  )}
-                  {isModelsError && (
-                    <option value="">Failed to load Models</option>
-                  )}
-                  {models?.data?.map((m: any, index: number) => (
-                    <option key={index} value={m?.model}>
-                      {m?.model}
-                    </option>
-                  ))}
+                  {isModelsLoading && <option value="">Loading Models...</option>}
+                  {isModelsError && <option value="">Failed to load Models</option>}
+                  {models?.data
+                    ?.filter((m: any) => {
+                      // Filter by selected year and make
+                      const yearMatch = m.year?.year === Number(vehicle.year);
+                      const makeMatch = m.make?.make === vehicle.make;
+                      return yearMatch && makeMatch;
+                    })
+                    .map((m: any, index: number) => (
+                      <option key={index} value={m?.model}>
+                        {m?.model}
+                      </option>
+                    ))}
                 </select>
               )}
               {step === 4 && (
@@ -258,36 +233,45 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
                 >
                   <option value="">*Trim</option>
                   {isTrimsLoading && <option value="">Loading Trims...</option>}
-                  {isTrimsError && (
-                    <option value="">Failed to load Trims</option>
-                  )}
-                  {trims?.data?.map((t: any, index: number) => (
-                    <option key={index} value={t?.trim}>
-                      {t?.trim}
-                    </option>
-                  ))}
+                  {isTrimsError && <option value="">Failed to load Trims</option>}
+                  {trims?.data
+                    ?.filter((t: any) => {
+                      // Filter by selected year, make, and model
+                      const yearMatch = t.year?.year === Number(vehicle.year);
+                      const makeMatch = t.make?.make === vehicle.make;
+                      const modelMatch = t.model?.model === vehicle.model;
+                      return yearMatch && makeMatch && modelMatch;
+                    })
+                    .map((t: any, index: number) => (
+                      <option key={index} value={t?.trim}>
+                        {t?.trim}
+                      </option>
+                    ))}
                 </select>
               )}
               {step === 5 && (
                 <select
                   className="w-[200px] border focus:border-orange-500 focus:outline-none rounded-md px-2 py-2"
                   value={vehicle.tireSize}
-                  onChange={(e) =>
-                    handleSelectChange("tireSize", e.target.value)
-                  }
+                  onChange={(e) => handleSelectChange("tireSize", e.target.value)}
                 >
                   <option value="">*Tire Size</option>
-                  {isTyreSizesLoading && (
-                    <option value="">Loading Tire Sizes...</option>
-                  )}
-                  {isTyreSizesError && (
-                    <option value="">Failed to load Tire Sizes</option>
-                  )}
-                  {tyreSizes?.data?.map((t: any, index: number) => (
-                    <option key={index} value={t?.tireSize}>
-                      {t?.tireSize}
-                    </option>
-                  ))}
+                  {isTyreSizesLoading && <option value="">Loading Tire Sizes...</option>}
+                  {isTyreSizesError && <option value="">Failed to load Tire Sizes</option>}
+                  {tyreSizes?.data
+                    ?.filter((t: any) => {
+                      // Filter by selected year, make, model, and trim
+                      const yearMatch = t.year?.year === Number(vehicle.year);
+                      const makeMatch = t.make?.make === vehicle.make;
+                      const modelMatch = t.model?.model === vehicle.model;
+                      const trimMatch = t.trim?.trim === vehicle.trim;
+                      return yearMatch && makeMatch && modelMatch && trimMatch;
+                    })
+                    .map((t: any, index: number) => (
+                      <option key={index} value={t?.tireSize}>
+                        {t?.tireSize}
+                      </option>
+                    ))}
                   <option value="Not Found">Didn't find your tire size?</option>
                 </select>
               )}
@@ -301,12 +285,8 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
               <div className="bg-green-100 p-3 rounded-full mb-4">
                 <CheckCircle className="h-10 w-10 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Vehicle Added Successfully!
-              </h3>
-              <p className="text-gray-500 mb-4">
-                Your vehicle has been saved and is ready for shopping.
-              </p>
+              <h3 className="text-xl font-semibold mb-2">Vehicle Added Successfully!</h3>
+              <p className="text-gray-500 mb-4">Your vehicle has been saved and is ready for shopping.</p>
             </div>
 
             <div className="rounded-lg p-5 mb-4">
@@ -332,9 +312,7 @@ const VehicleSelector = ({ setMainStep, vehicle, setVehicle }: any) => {
                 </div>
                 <div className="border p-3 rounded-md shadow-sm">
                   <p className="font-medium">Trim</p>
-                  <p className="font-bold">
-                    {vehicle.trim || "N/A"}
-                  </p>
+                  <p className="font-bold">{vehicle.trim || "N/A"}</p>
                 </div>
                 <div className="border p-3 rounded-md shadow-sm col-span-1 sm:col-span-2">
                   <p className="font-medium">Tire Size</p>
