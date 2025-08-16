@@ -1,3 +1,4 @@
+import { getFleetNewsById } from "./../services/News/index";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createFleetNews, deleteFleetNews, updateFleetNews } from "../services/News";
@@ -32,5 +33,15 @@ export const useDeleteFleetNews = ({ onSuccess, id }: any) => {
       toast.error(error.message);
     },
     onSuccess,
+  });
+};
+
+export const useGetFleetNewsById = (id: string) => {
+  return useMutation<any, Error, FormData>({
+    mutationKey: ["GET_FLEET_NEWS", id],
+    mutationFn: async () => await getFleetNewsById(id),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 };

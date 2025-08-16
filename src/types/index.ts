@@ -219,3 +219,15 @@ export interface VehicleInfo {
   trim: string;
   tireSize: string;
 }
+
+export interface IFleetNews {
+  _id: string;
+  badge: string;
+  title: string;
+  description: string;
+  status: string;
+  id: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+}
