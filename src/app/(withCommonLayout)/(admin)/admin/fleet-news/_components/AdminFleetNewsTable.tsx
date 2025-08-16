@@ -17,6 +17,7 @@ type AdminFleetNewsTableProps = {
 
 export const columns = [
   { name: "#", uid: "s/n" },
+  { name: "BADGE", uid: "badge" },
   { name: "TITLE", uid: "title" },
   { name: "DESCRIPTION", uid: "description" },
   { name: "STATUS", uid: "status" },
@@ -59,6 +60,13 @@ export default function AdminFleetNewsTable({
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm">{(page - 1) * rowsPerPage + index + 1}</p>
+          </div>
+        );
+
+      case "badge":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{item.badge}</p>
           </div>
         );
 

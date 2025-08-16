@@ -1,13 +1,8 @@
 import { Button } from "@heroui/button";
 import Link from "next/link";
-import AdminFleetNewsTable from "./_components/AdminFleetNewsTable";
-import FleetNewsManagement from "./_components/FleetNewsManagement";
-import TableLoading from "./_components/TableLoading";
-import { getAllFleetNews } from "@/src/services/News";
-import { Suspense } from "react";
+import FleetNewsWrapper from "./_components/FleetNewsWrapper";
 
-export default async function AllFleetNews() {
-  const allFleetNews = await getAllFleetNews();
+export default function AllFleetNews() {
   return (
     <div className="">
       <div className="flex justify-between items-center mb-6">
@@ -25,9 +20,7 @@ export default async function AllFleetNews() {
       </div>
 
       <div>
-        <Suspense fallback={<TableLoading />}>
-          <FleetNewsManagement fleetNewsData={allFleetNews.data} />
-        </Suspense>
+        <FleetNewsWrapper />
       </div>
     </div>
   );
