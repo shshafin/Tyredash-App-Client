@@ -24,7 +24,25 @@ import {
 } from "lucide-react"; // Import necessary icons
 import React from "react";
 
-export const userLinks = [
+interface IUserLinks {
+  label: string;
+  links: {
+    href: string;
+    label: string;
+    icon: React.ReactNode;
+  }[];
+}
+
+interface IAdminLinks {
+  label: string;
+  links: {
+    href: string;
+    label: string;
+    icon: React.ReactNode;
+  }[];
+}
+
+export const userLinks: IUserLinks[] = [
   {
     label: "Profile",
     links: [
@@ -52,7 +70,7 @@ export const userLinks = [
   },
 ];
 
-export const adminLinks = [
+export const adminLinks: IAdminLinks[] = [
   {
     label: "Dashboard",
     links: [
@@ -222,6 +240,21 @@ export const adminLinks = [
         href: "/admin/order",
         label: "All Orders",
         icon: React.createElement(ShoppingBag, { className: "w-5 h-5" }),
+      },
+    ],
+  },
+  {
+    label: "Fleet News",
+    links: [
+      {
+        href: "/admin/fleet-news",
+        label: "All Fleet News",
+        icon: React.createElement(List, { className: "w-5 h-5" }),
+      },
+      {
+        href: "/admin/fleet-news/create",
+        label: "Create Fleet News",
+        icon: React.createElement(PlusCircle, { className: "w-5 h-5" }),
       },
     ],
   },
