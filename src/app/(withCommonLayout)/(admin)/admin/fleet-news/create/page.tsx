@@ -1,7 +1,13 @@
-export default function CreateFleetNews() {
+import { Suspense } from "react";
+import CreateFleetNewsForm from "./_components/CreateFleetNewsForm";
+import CreateFleetNewsFormLoading from "./_components/CreateFleetNewsFormLoading";
+
+export default function CreateFleetNewsPage() {
   return (
     <div>
-      <h1 className="text-lg">This is CreateFleetNews component</h1>
+      <Suspense fallback={<CreateFleetNewsFormLoading />}>
+        <CreateFleetNewsForm />
+      </Suspense>
     </div>
   );
 }
