@@ -19,13 +19,6 @@ import {
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
-import {
-  useCreateWheelWidth,
-  useDeleteWheelWidth,
-  useGetWheelWidths,
-  useUpdateWheelWidth,
-} from "@/src/hooks/wheelWidth.hook";
 import { useState } from "react";
 import {
   DataEmpty,
@@ -34,16 +27,22 @@ import {
 } from "../../_components/DataFetchingStates";
 
 import { Input } from "@heroui/input";
-import WheelWidthTable from "./WheelWidthTable";
+import {
+  useCreateWheelWidthType,
+  useDeleteWheelWidthType,
+  useGetWheelWidthTypes,
+  useUpdateWheelWidthType,
+} from "@/src/hooks/wheelWhidthType";
+import WheelWidthTypeTable from "./WheelWidthTypeTable";
 
-interface IWheelWidth {
+interface IWheelWidthType {
   _id: string;
-  width: string;
+  widthType: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export default function AdminWheelWidth() {
+export default function AdminWheelWidthType() {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure(); // Modal open state
   const {
@@ -61,46 +60,52 @@ export default function AdminWheelWidth() {
   const methods = useForm(); // Hook form methods
 
   const { handleSubmit } = methods;
-  const [selectedWheelWidth, setSelectedWheelWidth] =
-    useState<IWheelWidth | null>(null);
+  const [selectedWheelWidthType, setSelectedWheelWidthType] =
+    useState<IWheelWidthType | null>(null);
 
-  const { mutate: handleCreateWheelWidth, isPending: createWheelWidthPending } =
-    useCreateWheelWidth({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH"] });
-        toast.success("Wheel width created successfully");
-        methods.reset();
-        onClose();
-      },
-    }); // Wheel width creation handler
-  const { mutate: handleUpdateWheelWidth, isPending: updateWheelWidthPending } =
-    useUpdateWheelWidth({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH"] });
-        toast.success("Wheel width updated successfully");
-        methods.reset();
-        setSelectedWheelWidth(null);
-        onEditClose();
-      },
-      id: selectedWheelWidth?._id,
-    }); // Wheel width update handler
-  const { mutate: handleDeleteWheelWidth, isPending: deleteWheelWidthPending } =
-    useDeleteWheelWidth({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH"] });
-        toast.success("Wheel width deleted successfully");
-        setSelectedWheelWidth(null);
-        onDeleteClose();
-      },
-      id: selectedWheelWidth?._id,
-    }); // Wheel width deletion handler
   const {
-    data: wheelWidths,
+    mutate: handleCreateWheelWidthType,
+    isPending: createWheelWidthTypePending,
+  } = useCreateWheelWidthType({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH_TYPES"] });
+      toast.success("Wheel width type created successfully");
+      methods.reset();
+      onClose();
+    },
+  }); // Wheel width creation handler
+  const {
+    mutate: handleUpdateWheelWidthType,
+    isPending: updateWheelWidthPendingType,
+  } = useUpdateWheelWidthType({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH_TYPES"] });
+      toast.success("Wheel width type updated successfully");
+      methods.reset();
+      setSelectedWheelWidthType(null);
+      onEditClose();
+    },
+    id: selectedWheelWidthType?._id,
+  }); // Wheel width update handler
+  const {
+    mutate: handleDeleteWheelWidthType,
+    isPending: deleteWheelWidthPendingType,
+  } = useDeleteWheelWidthType({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_WHEEL_WIDTH_TYPES"] });
+      toast.success("Wheel width type deleted successfully");
+      setSelectedWheelWidthType(null);
+      onDeleteClose();
+    },
+    id: selectedWheelWidthType?._id,
+  }); // Wheel width deletion handler
+  const {
+    data: wheelWidthTypes,
     isLoading,
     isError,
     refetch,
-  } = useGetWheelWidths({}); // Get existing wheel widths
-  console.log(wheelWidths);
+  } = useGetWheelWidthTypes({}); // Get existing wheel widths
+  console.log(wheelWidthTypes);
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -108,7 +113,7 @@ export default function AdminWheelWidth() {
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value as string);
     });
-    handleCreateWheelWidth(formData); // Send wheel width data
+    handleCreateWheelWidthType(formData); // Send wheel width data
   };
 
   const onEditSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -117,73 +122,73 @@ export default function AdminWheelWidth() {
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value as string);
     });
-    handleUpdateWheelWidth(formData); // Send wheel width data
+    handleUpdateWheelWidthType(formData); // Send wheel width data
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
-          Wheel Widths
+          Wheel Width Types
         </h1>
         <Button
           color="primary"
           className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
           onPress={onOpen}>
-          + Add Wheel Width
+          + Add Wheel Width Type
         </Button>
       </div>
 
       {isLoading && <DataLoading />}
       {isError && <DataError />}
-      {wheelWidths?.data?.length === 0 && <DataEmpty />}
+      {wheelWidthTypes?.data?.length === 0 && <DataEmpty />}
 
-      {!isLoading && wheelWidths?.data?.length > 0 && (
-        <WheelWidthTable
-          wheelWidths={wheelWidths}
-          setSelectedWheelWidth={setSelectedWheelWidth}
+      {!isLoading && wheelWidthTypes?.data?.length > 0 && (
+        <WheelWidthTypeTable
+          wheelWidthTypes={wheelWidthTypes}
+          setSelectedWheelWidthType={setSelectedWheelWidthType}
           onEditOpen={onEditOpen}
           onDeleteOpen={onDeleteOpen}
         />
       )}
 
       {/* Modal for adding a new Wheel Width */}
-      <AddWheelWidthModal
+      <AddWheelWidthTypeModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         methods={methods}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        createWheelWidthPending={createWheelWidthPending}
+        createWheelWidthTypePending={createWheelWidthTypePending}
       />
       {/* Modal for editing a Wheel Width */}
-      <EditWheelWidthModal
+      <EditWheelWidthTypeModal
         isOpen={isEditOpen}
         onOpenChange={onEditOpenChange}
         methods={methods}
         handleSubmit={handleSubmit}
         onSubmit={onEditSubmit}
-        updateWheelWidthPending={updateWheelWidthPending}
-        defaultValues={selectedWheelWidth}
+        updateWheelWidthTypePending={updateWheelWidthPendingType}
+        defaultValues={selectedWheelWidthType}
       />
       {/* Modal for deleting a Wheel Width */}
-      <DeleteWheelWidthModal
+      <DeleteWheelWidthTypeModal
         isOpen={isDeleteOpen}
         onOpenChange={onDeleteOpenChange}
-        handleDeleteWheelWidth={handleDeleteWheelWidth}
-        deleteWheelWidthPending={deleteWheelWidthPending}
+        handleDeleteWheelWidthType={handleDeleteWheelWidthType}
+        deleteWheelWidthPendingType={deleteWheelWidthPendingType}
       />
     </div>
   );
 }
 
-const AddWheelWidthModal = ({
+const AddWheelWidthTypeModal = ({
   isOpen,
   onOpenChange,
   methods,
   handleSubmit,
   onSubmit,
-  createWheelWidthPending,
+  createWheelWidthPendingType,
 }: any) => {
   return (
     <Modal
@@ -193,7 +198,7 @@ const AddWheelWidthModal = ({
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Add Wheel Width
+              Add Wheel Width Type
             </ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
@@ -203,15 +208,15 @@ const AddWheelWidthModal = ({
                   {/* Width Input */}
                   <div className=" w-full py-2">
                     <Controller
-                      name="width"
+                      name="widthType"
                       control={methods.control}
                       defaultValue=""
-                      rules={{ required: "Wheel width is required" }}
+                      rules={{ required: "Wheel width Type is required" }}
                       render={({ field, fieldState }) => (
                         <Input
                           {...field}
-                          label="Wheel Width"
-                          placeholder="Enter wheel width (e.g., 6.5, 7.0, 8.0)"
+                          label="Wheel Width Type"
+                          placeholder="Enter wheel width Type (e.g., wide, extra wide, standard)"
                           onChange={(e) => field.onChange(e.target.value)}
                           isInvalid={!!fieldState.error}
                           errorMessage={fieldState.error?.message}
@@ -224,10 +229,10 @@ const AddWheelWidthModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={createWheelWidthPending}>
-                    {createWheelWidthPending
+                    disabled={createWheelWidthPendingType}>
+                    {createWheelWidthPendingType
                       ? "Creating..."
-                      : "Create Wheel Width"}
+                      : "Create Wheel Width Type"}
                   </Button>
                 </form>
               </FormProvider>
@@ -239,13 +244,13 @@ const AddWheelWidthModal = ({
   );
 };
 
-const EditWheelWidthModal = ({
+const EditWheelWidthTypeModal = ({
   isOpen,
   onOpenChange,
   methods,
   handleSubmit,
   onSubmit,
-  updateWheelWidthPending,
+  updateWheelWidthPendingType,
   defaultValues,
 }: any) => {
   if (!defaultValues) return null;
@@ -261,7 +266,7 @@ const EditWheelWidthModal = ({
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Edit Wheel Width
+              Edit Wheel Width Type
             </ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
@@ -272,15 +277,15 @@ const EditWheelWidthModal = ({
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
                         <Controller
-                          name="width"
+                          name="widthType"
                           control={methods.control}
-                          defaultValue={defaultValues.width}
-                          rules={{ required: "Wheel width is required" }}
+                          defaultValue={defaultValues?.widthType}
+                          rules={{ required: "Wheel width type is required" }}
                           render={({ field, fieldState }) => (
                             <Input
                               {...field}
-                              label="Wheel Width"
-                              placeholder="Enter wheel width (e.g., 6.5, 7.0, 8.0)"
+                              label="Wheel Width Type"
+                              placeholder="Enter wheel width Type (e.g., wide, extra wide, standard)"
                               value={field.value}
                               onChange={(e) => field.onChange(e.target.value)}
                               isInvalid={!!fieldState.error}
@@ -295,10 +300,10 @@ const EditWheelWidthModal = ({
                     color="primary"
                     type="submit"
                     className="w-full rounded"
-                    disabled={updateWheelWidthPending}>
-                    {updateWheelWidthPending
+                    disabled={updateWheelWidthPendingType}>
+                    {updateWheelWidthPendingType
                       ? "Updating..."
-                      : "Update Wheel Width"}
+                      : "Update Wheel Width Type"}
                   </Button>
                 </form>
               </FormProvider>
@@ -310,11 +315,11 @@ const EditWheelWidthModal = ({
   );
 };
 
-const DeleteWheelWidthModal = ({
+const DeleteWheelWidthTypeModal = ({
   isOpen,
   onOpenChange,
-  handleDeleteWheelWidth,
-  deleteWheelWidthPending,
+  handleDeleteWheelWidthType,
+  deleteWheelWidthPendingType,
 }: any) => {
   return (
     <Modal
@@ -329,7 +334,7 @@ const DeleteWheelWidthModal = ({
 
             <ModalBody>
               <p className="text-sm text-red-500">
-                ⚠️ Are you sure you want to delete this wheel width? This action
+                ⚠️ Are you sure you want to delete this width type? This action
                 cannot be undone.
               </p>
             </ModalBody>
@@ -343,10 +348,10 @@ const DeleteWheelWidthModal = ({
               </Button>
               <Button
                 color="danger"
-                onPress={handleDeleteWheelWidth}
-                disabled={deleteWheelWidthPending}
+                onPress={handleDeleteWheelWidthType}
+                disabled={deleteWheelWidthPendingType}
                 className="rounded">
-                {deleteWheelWidthPending ? "Deleting..." : "Delete"}
+                {deleteWheelWidthPendingType ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
           </>

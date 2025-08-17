@@ -71,8 +71,7 @@ export default function WheelsTable({
                   setSelectedWheel(wheel);
                   router.push(`/admin/wheel/${wheel._id}`);
                 }}
-                className="text-lg text-blue-500 cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-blue-500 cursor-pointer active:opacity-50">
                 <Eye />
               </span>
             </Tooltip>
@@ -87,14 +86,15 @@ export default function WheelsTable({
               </span>
             </Tooltip>
 
-            <Tooltip content="Delete" className="bg-rose-600">
+            <Tooltip
+              content="Delete"
+              className="bg-rose-600">
               <span
                 onClick={() => {
                   setSelectedWheel(wheel);
                   onDeleteOpen();
                 }}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -113,8 +113,7 @@ export default function WheelsTable({
           {(column: any) => (
             <TableColumn
               key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
+              align={column.uid === "actions" ? "center" : "start"}>
               {column.name}
             </TableColumn>
           )}

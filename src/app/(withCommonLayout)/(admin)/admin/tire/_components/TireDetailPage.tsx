@@ -24,6 +24,7 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
     tireSize,
     category,
     drivingType,
+    vehicleType,
     images,
     description,
     productLine,
@@ -38,7 +39,6 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
     sidewallDescriptionRange,
     temperatureGradeRange,
     sectionWidthRange,
-    diameterRange,
     wheelRimDiameterRange,
     tractionGradeRange,
     treadDepthRange,
@@ -46,8 +46,8 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
     overallWidthRange,
     treadwearGradeRange,
     sectionWidth,
-    aspectRatio,
-    rimDiameter,
+    ratio,
+    diameter,
     overallDiameter,
     rimWidthRange,
     width,
@@ -82,8 +82,7 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
           images.map((img: any, index: number) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-md p-2 rounded-xl shadow-lg border border-white/20"
-            >
+              className="bg-white/10 backdrop-blur-md p-2 rounded-xl shadow-lg border border-white/20">
               <Image
                 src={`${envConfig.base_url}${img}`}
                 alt={`${name} - image ${index + 1}`}
@@ -113,6 +112,10 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
             { label: "Trim", value: trim?.trim },
             { label: "Tire Size", value: tireSize?.tireSize },
             { label: "Year", value: year?.year },
+            { label: "Vehicle Type", value: vehicleType?.vehicleType },
+            { label: "width", value: width?.width },
+            { label: "diameter", value: diameter?.diameter },
+            { label: "ratio", value: ratio?.ratio },
           ]}
         />
         <GlassCard
@@ -134,9 +137,6 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
           { label: "Speed Rating Range", value: speedRatingRange },
           { label: "Tread Depth", value: treadDepth },
           { label: "Section Width", value: sectionWidth },
-          { label: "Width", value: width },
-          { label: "Aspect Ratio", value: aspectRatio },
-          { label: "Rim Diameter", value: rimDiameter },
           { label: "Overall Diameter", value: overallDiameter },
           { label: "Load Range", value: loadRange },
           { label: "Max PSI", value: maxPSI },
@@ -169,7 +169,6 @@ export default function TireDetailPage({ params }: { params: { id: string } }) {
           { label: "Wheel Rim Diameter Range", value: wheelRimDiameterRange },
           { label: "Aspect Ratio Range", value: aspectRatioRange },
           { label: "Treadwear Grade Range", value: treadwearGradeRange },
-          { label: "Diameter Range", value: diameterRange },
           { label: "Rim Width Range", value: rimWidthRange },
           { label: "Section Width Range", value: sectionWidthRange },
         ]}
@@ -209,7 +208,9 @@ function GlassCard({
       <h2 className="text-xl font-semibold text-foreground">{title}</h2>
       <hr className="border-white/20" />
       {fields.map((field, index) => (
-        <p key={index} className="text-sm text-foreground">
+        <p
+          key={index}
+          className="text-sm text-foreground">
           <strong>{field.label}:</strong> {field.value ?? "N/A"}
         </p>
       ))}
@@ -230,7 +231,11 @@ function SpecsSection({
       <hr className="border-white/20" />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {specs.map((spec, idx) => (
-          <Spec key={idx} label={spec.label} value={spec.value} />
+          <Spec
+            key={idx}
+            label={spec.label}
+            value={spec.value}
+          />
         ))}
       </div>
     </div>

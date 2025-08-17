@@ -46,6 +46,5 @@ export const useGetDrivingTypes = () => {
   return useQuery({
     queryKey: ["GET_DRIVING_TYPES"],
     queryFn: async () => await getDrivingTypes(),
-    suspense: true,
   });
 };

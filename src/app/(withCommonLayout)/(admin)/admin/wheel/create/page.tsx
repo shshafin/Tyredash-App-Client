@@ -31,6 +31,11 @@ import { useGetCategories } from "@/src/hooks/categories.hook";
 import { useGetBrands } from "@/src/hooks/brand.hook";
 import { useCreateWheel } from "@/src/hooks/wheel.hook";
 import { useGetDrivingTypes } from "@/src/hooks/drivingTypes.hook";
+import { useGetVehicleTypes } from "@/src/hooks/vehicleType.hook";
+import { useGetWheelWidths } from "@/src/hooks/wheelWidth.hook";
+import { useGetWheelRatios } from "@/src/hooks/wheelRatio.hook";
+import { useGetWheelDiameters } from "@/src/hooks/wheelDiameter.hook";
+import { useGetWheelWidthTypes } from "@/src/hooks/wheelWhidthType";
 
 export default function AdminWheelPage() {
   const queryClient = useQueryClient();
@@ -64,11 +69,16 @@ export default function AdminWheelPage() {
       model: data.model,
       trim: data.trim,
       tireSize: data.tireSize,
-      brand: data.brand,
-      category: data.category,
       drivingType: data.drivingType,
+      brand: data.brand,
+      width: data.width,
+      ratio: data.ratio,
+      diameter: data.diameter,
+      vehicleType: data.vehicleType,
+      widthType: data.widthType,
       description: data.description,
       images: data.images,
+      category: data.category,
       productLine: data.productLine,
       unitName: data.unitName,
       grossWeight: data.grossWeight,
@@ -82,9 +92,7 @@ export default function AdminWheelPage() {
       wheelSize: data.wheelSize,
       wheelAccent: data.wheelAccent,
       wheelPieces: data.wheelPieces,
-      wheelWidth: data.wheelWidth,
-      RimDiameter: Number(data.RimDiameter),
-      RimWidth: Number(data.RimWidth),
+      rimWidth: Number(data.rimWidth),
       boltPattern: data.boltPattern,
       offset: Number(data.offset),
       hubBoreSize: Number(data.hubBoreSize),
@@ -136,8 +144,7 @@ export default function AdminWheelPage() {
           <FormProvider {...methods}>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="max-w-7xl mx-auto space-y-10 p-4"
-            >
+              className="max-w-7xl mx-auto space-y-10 p-4">
               {/* General Info Section */}
               <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-default-900">
@@ -145,11 +152,26 @@ export default function AdminWheelPage() {
                 </h2>
                 <Divider />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FXInput label="Name" name="name" />
-                  <FXInput label="Description" name="description" />
-                  <FXInput label="Product Line" name="productLine" />
-                  <FXInput label="Unit Name" name="unitName" />
-                  <FXInput label="Condition Info" name="conditionInfo" />
+                  <FXInput
+                    label="Name"
+                    name="name"
+                  />
+                  <FXInput
+                    label="Description"
+                    name="description"
+                  />
+                  <FXInput
+                    label="Product Line"
+                    name="productLine"
+                  />
+                  <FXInput
+                    label="Unit Name"
+                    name="unitName"
+                  />
+                  <FXInput
+                    label="Condition Info"
+                    name="conditionInfo"
+                  />
                 </div>
               </div>
 
@@ -192,9 +214,22 @@ export default function AdminWheelPage() {
                     defaultValue=""
                     register={methods.register}
                   />
-                  <FXInput label="Tread Pattern" name="treadPattern" />
-                  <FXInput label="Tire Type" name="tireType" />
-                  <FXInput label="Construction Type" name="constructionType" />
+                  <VehicleSelectForWheel
+                    defaultValue=""
+                    register={methods.register}
+                  />
+                  {/* <FXInput
+                    label="Tread Pattern"
+                    name="treadPattern"
+                  />
+                  <FXInput
+                    label="Tire Type"
+                    name="tireType"
+                  /> */}
+                  <FXInput
+                    label="Construction Type"
+                    name="constructionType"
+                  />
                 </div>
               </div>
 
@@ -205,31 +240,60 @@ export default function AdminWheelPage() {
                 </h2>
                 <Divider />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FXInput label="Section Width" name="sectionWidth" />
-                  <FXInput label="Aspect Ratio" name="aspectRatio" />
-                  <FXInput label="Rim Diameter" name="rimDiameter" />
-                  <FXInput label="Overall Diameter" name="overallDiameter" />
-                  <FXInput label="Rim Width Range" name="rimWidthRange" />
-                  <FXInput label="Width" name="width" />
-                  <FXInput label="Tread Depth" name="treadDepth" />
-                  <FXInput label="Load Index" name="loadIndex" />
-                  <FXInput label="Load Range" name="loadRange" />
-                  <FXInput label="Max PSI" name="maxPSI" />
-                  <FXInput label="Warranty" name="warranty" />
-                  <FXInput label="Load Capacity" name="loadCapacity" />
+                  <RatioSelectForWheel
+                    defaultValue=""
+                    register={methods.register}
+                  />
+                  <DiameterSelectForWheel
+                    defaultValue=""
+                    register={methods.register}
+                  />
+                  <FXInput
+                    label="Overall Diameter"
+                    name="overallDiameter"
+                  />
+                  <FXInput
+                    label="Rim Width Range"
+                    name="rimWidthRange"
+                  />
+                  <WidthSelectForWheel
+                    defaultValue=""
+                    register={methods.register}
+                  />
+                  <FXInput
+                    label="Warranty"
+                    name="warranty"
+                  />
+                  <FXInput
+                    label="Load Capacity"
+                    name="loadCapacity"
+                  />
+                  <FXInput
+                    label="Wheel Type"
+                    name="wheelType"
+                  />
                 </div>
               </div>
 
               {/* Range Values */}
-              <div className="space-y-6">
+              {/* <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-default-900">
                   Range Values
                 </h2>
                 <Divider />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FXInput label="Gross Weight Range" name="grossWeightRange" />
-                  <FXInput label="GTIN Range" name="gtinRange" />
-                  <FXInput label="Load Index Range" name="loadIndexRange" />
+                  <FXInput
+                    label="Gross Weight Range"
+                    name="grossWeightRange"
+                  />
+                  <FXInput
+                    label="GTIN Range"
+                    name="gtinRange"
+                  />
+                  <FXInput
+                    label="Load Index Range"
+                    name="loadIndexRange"
+                  />
                   <FXInput
                     label="Mileage Warranty Range"
                     name="mileageWarrantyRange"
@@ -238,7 +302,10 @@ export default function AdminWheelPage() {
                     label="Max Air Pressure Range"
                     name="maxAirPressureRange"
                   />
-                  <FXInput label="Speed Rating Range" name="speedRatingRange" />
+                  <FXInput
+                    label="Speed Rating Range"
+                    name="speedRatingRange"
+                  />
                   <FXInput
                     label="Sidewall Description Range"
                     name="sidewallDescriptionRange"
@@ -251,7 +318,10 @@ export default function AdminWheelPage() {
                     label="Section Width Range"
                     name="sectionWidthRange"
                   />
-                  <FXInput label="Diameter Range" name="diameterRange" />
+                  <FXInput
+                    label="Diameter Range"
+                    name="diameterRange"
+                  />
                   <FXInput
                     label="Wheel Rim Diameter Range"
                     name="wheelRimDiameterRange"
@@ -260,8 +330,14 @@ export default function AdminWheelPage() {
                     label="Traction Grade Range"
                     name="tractionGradeRange"
                   />
-                  <FXInput label="Tread Depth Range" name="treadDepthRange" />
-                  <FXInput label="Tread Width Range" name="treadWidthRange" />
+                  <FXInput
+                    label="Tread Depth Range"
+                    name="treadDepthRange"
+                  />
+                  <FXInput
+                    label="Tread Width Range"
+                    name="treadWidthRange"
+                  />
                   <FXInput
                     label="Overall Width Range"
                     name="overallWidthRange"
@@ -270,9 +346,12 @@ export default function AdminWheelPage() {
                     label="Treadwear Grade Range"
                     name="treadwearGradeRange"
                   />
-                  <FXInput label="Aspect Ratio Range" name="aspectRatioRange" />
+                  <FXInput
+                    label="Aspect Ratio Range"
+                    name="aspectRatioRange"
+                  />
                 </div>
-              </div>
+              </div> */}
               {/* Wheel Details */}
               <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-default-900">
@@ -280,26 +359,78 @@ export default function AdminWheelPage() {
                 </h2>
                 <Divider />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FXInput label="Gross Weight" name="grossWeight" />
-                  <FXInput label="GTIN" name="GTIN" />
-                  <FXInput label="ATV Offset" name="ATVOffset" />
-                  <FXInput label="Bolts Quantity" name="BoltsQuantity" />
-                  <FXInput label="Wheel Color" name="wheelColor" />
-                  <FXInput label="Hub Bore" name="hubBore" />
-                  <FXInput label="Material Type" name="materialType" />
-                  <FXInput label="Wheel Size" name="wheelSize" />
-                  <FXInput label="Wheel Accent" name="wheelAccent" />
-                  <FXInput label="Wheel Pieces" name="wheelPieces" />
-                  <FXInput label="Wheel Width" name="wheelWidth" />
-                  <FXInput label="Rim Diameter" name="RimDiameter" />
-                  <FXInput label="Rim Width" name="RimWidth" />
-                  <FXInput label="Bolt Pattern" name="boltPattern" />
-                  <FXInput label="Offset" name="offset" />
-                  <FXInput label="Hub Bore Size" name="hubBoreSize" />
-                  <FXInput label="Number of Bolts" name="numberOFBolts" />
-                  <FXInput label="Load Rating" name="loadRating" />
-                  <FXInput label="Finish" name="finish" />
-                  <FXInput label="Wheel Type" name="wheelType" />
+                  <FXInput
+                    label="Gross Weight"
+                    name="grossWeight"
+                  />
+                  <FXInput
+                    label="GTIN"
+                    name="GTIN"
+                  />
+                  <FXInput
+                    label="ATV Offset"
+                    name="ATVOffset"
+                  />
+                  <FXInput
+                    label="Bolts Quantity"
+                    name="BoltsQuantity"
+                  />
+                  <FXInput
+                    label="Wheel Color"
+                    name="wheelColor"
+                  />
+                  <FXInput
+                    label="Hub Bore"
+                    name="hubBore"
+                  />
+                  <FXInput
+                    label="Material Type"
+                    name="materialType"
+                  />
+                  <FXInput
+                    label="Wheel Size"
+                    name="wheelSize"
+                  />
+                  <FXInput
+                    label="Wheel Accent"
+                    name="wheelAccent"
+                  />
+                  <FXInput
+                    label="Wheel Pieces"
+                    name="wheelPieces"
+                  />
+                  <FXInput
+                    label="Rim Width"
+                    name="rimWidth"
+                  />
+                  <FXInput
+                    label="Bolt Pattern"
+                    name="boltPattern"
+                  />
+                  <FXInput
+                    label="Offset"
+                    name="offset"
+                  />
+                  <FXInput
+                    label="Hub Bore Size"
+                    name="hubBoreSize"
+                  />
+                  <FXInput
+                    label="Number of Bolts"
+                    name="numberOFBolts"
+                  />
+                  <FXInput
+                    label="Load Rating"
+                    name="loadRating"
+                  />
+                  <FXInput
+                    label="Finish"
+                    name="finish"
+                  />
+                  <WidthTypeSelectForWheel
+                    defaultValue=""
+                    register={methods.register}
+                  />
                 </div>
               </div>
 
@@ -310,9 +441,18 @@ export default function AdminWheelPage() {
                 </h2>
                 <Divider />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <FXInput label="Price" name="price" />
-                  <FXInput label="Discount Price" name="discountPrice" />
-                  <FXInput label="Stock Quantity" name="stockQuantity" />
+                  <FXInput
+                    label="Price"
+                    name="price"
+                  />
+                  <FXInput
+                    label="Discount Price"
+                    name="discountPrice"
+                  />
+                  <FXInput
+                    label="Stock Quantity"
+                    name="stockQuantity"
+                  />
                 </div>
               </div>
 
@@ -325,8 +465,7 @@ export default function AdminWheelPage() {
                 <div className="space-y-4">
                   <label
                     htmlFor="images"
-                    className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-gray-50 text-gray-600 shadow-sm transition hover:border-gray-400 hover:bg-gray-100"
-                  >
+                    className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-gray-50 text-gray-600 shadow-sm transition hover:border-gray-400 hover:bg-gray-100">
                     <span className="text-md font-medium">Upload Images</span>
                     <UploadCloud className="size-6" />
                   </label>
@@ -344,15 +483,14 @@ export default function AdminWheelPage() {
                         (imageDataUrl: string, index: number) => (
                           <div
                             key={index}
-                            className="relative size-32 rounded-xl border-2 border-dashed border-gray-300 p-2"
-                          >
+                            className="relative size-32 rounded-xl border-2 border-dashed border-gray-300 p-2">
                             <img
                               alt={`Preview ${index}`}
                               className="h-full w-full object-cover rounded-md"
                               src={imageDataUrl}
                             />
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   )}
@@ -364,8 +502,7 @@ export default function AdminWheelPage() {
                 <Button
                   type="submit"
                   className="w-full rounded bg-rose-600"
-                  disabled={createWheelPending}
-                >
+                  disabled={createWheelPending}>
                   {createWheelPending ? "Creating..." : "Create Wheel"}
                 </Button>
               </div>
@@ -385,14 +522,15 @@ const MakeSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("make", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Make</option>
         {isLoading && <option value="">Loading Makes...</option>}
         {isError && <option value="">Failed to load Makes</option>}
         {makes?.data?.length === 0 && <option value="">No Makes found</option>}
         {makes?.data?.map((m: any) => (
-          <option key={m?.make} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.make}
           </option>
         ))}
@@ -407,8 +545,7 @@ const DrivingTypeSelectForTyre = ({ defaultValue, register }: any) => {
       <select
         {...register("drivingType", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select driving types</option>
         {isLoading && <option value="">Loading driving types...</option>}
         {isError && <option value="">Failed to load driving types</option>}
@@ -416,7 +553,9 @@ const DrivingTypeSelectForTyre = ({ defaultValue, register }: any) => {
           <option value="">No driving types found</option>
         )}
         {drivingType?.data?.map((m: any) => (
-          <option key={m?.title} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.title}
           </option>
         ))}
@@ -425,14 +564,13 @@ const DrivingTypeSelectForTyre = ({ defaultValue, register }: any) => {
   );
 };
 const CategorySelectForWheel = ({ defaultValue, register }: any) => {
-  const { data: category, isLoading, isError } = useGetCategories();
+  const { data: category, isLoading, isError } = useGetCategories(undefined);
   return (
     <div className="flex-1 min-w-[150px]">
       <select
         {...register("category", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Category</option>
         {isLoading && <option value="">Loading Categories...</option>}
         {isError && <option value="">Failed to load Categories</option>}
@@ -440,7 +578,9 @@ const CategorySelectForWheel = ({ defaultValue, register }: any) => {
           <option value="">No Categories found</option>
         )}
         {category?.data?.map((m: any) => (
-          <option key={m?.name} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.name}
           </option>
         ))}
@@ -457,14 +597,15 @@ const YearSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("year", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Year</option>
         {isLoading && <option value="">Loading Years...</option>}
         {isError && <option value="">Failed to load Years</option>}
         {year?.data?.length === 0 && <option value="">No Years found</option>}
         {year?.data?.map((y: any) => (
-          <option key={y?.year} value={y?._id}>
+          <option
+            key={y?._id}
+            value={y?._id}>
             {y?.year}
           </option>
         ))}
@@ -481,14 +622,15 @@ const BrandSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("brand", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Brand</option>
         {isLoading && <option value="">Loading Brands...</option>}
         {isError && <option value="">Failed to load Brands</option>}
         {brand?.data?.length === 0 && <option value="">No Brands found</option>}
         {brand?.data?.map((m: any) => (
-          <option key={m?._id} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.name}
           </option>
         ))}
@@ -504,14 +646,15 @@ const ModelSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("model", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Model</option>
         {isLoading && <option value="">Loading Models...</option>}
         {isError && <option value="">Failed to load Models</option>}
         {model?.data?.length === 0 && <option value="">No Models found</option>}
         {model?.data?.map((m: any) => (
-          <option key={m?.model} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.model}
           </option>
         ))}
@@ -528,8 +671,7 @@ const TyreSizeSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("tireSize", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Tyre Size</option>
         {isLoading && <option value="">Loading Tyre Sizes...</option>}
         {isError && <option value="">Failed to load Tyre Sizes</option>}
@@ -537,7 +679,9 @@ const TyreSizeSelectForWheel = ({ defaultValue, register }: any) => {
           <option value="">No Tyre Sizes found</option>
         )}
         {tireSize?.data?.map((m: any) => (
-          <option key={m?.tireSize} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.tireSize}
           </option>
         ))}
@@ -554,15 +698,156 @@ const TrimSelectForWheel = ({ defaultValue, register }: any) => {
       <select
         {...register("trim", { required: true })}
         defaultValue={defaultValue ? defaultValue?._id : ""}
-        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5"
-      >
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
         <option value="">Select Trim</option>
         {isLoading && <option value="">Loading Trims...</option>}
         {isError && <option value="">Failed to load Trims</option>}
         {trim?.data?.length === 0 && <option value="">No Trims found</option>}
         {trim?.data?.map((m: any) => (
-          <option key={m?.trim} value={m?._id}>
+          <option
+            key={m?._id}
+            value={m?._id}>
             {m?.trim}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const VehicleSelectForWheel = ({ defaultValue, register }: any) => {
+  const {
+    data: vehicleType,
+    isLoading,
+    isError,
+  } = useGetVehicleTypes({}) as any;
+
+  return (
+    <div className="flex-1 min-w-[150px]">
+      <select
+        {...register("vehicleType", { required: true })}
+        defaultValue={defaultValue ? defaultValue?._id : ""}
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
+        <option value="">Select Vehicle Type</option>
+        {isLoading && <option value="">Loading Types...</option>}
+        {isError && <option value="">Failed to load Types</option>}
+        {vehicleType?.data?.length === 0 && (
+          <option value="">No Types found</option>
+        )}
+        {vehicleType?.data?.map((m: any, index: number) => (
+          <option
+            key={index}
+            value={m?._id}>
+            {m?.vehicleType}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const WidthSelectForWheel = ({ defaultValue, register }: any) => {
+  const { data: width, isLoading, isError } = useGetWheelWidths({}) as any;
+
+  return (
+    <div className="flex-1 min-w-[150px]">
+      <select
+        {...register("width", { required: true })}
+        defaultValue={defaultValue ? defaultValue?._id : ""}
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
+        <option value="">Select Width</option>
+        {isLoading && <option value="">Loading Widths...</option>}
+        {isError && <option value="">Failed to load Widths</option>}
+        {width?.data?.length === 0 && <option value="">No Widths found</option>}
+        {width?.data?.map((m: any, index: number) => (
+          <option
+            key={index}
+            value={m?._id}>
+            {m?.width}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+const RatioSelectForWheel = ({ defaultValue, register }: any) => {
+  const { data: ratio, isLoading, isError } = useGetWheelRatios({}) as any;
+
+  return (
+    <div className="flex-1 min-w-[150px]">
+      <select
+        {...register("ratio", { required: true })}
+        defaultValue={defaultValue ? defaultValue?._id : ""}
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
+        <option value="">Select Aspect Ratio</option>
+        {isLoading && <option value="">Loading Ratios...</option>}
+        {isError && <option value="">Failed to load Ratios</option>}
+        {ratio?.data?.length === 0 && <option value="">No Ratios found</option>}
+        {ratio?.data?.map((m: any, index: number) => (
+          <option
+            key={index}
+            value={m?._id}>
+            {m?.ratio}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+const DiameterSelectForWheel = ({ defaultValue, register }: any) => {
+  const {
+    data: diameter,
+    isLoading,
+    isError,
+  } = useGetWheelDiameters({}) as any;
+
+  return (
+    <div className="flex-1 min-w-[150px]">
+      <select
+        {...register("diameter", { required: true })}
+        defaultValue={defaultValue ? defaultValue?._id : ""}
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
+        <option value="">Select Rim Diameter</option>
+        {isLoading && <option value="">Loading Diameters...</option>}
+        {isError && <option value="">Failed to load Diameters</option>}
+        {diameter?.data?.length === 0 && (
+          <option value="">No Diameters found</option>
+        )}
+        {diameter?.data?.map((m: any, index: number) => (
+          <option
+            key={index}
+            value={m?._id}>
+            {m?.diameter}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+const WidthTypeSelectForWheel = ({ defaultValue, register }: any) => {
+  const {
+    data: widthType,
+    isLoading,
+    isError,
+  } = useGetWheelWidthTypes({}) as any;
+
+  return (
+    <div className="flex-1 min-w-[150px]">
+      <select
+        {...register("widthType", { required: true })}
+        defaultValue={defaultValue ? defaultValue?._id : ""}
+        className="w-full border-2 border-[#71717ab3] bg-default-50 rounded-lg px-2 py-3.5">
+        <option value="">Select Width Type</option>
+        {isLoading && <option value="">Loading Width Types...</option>}
+        {isError && <option value="">Failed to load Width Types</option>}
+        {widthType?.data?.length === 0 && (
+          <option value="">No Width Types found</option>
+        )}
+        {widthType?.data?.map((m: any, index: number) => (
+          <option
+            key={index}
+            value={m?._id}>
+            {m?.widthType}
           </option>
         ))}
       </select>

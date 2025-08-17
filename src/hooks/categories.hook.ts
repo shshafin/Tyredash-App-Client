@@ -45,6 +45,5 @@ export const useGetCategories = (params: any) => {
   return useQuery({
     queryKey: ["GET_CATEGORIES"],
     queryFn: async () => await getCategories(params),
-    suspense: true,
   });
 };

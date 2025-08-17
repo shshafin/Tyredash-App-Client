@@ -63,4 +63,3 @@ export const getSingleBrand = async (brandId: any) => {
     throw new Error(error.message);
   }
 };
-
