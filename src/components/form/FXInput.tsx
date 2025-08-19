@@ -6,6 +6,9 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 
 interface IProps extends IInput {}
+interface IProps extends IInput {
+  rules?: any; // React Hook Form validation rules
+}
 
 export default function FXInput({
   variant = "bordered",
@@ -16,6 +19,7 @@ export default function FXInput({
   name,
   isClearable = true,
   defaultValue = "",
+  rules,
 }: IProps) {
   const {
     register,
@@ -28,7 +32,7 @@ export default function FXInput({
   return (
     <div className="flex flex-col gap-1">
       <Input
-        {...register(name)}
+        {...register(name, rules)}
         variant={variant}
         size={size}
         required={required}

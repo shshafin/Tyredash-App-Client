@@ -244,6 +244,21 @@ export const adminLinks: IAdminLinks[] = [
     ],
   },
   {
+    label: "Blogs",
+    links: [
+      {
+        href: "/admin/blog",
+        label: "All Blogs",
+        icon: React.createElement(List, { className: "w-5 h-5" }),
+      },
+      {
+        href: "/admin/blog/create",
+        label: "Create Blog",
+        icon: React.createElement(PlusCircle, { className: "w-5 h-5" }),
+      },
+    ],
+  },
+  {
     label: "Fleet News",
     links: [
       {

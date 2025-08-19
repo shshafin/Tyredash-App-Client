@@ -11,22 +11,22 @@ import { Tooltip } from "@heroui/tooltip";
 import { DeleteIcon, EditIcon } from "@/src/icons";
 
 export const columns = [
-  { name: "Width", uid: "width" },
+  { name: "WIDTH TYPE", uid: "widthType" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
-export default function WheelWidthTable({
-  wheelWidths,
-  setSelectedWheelWidth,
+export default function WheelWidthTypeTable({
+  wheelWidthTypes,
+  setSelectedWheelWidthType,
   onDeleteOpen,
   onEditOpen,
 }: any) {
-  const renderCell = (wheelWidth: any, columnKey: any) => {
-    const cellValue = wheelWidth[columnKey];
+  const renderCell = (wheelWidthType: any, columnKey: any) => {
+    const cellValue = wheelWidthType[columnKey];
 
     switch (columnKey) {
-      case "width":
-        return wheelWidth.width;
+      case "widthType":
+        return wheelWidthType.widthType;
 
       case "actions":
         return (
@@ -34,7 +34,7 @@ export default function WheelWidthTable({
             <Tooltip content="Edit">
               <span
                 onClick={() => {
-                  setSelectedWheelWidth(wheelWidth);
+                  setSelectedWheelWidthType(wheelWidthType);
                   onEditOpen();
                 }}
                 className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -46,7 +46,7 @@ export default function WheelWidthTable({
               className="bg-rose-600">
               <span
                 onClick={() => {
-                  setSelectedWheelWidth(wheelWidth);
+                  setSelectedWheelWidthType(wheelWidthType);
                   onDeleteOpen();
                 }}
                 className="text-lg text-danger cursor-pointer active:opacity-50">
@@ -62,7 +62,7 @@ export default function WheelWidthTable({
 
   return (
     <div className="overflow-x-auto shadow-md rounded-lg">
-      <Table aria-label="Wheel Widths Table">
+      <Table aria-label="Wheel Width Types Table">
         <TableHeader columns={columns}>
           {(column: any) => (
             <TableColumn
@@ -72,7 +72,7 @@ export default function WheelWidthTable({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={wheelWidths.data}>
+        <TableBody items={wheelWidthTypes?.data}>
           {(item: any) => (
             <TableRow key={item._id}>
               {(columnKey: any) => (

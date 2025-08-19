@@ -22,7 +22,6 @@ export const useGetUsers = () => {
   return useQuery({
     queryKey: ["GET_USERS"],
     queryFn: async () => await getUsers(),
-    suspense: true,
   });
 };
 

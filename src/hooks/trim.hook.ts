@@ -44,6 +44,5 @@ export const useGetTrims = (params: any) => {
   return useQuery({
     queryKey: ["GET_TRIMS"],
     queryFn: async () => await getTrims(params),
-    suspense: true,
   });
 };

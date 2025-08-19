@@ -71,8 +71,7 @@ export default function TiresTable({
                   setSelectedTire(tire);
                   router.push(`/admin/tire/${tire._id}`);
                 }}
-                className="text-lg text-blue-500 cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-blue-500 cursor-pointer active:opacity-50">
                 <Eye />
               </span>
             </Tooltip>
@@ -87,14 +86,15 @@ export default function TiresTable({
               </span>
             </Tooltip>
 
-            <Tooltip content="Delete" className="bg-rose-600">
+            <Tooltip
+              content="Delete"
+              className="bg-rose-600">
               <span
                 onClick={() => {
                   setSelectedTire(tire);
                   onDeleteOpen();
                 }}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -113,8 +113,7 @@ export default function TiresTable({
           {(column: any) => (
             <TableColumn
               key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
+              align={column.uid === "actions" ? "center" : "start"}>
               {column.name}
             </TableColumn>
           )}

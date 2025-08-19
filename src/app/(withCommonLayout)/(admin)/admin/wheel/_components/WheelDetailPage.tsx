@@ -26,7 +26,9 @@ export default function WheelDetailPage({
     tireSize,
     brand,
     category,
+    ratio,
     drivingType,
+    vehicleType,
     description,
     images,
     productLine,
@@ -42,9 +44,9 @@ export default function WheelDetailPage({
     wheelSize,
     wheelAccent,
     wheelPieces,
-    wheelWidth,
-    RimDiameter,
-    RimWidth,
+    width,
+    diameter,
+    rimWidth,
     boltPattern,
     offset,
     hubBoreSize,
@@ -54,7 +56,7 @@ export default function WheelDetailPage({
     finish,
     warranty,
     constructionType,
-    wheelType,
+    widthType,
     price,
     discountPrice,
     stockQuantity,
@@ -76,8 +78,7 @@ export default function WheelDetailPage({
           images.map((img: any, index: number) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-md p-2 rounded-xl shadow-lg border border-white/20"
-            >
+              className="bg-white/10 backdrop-blur-md p-2 rounded-xl shadow-lg border border-white/20">
               <Image
                 src={`${envConfig.base_url}${img}`}
                 alt={`${name} - image ${index + 1}`}
@@ -107,6 +108,8 @@ export default function WheelDetailPage({
             { label: "Trim", value: trim?.trim },
             { label: "Tire Size", value: tireSize?.tireSize },
             { label: "Year", value: year?.year },
+            { label: "vehicleType", value: vehicleType?.vehicleType },
+            { label: "Ratio", value: ratio?.ratio },
           ]}
         />
         <GlassCard
@@ -129,9 +132,9 @@ export default function WheelDetailPage({
           { label: "Wheel Size", value: wheelSize },
           { label: "Wheel Accent", value: wheelAccent },
           { label: "Wheel Pieces", value: wheelPieces },
-          { label: "Wheel Width", value: wheelWidth },
-          { label: "Rim Diameter", value: RimDiameter },
-          { label: "Rim Width", value: RimWidth },
+          { label: "Wheel Width", value: width?.width },
+          { label: "Rim Diameter", value: diameter?.diameter },
+          { label: "Rim Width", value: rimWidth },
           { label: "Bolt Pattern", value: boltPattern },
           { label: "Offset", value: offset },
           { label: "Hub Bore Size", value: hubBoreSize },
@@ -154,7 +157,7 @@ export default function WheelDetailPage({
           { label: "Finish", value: finish },
           { label: "Warranty", value: warranty },
           { label: "Construction Type", value: constructionType },
-          { label: "Wheel Type", value: wheelType },
+          { label: "Wheel Type", value: widthType?.widthType },
         ]}
       />
 
@@ -192,7 +195,9 @@ function GlassCard({
       <h2 className="text-xl font-semibold text-foreground">{title}</h2>
       <hr className="border-white/20" />
       {fields.map((field, index) => (
-        <p key={index} className="text-sm text-foreground">
+        <p
+          key={index}
+          className="text-sm text-foreground">
           <strong>{field.label}:</strong> {field.value ?? "N/A"}
         </p>
       ))}
@@ -213,7 +218,11 @@ function SpecsSection({
       <hr className="border-white/20" />
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {specs.map((spec, idx) => (
-          <Spec key={idx} label={spec.label} value={spec.value} />
+          <Spec
+            key={idx}
+            label={spec.label}
+            value={spec.value}
+          />
         ))}
       </div>
     </div>

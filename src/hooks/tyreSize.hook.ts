@@ -45,7 +45,6 @@ export const useGetTyreSizes = (params: any) => {
   return useQuery({
     queryKey: ["GET_TYRE_SIZES"],
     queryFn: async () => await getTyreSizes(params),
-    suspense: true,
   });
 };
 
