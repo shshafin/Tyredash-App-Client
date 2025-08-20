@@ -4,7 +4,7 @@ import { axiosInstance } from "@/src/lib/AxiosInstance";
 
 export const getAllSupportRequests = async () => {
   try {
-    const { data } = await axiosInstance.get("/fleet-appointments", {
+    const { data } = await axiosInstance.get("/fleet-supports", {
       headers: {
         "Content-Type": "application/json",
       },

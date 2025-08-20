@@ -1,56 +1,35 @@
 "use client";
 
-import { useAssignFleetRef, useGetAllSupportRequests } from "@/src/hooks/fleetSupport.hook";
-import { EditIcon } from "@/src/icons";
+import { useGetAllSupportRequests } from "@/src/hooks/fleetSupport.hook";
+import { Eye } from "lucide-react";
 import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
+import { Input } from "@heroui/input";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
 import { Tooltip } from "@heroui/tooltip";
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 export default function FleetSupportTable() {
-  const queryClient = useQueryClient();
   const supportQuery = useGetAllSupportRequests();
+
   const list = supportQuery?.data?.data || [];
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRequest, setSelectedRequest] = useState<any | null>(null);
 
-  const methods = useForm<{ phone: string; email: string; note: string }>({
-    defaultValues: { phone: "", email: "", note: "" },
-  });
-  const { control, handleSubmit, reset } = methods;
-
-  const onSubmit: SubmitHandler<{ phone: string; email: string; note: string }> = (values) => {
-    if (!selectedRequest) return;
-    const payload = { fleetRef: { phone: values.phone, email: values.email, note: values.note } };
-    assignFleetRef({ id: selectedRequest._id, payload } as any);
-  };
-
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-  const { mutate: assignFleetRef, isPending: assignLoading } = useAssignFleetRef({
-    onSuccess: () => {
-      toast.success("Fleet reference assigned");
-      queryClient.invalidateQueries({ queryKey: ["GET_ALL_SUPPORT_REQUESTS"] });
-      onClose();
-      setSelectedRequest(null);
-    },
-  } as any);
 
   const filtered = useMemo(() => {
     if (!searchTerm) return list || [];
     return (list || []).filter((item: any) => {
-      const fv = item.fleetVehicle || {};
+      if (!searchTerm) return true;
+      const q = searchTerm.toLowerCase();
       return (
-        item.serviceType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        fv.make?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        fv.model?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        fv.licensePlate?.toLowerCase().includes(searchTerm.toLowerCase())
+        (item.issueType || "").toLowerCase().includes(q) ||
+        (item.priority || "").toLowerCase().includes(q) ||
+        (item.subject || "").toLowerCase().includes(q) ||
+        (item.message || "").toLowerCase().includes(q) ||
+        (item.status || "").toLowerCase().includes(q)
       );
     });
   }, [list, searchTerm]);
@@ -79,48 +58,46 @@ export default function FleetSupportTable() {
 
   const handleOpenEdit = (request: any) => {
     setSelectedRequest(request);
-    // initialize form with existing fleetRef
-    reset({
-      phone: request.fleetRef?.phone || "",
-      email: request.fleetRef?.email || "",
-      note: request.fleetRef?.note || "",
-    });
     onOpen();
   };
 
   const renderCell = (item: any, columnKey: string) => {
     switch (columnKey) {
-      case "vehicle":
-        return (
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">
-              {item.fleetVehicle?.make} {item.fleetVehicle?.model}
-            </span>
-            <span className="text-xs text-default-400">{item.fleetVehicle?.licensePlate}</span>
-          </div>
-        );
-      case "serviceType":
-        return <span className="text-sm">{item.serviceType}</span>;
-      case "dateTime":
-        return (
-          <div className="flex flex-col">
-            <span className="text-sm">{item.date}</span>
-            <span className="text-xs text-default-400">{item.time}</span>
-          </div>
-        );
-      case "address":
-        return <span className="text-sm">{item.address}</span>;
+      case "issueType":
+        return <span className="text-sm">{item.issueType}</span>;
+      case "priority":
+        return <span className="text-sm">{item.priority}</span>;
+      case "subject":
+        return <span className="text-sm font-medium">{item.subject}</span>;
+      case "message":
+        return <span className="text-sm">{item.message}</span>;
+      case "createdAt":
+        return <span className="text-sm">{item.createdAt ? new Date(item.createdAt).toLocaleString() : "-"}</span>;
+      //   case "files":
+      //     return (
+      //       <div className="flex flex-col">
+      //         {(item.files || []).length === 0 ? (
+      //           <span className="text-xs text-default-400">No files</span>
+      //         ) : (
+      //           (item.files || []).map((f: string, idx: number) => (
+      //             <a key={idx} href={f} className="text-sm text-blue-600 underline" target="_blank" rel="noreferrer">
+      //               {f.split("/").pop()}
+      //             </a>
+      //           ))
+      //         )}
+      //       </div>
+      //     );
       case "status":
-        return <span className="text-sm">{item.fleetRef ? "Assigned" : "Not Assigned"}</span>;
+        return <span className="text-sm">{item.status}</span>;
       case "actions":
         return (
           <div className="flex items-center justify-center gap-2">
-            <Tooltip content="Edit">
+            <Tooltip content="View">
               <span
                 onClick={() => handleOpenEdit(item)}
                 className="text-lg text-blue-500 cursor-pointer active:opacity-60"
               >
-                <EditIcon />
+                <Eye className="h-4 w-4" />
               </span>
             </Tooltip>
           </div>
@@ -131,10 +108,12 @@ export default function FleetSupportTable() {
   };
 
   const columns = [
-    { name: "VEHICLE", uid: "vehicle" },
-    { name: "SERVICE", uid: "serviceType" },
-    { name: "DATE / TIME", uid: "dateTime" },
-    { name: "ADDRESS", uid: "address" },
+    { name: "TYPE", uid: "issueType" },
+    { name: "PRIORITY", uid: "priority" },
+    { name: "SUBJECT", uid: "subject" },
+    // { name: "MESSAGE", uid: "message" },
+    // { name: "FILES", uid: "files" },
+    { name: "CREATED", uid: "createdAt" },
     { name: "STATUS", uid: "status" },
     { name: "ACTIONS", uid: "actions" },
   ];
@@ -277,93 +256,70 @@ export default function FleetSupportTable() {
         <ModalContent>
           {(close) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Edit Support Request</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Support Request Details</ModalHeader>
               <ModalBody>
                 {selectedRequest ? (
-                  <form className="space-y-3" onSubmit={handleSubmit(onSubmit as any)}>
+                  <div className="space-y-3">
                     <div>
-                      <label className="text-xs text-default-500">Vehicle</label>
-                      <div className="text-sm font-medium">
-                        {selectedRequest.fleetVehicle?.make} {selectedRequest.fleetVehicle?.model}
+                      <label className="text-xs text-default-500">Issue Type</label>
+                      <div className="text-sm font-medium">{selectedRequest.issueType}</div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-default-500">Priority</label>
+                      <div className="text-sm">{selectedRequest.priority}</div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-default-500">Subject</label>
+                      <div className="text-sm font-medium">{selectedRequest.subject}</div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-default-500">Message</label>
+                      <div className="text-sm">{selectedRequest.message}</div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-default-500">Files</label>
+                      <div className="flex flex-col">
+                        {(selectedRequest.files || []).length === 0 ? (
+                          <span className="text-xs text-default-400">No files</span>
+                        ) : (
+                          (selectedRequest.files || []).map((f: string, idx: number) => (
+                            <a
+                              key={idx}
+                              href={f}
+                              className="text-sm text-blue-600 underline"
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {f.split("/").pop()}
+                            </a>
+                          ))
+                        )}
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-xs text-default-500">Phone (+14123456789)</label>
-                      <Controller
-                        control={control}
-                        name="phone"
-                        rules={{ required: "Phone is required" }}
-                        render={({ field, fieldState }) => (
-                          <Input
-                            size="sm"
-                            {...field}
-                            onChange={(e: any) => field.onChange(e.target.value)}
-                            isInvalid={!!fieldState.error}
-                            errorMessage={fieldState.error?.message}
-                          />
-                        )}
-                      />
+                      <label className="text-xs text-default-500">Created</label>
+                      <div className="text-sm">
+                        {selectedRequest.createdAt ? new Date(selectedRequest.createdAt).toLocaleString() : "-"}
+                      </div>
                     </div>
 
                     <div>
-                      <label className="text-xs text-default-500">Email</label>
-                      <Controller
-                        control={control}
-                        name="email"
-                        rules={{
-                          required: "Email is required",
-                          pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Enter a valid email",
-                          },
-                        }}
-                        render={({ field, fieldState }) => (
-                          <Input
-                            size="sm"
-                            {...field}
-                            onChange={(e: any) => field.onChange(e.target.value)}
-                            isInvalid={!!fieldState.error}
-                            errorMessage={fieldState.error?.message}
-                          />
-                        )}
-                      />
+                      <label className="text-xs text-default-500">Status</label>
+                      <div className="text-sm">{selectedRequest.status}</div>
                     </div>
-
-                    <div>
-                      <label className="text-xs text-default-500">Note</label>
-                      <Controller
-                        control={control}
-                        name="note"
-                        // rules={{ required: "Note is required" }}
-                        render={({ field, fieldState }) => (
-                          <Textarea
-                            size="sm"
-                            {...field}
-                            onChange={(e: any) => field.onChange(e.target.value)}
-                            isInvalid={!!fieldState.error}
-                            // errorMessage={fieldState.error?.message}
-                          />
-                        )}
-                      />
-                    </div>
-                  </form>
+                  </div>
                 ) : (
                   <div>No request selected</div>
                 )}
               </ModalBody>
               <ModalFooter className="flex justify-end gap-2">
                 <Button variant="bordered" className="rounded" onPress={() => close()}>
-                  Cancel
-                </Button>
-                <Button
-                  onPress={() => {
-                    void handleSubmit(onSubmit)();
-                  }}
-                  disabled={assignLoading}
-                  className="rounded"
-                >
-                  {assignLoading ? "Updating..." : "Save"}
+                  Close
                 </Button>
               </ModalFooter>
             </>
