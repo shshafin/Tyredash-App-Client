@@ -1,40 +1,19 @@
 "use client";
 
 import { Button } from "@heroui/button";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@heroui/modal";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
 import FXInput from "@/src/components/form/FXInput";
-import {
-  FieldValues,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { ChangeEvent, useState } from "react";
-import {
-  DataEmpty,
-  DataError,
-  DataLoading,
-} from "../../_components/DataFetchingStates";
+import { ChangeEvent, useEffect, useState } from "react";
+import { DataEmpty, DataError, DataLoading } from "../../_components/DataFetchingStates";
 import { UploadCloud } from "lucide-react";
 import { Divider } from "@heroui/divider";
 import { IBrand } from "@/src/types";
-import {
-  useCreateBrand,
-  useDeleteBrand,
-  useGetBrands,
-  useUpdateBrand,
-} from "@/src/hooks/brand.hook";
+import { useCreateBrand, useDeleteBrand, useGetBrands, useUpdateBrand } from "@/src/hooks/brand.hook";
 import BrandsTable from "./BrandTable";
 
 export default function AdminBrandPage() {
@@ -58,37 +37,51 @@ export default function AdminBrandPage() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]); // Track selected images
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]); // Track image previews
 
-  const { mutate: handleCreateBrand, isPending: createBrandPending } =
-    useCreateBrand({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
-        toast.success("Brand created successfully");
-        methods.reset();
-        onClose();
-      },
-    }); // Brand creation handler
-  const { mutate: handleUpdateBrand, isPending: updateBrandPending } =
-    useUpdateBrand({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
-        toast.success("Brand updated successfully");
-        methods.reset();
-        setSelectedBrand(null);
-        onEditClose();
-      },
-      id: selectedBrand?._id,
-    }); // Brand update handler
-  const { mutate: handleDeleteBrand, isPending: deleteBrandPending } =
-    useDeleteBrand({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
-        toast.success("Brand deleted successfully");
-        setSelectedBrand(null);
-        onDeleteClose();
-      },
-      id: selectedBrand?._id,
-    }); // Brand deletion handler
+  const { mutate: handleCreateBrand, isPending: createBrandPending } = useCreateBrand({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
+      toast.success("Brand created successfully");
+      methods.reset();
+      onClose();
+    },
+  }); // Brand creation handler
+  const { mutate: handleUpdateBrand, isPending: updateBrandPending } = useUpdateBrand({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
+      toast.success("Brand updated successfully");
+      methods.reset();
+      setSelectedBrand(null);
+      onEditClose();
+    },
+    id: selectedBrand?._id,
+  }); // Brand update handler
+  const { mutate: handleDeleteBrand, isPending: deleteBrandPending } = useDeleteBrand({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_BRANDS"] });
+      toast.success("Brand deleted successfully");
+      setSelectedBrand(null);
+      onDeleteClose();
+    },
+    id: selectedBrand?._id,
+  }); // Brand deletion handler
   const { data: Brands, isLoading, isError } = useGetBrands({}); // Get existing Brands
+  // --- Client-side pagination state ---
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(5);
+  const pageSizeOptions = [5, 10, 25];
+
+  const totalItems = Brands?.data?.length ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  // Reset current page if data or pageSize changes and current page is out of range
+  useEffect(() => {
+    if (page > totalPages) setPage(1);
+  }, [totalItems, pageSize, totalPages, page]);
+
+  // Prepare a paginated copy of the Brands response for the table
+  const paginatedBrands = Brands
+    ? { ...Brands, data: Brands.data.slice((page - 1) * pageSize, page * pageSize) }
+    : Brands;
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -140,13 +133,12 @@ export default function AdminBrandPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
-          Brand
-        </h1>
+        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">Brand</h1>
         <Button
           color="primary"
           className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-          onPress={onOpen}>
+          onPress={onOpen}
+        >
           + Add Brand
         </Button>
       </div>
@@ -156,12 +148,55 @@ export default function AdminBrandPage() {
       {Brands?.data?.length === 0 && <DataEmpty />}
 
       {!isLoading && Brands?.data?.length > 0 && (
-        <BrandsTable
-          Brands={Brands}
-          onDeleteOpen={onDeleteOpen}
-          onEditOpen={onEditOpen}
-          setSelectedBrand={setSelectedBrand}
-        />
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <label className="text-sm">Show</label>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="border rounded px-2 py-1"
+              >
+                {pageSizeOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm text-muted">items per page</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-sm">{`Page ${page} of ${totalPages}`}</span>
+              <Button
+                variant="bordered"
+                className="rounded disabled:opacity-50"
+                onPress={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                Prev
+              </Button>
+              <Button
+                className="rounded disabled:opacity-50"
+                variant="bordered"
+                onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+
+          <BrandsTable
+            Brands={paginatedBrands}
+            onDeleteOpen={onDeleteOpen}
+            onEditOpen={onEditOpen}
+            setSelectedBrand={setSelectedBrand}
+          />
+        </>
       )}
 
       {/* Modal for adding a new Brand */}
@@ -209,77 +244,55 @@ const AddBrandModal = ({
   handleImageChange,
 }: any) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">Add Brand</ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Brand & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput
-                          label="Brand Name"
-                          name="name"
-                        />
+                        <FXInput label="Brand Name" name="name" />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput
-                          label="Description"
-                          name="description"
-                        />
+                        <FXInput label="Description" name="description" />
                       </div>
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
-                          <span className="text-md font-medium">
-                            Upload Images
-                          </span>
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
+                        >
+                          <span className="text-md font-medium">Upload Images</span>
                           <UploadCloud className="size-6" />
                         </label>
-                        <input
-                          multiple
-                          className="hidden"
-                          id="image"
-                          type="file"
-                          onChange={handleImageChange}
-                        />
+                        <input multiple className="hidden" id="image" type="file" onChange={handleImageChange} />
                       </div>
                     </div>
                     {/* Image previews */}
                     {imagePreviews.length > 0 && (
                       <div className="flex gap-5 my-5 flex-wrap">
-                        {imagePreviews.map(
-                          (imageDataUrl: string, index: number) => (
-                            <div
-                              key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
-                              <img
-                                alt={`Preview ${index}`}
-                                className="h-full w-full object-cover rounded-md"
-                                src={imageDataUrl}
-                              />
-                            </div>
-                          )
-                        )}
+                        {imagePreviews.map((imageDataUrl: string, index: number) => (
+                          <div
+                            key={index}
+                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
+                          >
+                            <img
+                              alt={`Preview ${index}`}
+                              className="h-full w-full object-cover rounded-md"
+                              src={imageDataUrl}
+                            />
+                          </div>
+                        ))}
                       </div>
                     )}
 
                     <Divider className="my-6" />
                   </div>
-                  <Button
-                    color="primary"
-                    type="submit"
-                    className="w-full rounded"
-                    disabled={createBrandPending}>
+                  <Button color="primary" type="submit" className="w-full rounded" disabled={createBrandPending}>
                     {createBrandPending ? "Creating..." : "Create Brand"}
                   </Button>
                 </form>
@@ -310,81 +323,58 @@ const EditBrandModal = ({
       onOpenChange={() => {
         onOpenChange();
         methods.reset();
-      }}>
+      }}
+    >
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Edit Brand
-            </ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Edit Brand</ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-xl mx-auto space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl mx-auto space-y-6">
                   <div className="flex flex-wrap gap-4 py-2">
                     {/* Brand & logo Inputs */}
                     <div className="flex flex-wrap gap-2 w-full">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput
-                          label="Brand Name"
-                          name="name"
-                          defaultValue={defaultValues.name}
-                        />
+                        <FXInput label="Brand Name" name="name" defaultValue={defaultValues.name} />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput
-                          label="Description"
-                          name="description"
-                          defaultValue={defaultValues.description}
-                        />
+                        <FXInput label="Description" name="description" defaultValue={defaultValues.description} />
                       </div>
 
                       <div className="w-full">
                         <label
                           htmlFor="image"
-                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
-                          <span className="text-md font-medium">
-                            Upload Images
-                          </span>
+                          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
+                        >
+                          <span className="text-md font-medium">Upload Images</span>
                           <UploadCloud className="size-6" />
                         </label>
-                        <input
-                          multiple
-                          className="hidden"
-                          id="image"
-                          type="file"
-                          onChange={handleImageChange}
-                        />
+                        <input multiple className="hidden" id="image" type="file" onChange={handleImageChange} />
                       </div>
                     </div>
                     {/* Image previews */}
                     {imagePreviews.length > 0 && (
                       <div className="flex gap-5 my-5 flex-wrap">
-                        {imagePreviews.map(
-                          (imageDataUrl: string, index: number) => (
-                            <div
-                              key={index}
-                              className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
-                              <img
-                                alt={`Preview ${index}`}
-                                className="h-full w-full object-cover rounded-md"
-                                src={imageDataUrl}
-                              />
-                            </div>
-                          )
-                        )}
+                        {imagePreviews.map((imageDataUrl: string, index: number) => (
+                          <div
+                            key={index}
+                            className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
+                          >
+                            <img
+                              alt={`Preview ${index}`}
+                              className="h-full w-full object-cover rounded-md"
+                              src={imageDataUrl}
+                            />
+                          </div>
+                        ))}
                       </div>
                     )}
 
                     <Divider className="my-6" />
                   </div>
 
-                  <Button
-                    color="primary"
-                    type="submit"
-                    className="w-full rounded"
-                    disabled={updateBrandPending}>
+                  <Button color="primary" type="submit" className="w-full rounded" disabled={updateBrandPending}>
                     {updateBrandPending ? "Updating..." : "Update Brand"}
                   </Button>
                 </form>
@@ -397,42 +387,25 @@ const EditBrandModal = ({
   );
 };
 
-const DeleteBrandModal = ({
-  isOpen,
-  onOpenChange,
-  handleDeleteBrand,
-  deleteBrandPending,
-}: any) => {
+const DeleteBrandModal = ({ isOpen, onOpenChange, handleDeleteBrand, deleteBrandPending }: any) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Confirm Delete
-            </ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Confirm Delete</ModalHeader>
 
             <ModalBody>
               <p className="text-sm text-red-500">
-                ⚠️ Are you sure you want to delete this Brand? This action
-                cannot be undone.
+                ⚠️ Are you sure you want to delete this Brand? This action cannot be undone.
               </p>
             </ModalBody>
 
             <ModalFooter className="flex justify-end gap-2">
-              <Button
-                variant="bordered"
-                className="rounded"
-                onPress={onOpenChange}>
+              <Button variant="bordered" className="rounded" onPress={onOpenChange}>
                 Cancel
               </Button>
-              <Button
-                color="danger"
-                onPress={handleDeleteBrand}
-                disabled={deleteBrandPending}
-                className="rounded">
+              <Button color="danger" onPress={handleDeleteBrand} disabled={deleteBrandPending} className="rounded">
                 {deleteBrandPending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
