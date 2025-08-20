@@ -231,3 +231,18 @@ export interface IFleetNews {
   updatedAt?: string;
   __v?: number;
 }
+
+export interface IDeal {
+  _id: string;
+  title: string;
+  description: string;
+  image?: string;
+  discountPercentage: number;
+  applicableProducts: string[];
+  brand: IBrand;
+  validFrom: string;
+  validTo: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+}
