@@ -56,7 +56,7 @@ export const getBlogs = async (params: any) => {
 
 export const getSingleBlog = async (blogId: any) => {
   try {
-    const { data } = await axiosInstance.get(`/blogs${blogId}`);
+    const { data } = await axiosInstance.get(`/blogs/${blogId}`);
 
     return data;
   } catch (error: any) {
