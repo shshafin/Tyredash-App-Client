@@ -38,11 +38,9 @@ export const getDiscountedProductsByBrand = async (brandId: string) => {
 // Apply deal to a tire
 export const applyDealToTire = async (tireId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(
-      `/deals/apply-deal-to-tire/${tireId}`,
-      dealData,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const { data } = await axiosInstance.post(`/deals/apply-deal-to-tire/${tireId}`, dealData, {
+      headers: { "Content-Type": "application/json" },
+    });
     return data;
   } catch (error) {
     console.error(error);
@@ -53,11 +51,9 @@ export const applyDealToTire = async (tireId: string, dealData: any) => {
 // Apply deal to a wheel
 export const applyDealToWheel = async (wheelId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(
-      `/deals/apply-deal-to-wheel/${wheelId}`,
-      dealData,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const { data } = await axiosInstance.post(`/deals/apply-deal-to-wheel/${wheelId}`, dealData, {
+      headers: { "Content-Type": "application/json" },
+    });
     return data;
   } catch (error) {
     console.error(error);
@@ -68,11 +64,9 @@ export const applyDealToWheel = async (wheelId: string, dealData: any) => {
 // Apply deal to a product
 export const applyDealToProduct = async (productId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(
-      `/deals/apply-deal-to-product/${productId}`,
-      dealData,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const { data } = await axiosInstance.post(`/deals/apply-deal-to-product/${productId}`, dealData, {
+      headers: { "Content-Type": "application/json" },
+    });
     return data;
   } catch (error) {
     console.error(error);
@@ -84,7 +78,7 @@ export const applyDealToProduct = async (productId: string, dealData: any) => {
 export const createDeal = async (dealData: any) => {
   try {
     const { data } = await axiosInstance.post("/deals/create", dealData, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     return data;
@@ -113,5 +107,29 @@ export const getSingleDeal = async (id: string) => {
   } catch (error) {
     console.error(error);
     throw new Error("Failed to fetch single deal.");
+  }
+};
+
+// Update a deal
+export const updateDeal = async (id: string, dealData: any) => {
+  try {
+    const { data } = await axiosInstance.put(`/deals/${id}`, dealData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to update deal.");
+  }
+};
+
+// Delete a deal
+export const deleteDeal = async (id: string) => {
+  try {
+    const { data } = await axiosInstance.delete(`/deals/${id}`);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to delete deal.");
   }
 };
