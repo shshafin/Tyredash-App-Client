@@ -274,6 +274,16 @@ export const adminLinks: IAdminLinks[] = [
     ],
   },
   {
+    label: "Fleet Support",
+    links: [
+      {
+        href: "/admin/fleet-support",
+        label: "Support Requests",
+        icon: React.createElement(List, { className: "w-5 h-5" }),
+      },
+    ],
+  },
+  {
     label: "Fleet News",
     links: [
       {

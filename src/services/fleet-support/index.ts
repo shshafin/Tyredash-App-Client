@@ -18,7 +18,7 @@ export const getAllSupportRequests = async () => {
 
 export const assignFleetRef = async (formdata: any, id: string) => {
   try {
-    const { data } = await axiosInstance.post(`/fleet-appointments/fleet-ref/${id}`, formdata, {
+    const { data } = await axiosInstance.patch(`/fleet-appointments/fleet-ref/${id}`, formdata, {
       headers: {
         "Content-Type": "application/json",
       },
