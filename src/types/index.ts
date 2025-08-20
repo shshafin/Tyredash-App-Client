@@ -246,3 +246,14 @@ export interface IDeal {
   updatedAt?: string;
   __v?: number;
 }
+
+export interface IBlog {
+  _id: string;
+  title: string;
+  description: string;
+  image?: string;
+  category: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+}
