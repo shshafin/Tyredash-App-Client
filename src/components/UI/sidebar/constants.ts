@@ -244,6 +244,21 @@ export const adminLinks: IAdminLinks[] = [
     ],
   },
   {
+    label: "Deals Management",
+    links: [
+      {
+        href: "/admin/deals",
+        label: "All Deals",
+        icon: React.createElement(List, { className: "w-5 h-5" }),
+      },
+      {
+        href: "/admin/deals/create",
+        label: "Create Deal",
+        icon: React.createElement(PlusCircle, { className: "w-5 h-5" }),
+      },
+    ],
+  },
+  {
     label: "Blogs",
     links: [
       {
