@@ -10,6 +10,8 @@ import {
   getDiscountedProductsByBrand,
   getAllDeals,
   getSingleDeal,
+  updateDeal,
+  deleteDeal,
 } from "@/src/services/Deals";
 
 // Get discounted Tires by Brand
@@ -22,7 +24,7 @@ export const useGetDiscountedTiresByBrand = (brandId: string) => {
 
 // Get discounted Wheels by Brand
 export const useGetDiscountedWheelsByBrand = (brandId: string) => {
-  return useQuery({ 
+  return useQuery({
     queryKey: ["GET_DISCOUNTED_WHEELS_BY_BRAND", brandId],
     queryFn: async () => await getDiscountedWheelsByBrand(brandId),
   });
@@ -30,7 +32,7 @@ export const useGetDiscountedWheelsByBrand = (brandId: string) => {
 
 // Get discounted Products by Brand
 export const useGetDiscountedProductsByBrand = (brandId: string) => {
-  return useQuery({ 
+  return useQuery({
     queryKey: ["GET_DISCOUNTED_PRODUCTS_BY_BRAND", brandId],
     queryFn: async () => await getDiscountedProductsByBrand(brandId),
   });
@@ -78,7 +80,7 @@ export const useCreateDeal = ({ onSuccess }: any) => {
 
 // Get discounted Products by Brand
 export const useGetAllDeals = () => {
-  return useQuery({ 
+  return useQuery({
     queryKey: ["GET_ALL_DEALS"],
     queryFn: async () => await getAllDeals(),
   });
@@ -89,5 +91,25 @@ export const useGetSingleDeal = (id: string) => {
   return useQuery({
     queryKey: ["GET_SINGLE_DEAL", id],
     queryFn: async () => await getSingleDeal(id),
+  });
+};
+
+// Update a deal
+export const useUpdateDeal = ({ onSuccess, id }: any) => {
+  return useMutation<any, Error, any>({
+    mutationKey: ["UPDATE_DEAL"],
+    mutationFn: async (dealData) => await updateDeal(id, dealData),
+    onError: (error) => toast.error(error?.message),
+    onSuccess,
+  });
+};
+
+// Delete a deal
+export const useDeleteDeal = ({ onSuccess, id }: any) => {
+  return useMutation<any, Error, any>({
+    mutationKey: ["DELETE_DEAL"],
+    mutationFn: async () => await deleteDeal(id),
+    onError: (error) => toast.error(error?.message),
+    onSuccess,
   });
 };
