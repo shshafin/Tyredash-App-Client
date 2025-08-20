@@ -44,12 +44,14 @@ export default function FleetSupportTable() {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     return filtered.slice(start, end);
-  }, [filtered, page]);
+  }, [filtered, page, rowsPerPage]);
 
   // If filtered changes and current page is out of range, reset to 1
   useEffect(() => {
-    if (page > pages) setPage(1);
-  }, [filtered, pages]);
+    if (page > pages && pages > 0) {
+      setPage(1);
+    }
+  }, [page, pages]);
 
   // Reset to first page when rows per page changes
   useEffect(() => {
@@ -168,11 +170,11 @@ export default function FleetSupportTable() {
             </Table>
 
             {/* Pagination controls */}
-            {
+            {pages > 1 && (
               <div className="flex justify-center items-center mt-4 gap-2">
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => setPage(Math.max(1, page - 1))}
                     disabled={page === 1}
                     className={`py-2 px-2 border rounded-lg text-sm font-medium shadow-sm ${
                       page === 1
@@ -203,9 +205,12 @@ export default function FleetSupportTable() {
                       pageNumber = page - 2 + i;
                     }
 
+                    // Ensure pageNumber is within valid range
+                    pageNumber = Math.max(1, Math.min(pages, pageNumber));
+
                     return (
                       <button
-                        key={pageNumber}
+                        key={i}
                         onClick={() => setPage(pageNumber)}
                         className={`h-8 w-8 flex items-center justify-center rounded-lg text-sm font-medium shadow-sm ${
                           page === pageNumber
@@ -221,7 +226,7 @@ export default function FleetSupportTable() {
                   {pages > 5 && page < pages - 2 && <span className="mx-1 text-gray-500 dark:text-gray-400">...</span>}
 
                   <button
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => setPage(Math.min(pages, page + 1))}
                     disabled={page === pages}
                     className={`py-2 px-2 border rounded-lg text-sm font-medium shadow-sm ${
                       page === pages
@@ -242,11 +247,11 @@ export default function FleetSupportTable() {
                 </div>
 
                 <div className="ml-4 text-sm text-gray-600 dark:text-gray-400">
-                  Showing {(page - 1) * rowsPerPage + 1} to {Math.min(page * rowsPerPage, filtered.length)} of{" "}
-                  {filtered.length} entries
+                  Showing {Math.min((page - 1) * rowsPerPage + 1, filtered.length)} to{" "}
+                  {Math.min(page * rowsPerPage, filtered.length)} of {filtered.length} entries
                 </div>
               </div>
-            }
+            )}
           </>
         )}
       </div>
