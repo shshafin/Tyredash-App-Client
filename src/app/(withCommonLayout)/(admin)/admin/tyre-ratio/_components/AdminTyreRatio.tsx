@@ -13,7 +13,7 @@ import {
   useGetTireRatios,
   useUpdateTireRatio,
 } from "@/src/hooks/tireRatio.hook";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { DataEmpty, DataError, DataLoading } from "../../_components/DataFetchingStates";
 import TireRatioTable from "./TyreRatioTable";
 import { Input } from "@heroui/input";
@@ -75,6 +75,26 @@ export default function AdminTyreRatio() {
   const { data: tyreRatios, isLoading, isError, refetch } = useGetTireRatios({}); // Get existing tyre ratios
   console.log(tyreRatios);
 
+  // Client-side pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const totalItems = tyreRatios?.data?.length ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+    if (currentPage < 1) setCurrentPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPages]);
+
+  const paginatedRatios = useMemo(() => {
+    if (!tyreRatios?.data) return tyreRatios;
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return { ...tyreRatios, data: tyreRatios.data.slice(start, end) };
+  }, [tyreRatios, currentPage, pageSize]);
+
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const formData = new FormData();
@@ -111,12 +131,62 @@ export default function AdminTyreRatio() {
       {tyreRatios?.data?.length === 0 && <DataEmpty />}
 
       {!isLoading && tyreRatios?.data?.length > 0 && (
-        <TireRatioTable
-          tyreRatios={tyreRatios}
-          setSelectedYear={setSelectedTireRatio}
-          onEditOpen={onEditOpen}
-          onDeleteOpen={onDeleteOpen}
-        />
+        <>
+          <TireRatioTable
+            tyreRatios={paginatedRatios}
+            setSelectedYear={setSelectedTireRatio}
+            onEditOpen={onEditOpen}
+            onDeleteOpen={onDeleteOpen}
+          />
+
+          {/* Pagination controls */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              Showing {Math.min(totalItems, (currentPage - 1) * pageSize + 1)} -{" "}
+              {Math.min(totalItems, currentPage * pageSize)} of {totalItems}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+              </select>
+
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </Button>
+
+                <div className="px-3 text-sm">
+                  {currentPage} / {totalPages}
+                </div>
+
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Modal for adding a new Tire Ratio */}
