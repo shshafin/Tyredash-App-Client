@@ -1,21 +1,10 @@
 "use client";
 
 import { useDeleteTire, useGetTires } from "@/src/hooks/tire.hook";
-import React, { useState, useRef } from "react";
-import {
-  DataEmpty,
-  DataError,
-  DataLoading,
-} from "../_components/DataFetchingStates";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { DataEmpty, DataError, DataLoading } from "../_components/DataFetchingStates";
 import TiresTable from "./_components/TireTable";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@heroui/modal";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
 import { ITire } from "@/src/types";
 import Link from "next/link";
 import { Button } from "@heroui/button";
@@ -23,15 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Card, CardBody } from "@heroui/card";
 import { Progress } from "@heroui/progress";
-import {
-  Upload,
-  FileText,
-  Download,
-  CheckCircle,
-  X,
-  Info,
-  FileSpreadsheet,
-} from "lucide-react";
+import { Upload, FileText, Download, CheckCircle, X, Info, FileSpreadsheet } from "lucide-react";
 import { useImportCSVTires } from "@/src/hooks/tire.hook";
 
 const Page = () => {
@@ -51,36 +32,56 @@ const Page = () => {
     onClose: onDeleteClose,
   } = useDisclosure();
 
-  const { mutate: handleDeleteTire, isPending: deleteTirePending } =
-    useDeleteTire({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["GET_TIRES"] });
-        toast.success("Tire deleted successfully");
-        setSelectedTire(null);
-        onDeleteClose();
-      },
-      id: selectedTire?._id,
-    }); // Tire deletion handler
+  const { mutate: handleDeleteTire, isPending: deleteTirePending } = useDeleteTire({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GET_TIRES"] });
+      toast.success("Tire deleted successfully");
+      setSelectedTire(null);
+      onDeleteClose();
+    },
+    id: selectedTire?._id,
+  }); // Tire deletion handler
 
   const { data: Tires, isLoading, isError } = useGetTires({});
+
+  // Client-side pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const totalItems = Tires?.data?.length ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  // Keep current page in range when data or page size changes
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+    if (currentPage < 1) setCurrentPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalPages]);
+
+  const paginatedTires = useMemo(() => {
+    if (!Tires?.data) return Tires;
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    return { ...Tires, data: Tires.data.slice(start, end) };
+  }, [Tires, currentPage, pageSize]);
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
-          Tires
-        </h1>
+        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">Tires</h1>
         <div className="flex items-center gap-3">
           <Button
             color="primary"
             className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-            onPress={onOpen}>
+            onPress={onOpen}
+          >
             <Upload className="h-4 w-4" /> Upload
           </Button>
           <Link href="/admin/tire/create">
             <Button
               color="primary"
-              className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
+              className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+            >
               + Add Tire
             </Button>
           </Link>
@@ -91,12 +92,62 @@ const Page = () => {
       {Tires?.data?.length === 0 && <DataEmpty />}
 
       {!isLoading && Tires?.data?.length > 0 && (
-        <TiresTable
-          tires={Tires}
-          onDeleteOpen={onDeleteOpen}
-          onEditOpen={onEditOpen}
-          setSelectedTire={setSelectedTire}
-        />
+        <>
+          <TiresTable
+            tires={paginatedTires}
+            onDeleteOpen={onDeleteOpen}
+            onEditOpen={onEditOpen}
+            setSelectedTire={setSelectedTire}
+          />
+
+          {/* Pagination controls */}
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              Showing {Math.min(totalItems, (currentPage - 1) * pageSize + 1)} -{" "}
+              {Math.min(totalItems, currentPage * pageSize)} of {totalItems}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+              </select>
+
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </Button>
+
+                <div className="px-3 text-sm">
+                  {currentPage} / {totalPages}
+                </div>
+
+                <Button
+                  variant="bordered"
+                  size="sm"
+                  onPress={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Modal for deleting a Tire */}
@@ -107,52 +158,32 @@ const Page = () => {
         deleteTirePending={deleteTirePending}
       />
       {/* Modal for uploading tires with csv */}
-      <ImportCSVTiresModal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-      />
+      <ImportCSVTiresModal isOpen={isOpen} onOpenChange={onOpenChange} />
     </div>
   );
 };
 
 export default Page;
 
-const DeleteTireModal = ({
-  isOpen,
-  onOpenChange,
-  handleDeleteTire,
-  deleteTirePending,
-}: any) => {
+const DeleteTireModal = ({ isOpen, onOpenChange, handleDeleteTire, deleteTirePending }: any) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Confirm Delete
-            </ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Confirm Delete</ModalHeader>
 
             <ModalBody>
               <p className="text-sm text-red-500">
-                ⚠️ Are you sure you want to delete this Tire? This action cannot
-                be undone.
+                ⚠️ Are you sure you want to delete this Tire? This action cannot be undone.
               </p>
             </ModalBody>
 
             <ModalFooter className="flex justify-end gap-2">
-              <Button
-                variant="bordered"
-                className="rounded"
-                onPress={onOpenChange}>
+              <Button variant="bordered" className="rounded" onPress={onOpenChange}>
                 Cancel
               </Button>
-              <Button
-                color="danger"
-                onPress={handleDeleteTire}
-                disabled={deleteTirePending}
-                className="rounded">
+              <Button color="danger" onPress={handleDeleteTire} disabled={deleteTirePending} className="rounded">
                 {deleteTirePending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>
@@ -168,10 +199,7 @@ interface ImportCSVTiresModalProps {
   onOpenChange: () => void;
 }
 
-const ImportCSVTiresModal = ({
-  isOpen,
-  onOpenChange,
-}: ImportCSVTiresModalProps) => {
+const ImportCSVTiresModal = ({ isOpen, onOpenChange }: ImportCSVTiresModalProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -279,16 +307,11 @@ const ImportCSVTiresModal = ({
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return (
-      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-    );
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      size="2xl">
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
       <ModalContent>
         {() => (
           <>
@@ -297,9 +320,7 @@ const ImportCSVTiresModal = ({
                 <FileSpreadsheet className="h-6 w-6 text-primary" />
                 <span>Import Tires from CSV</span>
               </div>
-              <p className="text-sm text-gray-500 font-normal">
-                Upload a CSV file to import multiple tires at once
-              </p>
+              <p className="text-sm text-gray-500 font-normal">Upload a CSV file to import multiple tires at once</p>
             </ModalHeader>
             <ModalBody className="mb-5">
               <div className="space-y-6">
@@ -336,14 +357,9 @@ const ImportCSVTiresModal = ({
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
-                  onDrop={handleDrop}>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                  onDrop={handleDrop}
+                >
+                  <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileChange} className="hidden" />
 
                   {selectedFile ? (
                     <div className="space-y-4">
@@ -351,26 +367,21 @@ const ImportCSVTiresModal = ({
                         <CheckCircle className="h-12 w-12 text-green-500" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-green-700">
-                          File Selected
-                        </h3>
+                        <h3 className="font-medium text-green-700">File Selected</h3>
                         <div className="mt-2 space-y-1">
                           <div className="flex items-center justify-center gap-2">
                             <FileText className="h-4 w-4 text-gray-500" />
-                            <span className="text-sm font-medium">
-                              {selectedFile.name}
-                            </span>
+                            <span className="text-sm font-medium">{selectedFile.name}</span>
                           </div>
-                          <p className="text-sm text-gray-500">
-                            {formatFileSize(selectedFile.size)}
-                          </p>
+                          <p className="text-sm text-gray-500">{formatFileSize(selectedFile.size)}</p>
                         </div>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
                         onPress={removeFile}
-                        className="gap-2 text-red-500 hover:text-red-600">
+                        className="gap-2 text-red-500 hover:text-red-600"
+                      >
                         <X className="h-4 w-4" />
                         Remove File
                       </Button>
@@ -386,13 +397,12 @@ const ImportCSVTiresModal = ({
                           <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="text-primary hover:text-primary/80 underline">
+                            className="text-primary hover:text-primary/80 underline"
+                          >
                             browse
                           </button>
                         </h3>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Supports CSV files up to 10MB
-                        </p>
+                        <p className="text-sm text-gray-500 mt-1">Supports CSV files up to 10MB</p>
                       </div>
                     </div>
                   )}
@@ -403,14 +413,9 @@ const ImportCSVTiresModal = ({
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Uploading...</span>
-                      <span className="text-sm text-gray-500">
-                        {uploadProgress}%
-                      </span>
+                      <span className="text-sm text-gray-500">{uploadProgress}%</span>
                     </div>
-                    <Progress
-                      value={uploadProgress}
-                      className="w-full"
-                    />
+                    <Progress value={uploadProgress} className="w-full" />
                   </div>
                 )}
 
@@ -420,19 +425,12 @@ const ImportCSVTiresModal = ({
                     <div className="flex items-start gap-3">
                       <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                       <div className="space-y-2">
-                        <h4 className="font-medium text-gray-700">
-                          Important Notes:
-                        </h4>
+                        <h4 className="font-medium text-gray-700">Important Notes:</h4>
                         <ul className="text-sm text-gray-600 space-y-1">
-                          <li>
-                            • Make sure your CSV follows the template format
-                            exactly
-                          </li>
+                          <li>• Make sure your CSV follows the template format exactly</li>
                           <li>• All required fields must be filled</li>
                           <li>• Duplicate entries will be skipped</li>
-                          <li>
-                            • Invalid data rows will be reported after upload
-                          </li>
+                          <li>• Invalid data rows will be reported after upload</li>
                           <li>• Maximum file size: 10MB</li>
                         </ul>
                       </div>
@@ -442,18 +440,15 @@ const ImportCSVTiresModal = ({
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button
-                    variant="bordered"
-                    onPress={onOpenChange}
-                    className="flex-1"
-                    disabled={isImporting}>
+                  <Button variant="bordered" onPress={onOpenChange} className="flex-1" disabled={isImporting}>
                     Cancel
                   </Button>
                   <Button
                     color="primary"
                     onPress={handleUpload}
                     className="flex-1 gap-2"
-                    disabled={!selectedFile || isImporting}>
+                    disabled={!selectedFile || isImporting}
+                  >
                     {isImporting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
