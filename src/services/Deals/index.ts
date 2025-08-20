@@ -113,7 +113,7 @@ export const getSingleDeal = async (id: string) => {
 // Update a deal
 export const updateDeal = async (id: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.put(`/deals/${id}`, dealData, {
+    const { data } = await axiosInstance.patch(`/deals/${id}`, dealData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return data;

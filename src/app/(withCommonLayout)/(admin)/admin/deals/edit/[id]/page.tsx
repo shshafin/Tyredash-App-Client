@@ -21,10 +21,10 @@ export default function EditDealPage() {
   const router = useRouter();
   const params = useParams();
   const dealId = params.id as string;
-  
+
   const methods = useForm();
   const { handleSubmit, reset } = methods;
-  
+
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
@@ -50,29 +50,37 @@ export default function EditDealPage() {
         discountPercentage: deal.data.discountPercentage,
         brand: deal.data.brand._id,
         applicableProducts: deal.data.applicableProducts,
-        validFrom: new Date(deal.data.validFrom).toISOString().split('T')[0],
-        validTo: new Date(deal.data.validTo).toISOString().split('T')[0],
+        validFrom: new Date(deal.data.validFrom).toISOString().split("T")[0],
+        validTo: new Date(deal.data.validTo).toISOString().split("T")[0],
       });
     }
   }, [deal, reset]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const formData = new FormData();
-    
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("discountPercentage", data.discountPercentage);
-    formData.append("brand", data.brand);
-    formData.append("validFrom", data.validFrom);
-    formData.append("validTo", data.validTo);
-    
-    if (data.applicableProducts) {
-      formData.append("applicableProducts", JSON.stringify(data.applicableProducts));
-    }
 
-    imageFiles.forEach((image) => {
-      formData.append("file", image);
-    });
+    // applicable products will be an array of strings
+    const reformApplicableProducts = Array.isArray(data.applicableProducts)
+      ? data.applicableProducts
+      : data.applicableProducts.split(",").map((item: string) => item.trim());
+
+    formData.append(
+      "data",
+      JSON.stringify({
+        title: data.title,
+        description: data.description,
+        discountPercentage: data.discountPercentage,
+        brand: data.brand,
+        validFrom: data.validFrom,
+        validTo: data.validTo,
+        applicableProducts: reformApplicableProducts,
+      })
+    );
+
+    // Only append file if a new image is selected
+    if (imageFiles.length > 0) {
+      formData.append("file", imageFiles[0]);
+    }
 
     handleUpdateDeal(formData);
   };
@@ -104,11 +112,7 @@ export default function EditDealPage() {
         <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
           Edit Deal: {deal.data.title}
         </h1>
-        <Button
-          color="default"
-          variant="bordered"
-          onPress={() => router.back()}
-        >
+        <Button color="default" variant="bordered" onPress={() => router.back()}>
           ← Back
         </Button>
       </div>
@@ -117,38 +121,21 @@ export default function EditDealPage() {
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FXInput 
-                label="Deal Title" 
-                name="title" 
-                required
-              />
-              <FXInput 
-                label="Description" 
-                name="description" 
-                required
-              />
-              <FXInput 
-                label="Discount Percentage" 
-                name="discountPercentage" 
-                type="number"
-                required
-              />
-              
-              <Select 
-                label="Brand" 
+              <FXInput label="Deal Title" name="title" required />
+              <FXInput label="Description" name="description" required />
+              <FXInput label="Discount Percentage" name="discountPercentage" type="number" required />
+
+              <Select
+                label="Brand"
                 isRequired
                 defaultSelectedKeys={[deal.data.brand._id]}
                 {...methods.register("brand", { required: "Brand is required" })}
               >
-                {brands?.data?.map((brand: any) => (
-                  <SelectItem key={brand._id}>
-                    {brand.name}
-                  </SelectItem>
-                ))}
+                {brands?.data?.map((brand: any) => <SelectItem key={brand._id}>{brand.name}</SelectItem>)}
               </Select>
 
-              <Select 
-                label="Applicable Products" 
+              <Select
+                label="Applicable Products"
                 selectionMode="multiple"
                 isRequired
                 defaultSelectedKeys={deal.data.applicableProducts}
@@ -156,21 +143,12 @@ export default function EditDealPage() {
               >
                 <SelectItem key="tire">Tires</SelectItem>
                 <SelectItem key="wheel">Wheels</SelectItem>
+                <SelectItem key="product">Products</SelectItem>
               </Select>
 
               <div className="md:col-span-2 grid grid-cols-2 gap-4">
-                <FXInput 
-                  label="Valid From" 
-                  name="validFrom"
-                  type="date"
-                  required
-                />
-                <FXInput 
-                  label="Valid To" 
-                  name="validTo"
-                  type="date"
-                  required
-                />
+                <FXInput label="Valid From" name="validFrom" type="date" required />
+                <FXInput label="Valid To" name="validTo" type="date" required />
               </div>
             </div>
 
@@ -198,51 +176,33 @@ export default function EditDealPage() {
                 <span className="text-md font-medium">Upload New Image (Optional)</span>
                 <UploadCloud className="size-6" />
               </label>
-              <input 
-                className="hidden" 
-                id="image" 
-                type="file" 
-                onChange={handleImageChange} 
-                accept="image/*" 
-              />
+              <input className="hidden" id="image" type="file" onChange={handleImageChange} accept="image/*" />
             </div>
 
             {imagePreviews.length > 0 && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium">New Image Preview:</label>
-                <div className="flex gap-5 flex-wrap">
-                  {imagePreviews.map((imageDataUrl: string, index: number) => (
-                    <div
-                      key={index}
-                      className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                    >
-                      <img
-                        alt={`Preview ${index}`}
-                        className="h-full w-full object-cover rounded-md"
-                        src={imageDataUrl}
-                      />
-                    </div>
-                  ))}
-                </div>
+              <div className="flex gap-5 my-5 flex-wrap">
+                {imagePreviews.map((imageDataUrl: string, index: number) => (
+                  <div
+                    key={index}
+                    className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
+                  >
+                    <img
+                      alt={`Preview ${index}`}
+                      className="h-full w-full object-cover rounded-md"
+                      src={imageDataUrl}
+                    />
+                  </div>
+                ))}
               </div>
             )}
 
             <Divider className="my-6" />
-            
+
             <div className="flex gap-4 justify-end">
-              <Button
-                color="default"
-                variant="bordered"
-                onPress={() => router.back()}
-              >
+              <Button color="default" variant="bordered" onPress={() => router.back()}>
                 Cancel
               </Button>
-              <Button 
-                color="primary" 
-                type="submit" 
-                disabled={updateDealPending}
-                className="px-8"
-              >
+              <Button color="primary" type="submit" disabled={updateDealPending} className="px-8">
                 {updateDealPending ? "Updating..." : "Update Deal"}
               </Button>
             </div>
