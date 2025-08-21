@@ -8,9 +8,12 @@ export const useAssignFleetRef = ({ onSuccess }: any = {}) => {
     // accept { id, payload } at mutate-time to avoid recreating the hook
     mutationFn: async ({ id, payload }) => await assignFleetRef(payload, id),
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message || "Failed to assign fleet reference");
     },
-    onSuccess,
+    onSuccess: (data) => {
+      toast.success("Fleet reference assigned successfully!");
+      if (onSuccess) onSuccess(data);
+    },
   });
 };
 

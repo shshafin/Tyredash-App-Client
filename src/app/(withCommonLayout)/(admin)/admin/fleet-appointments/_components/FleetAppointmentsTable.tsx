@@ -1,23 +1,24 @@
 "use client";
-import React, { useState, useMemo, useCallback } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
-import { Chip } from "@heroui/chip";
-import { Tooltip } from "@heroui/tooltip";
 import { Button } from "@heroui/button";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
-import { Input } from "@heroui/input";
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
 import { Divider } from "@heroui/divider";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
+import { Input } from "@heroui/input";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
 import { Spinner } from "@heroui/spinner";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
+import { Tooltip } from "@heroui/tooltip";
+import React, { useCallback, useMemo, useState } from "react";
 // Note: Pagination might not be available in your HeroUI version, using simple pagination instead
 import {
-  useGetAllFleetAppointments,
   useDeleteFleetAppointment,
+  useGetAllFleetAppointments,
   useUpdateAppointmentStatus,
+  useUpdateFleetRef,
 } from "@/src/hooks/fleetAppointments.hook";
-import { DeleteIcon, EyeIcon } from "@/src/icons";
-import { toast } from "sonner";
+import { DeleteIcon, EditIcon, EyeIcon } from "@/src/icons";
+import { type FleetRefFormData } from "@/src/schemas/fleetRef.schema";
 
 // Types for better type safety
 interface FleetVehicle {
@@ -64,14 +65,6 @@ const statusColorMap = {
   Cancelled: "danger",
 } as const;
 
-const statusOptions = [
-  { key: "Pending", label: "Pending" },
-  { key: "Confirmed", label: "Confirmed" },
-  { key: "In Progress", label: "In Progress" },
-  { key: "Completed", label: "Completed" },
-  { key: "Cancelled", label: "Cancelled" },
-];
-
 const columns = [
   { name: "VEHICLE", uid: "vehicle" },
   { name: "SERVICE TYPE", uid: "serviceType" },
@@ -90,9 +83,18 @@ export default function FleetAppointmentsTable() {
   // Modal states
   const { isOpen: isDetailsOpen, onOpen: onDetailsOpen, onClose: onDetailsClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isFleetRefOpen, onOpen: onFleetRefOpen, onClose: onFleetRefClose } = useDisclosure();
 
   const [selectedAppointment, setSelectedAppointment] = useState<FleetAppointment | null>(null);
   const [appointmentToDelete, setAppointmentToDelete] = useState<string | null>(null);
+
+  // Fleet reference form state
+  const [fleetRefForm, setFleetRefForm] = useState<FleetRefFormData>({
+    phone: "",
+    email: "",
+    note: "",
+  });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Mutations
   const deleteAppointmentMutation = useDeleteFleetAppointment({
@@ -108,8 +110,38 @@ export default function FleetAppointmentsTable() {
     onSuccess: () => {
       refetch();
     },
+  });
+
+  const updateFleetRefMutation = useUpdateFleetRef({
+    onSuccess: () => {
+      refetch();
+      onFleetRefClose();
+      setFleetRefForm({ phone: "", email: "", note: "" });
+    },
     id: selectedAppointment?._id,
   });
+
+  // Helper functions
+  const handleEditFleetRef = useCallback(
+    (appointment: FleetAppointment) => {
+      setSelectedAppointment(appointment);
+      setFleetRefForm({
+        phone: appointment.fleetRef?.phone || "",
+        email: appointment.fleetRef?.email || "",
+        note: appointment.fleetRef?.note || "",
+      });
+      onFleetRefOpen();
+    },
+    [onFleetRefOpen]
+  );
+
+  const handleFleetRefSubmit = useCallback(() => {
+    if (selectedAppointment) {
+      updateFleetRefMutation.mutate({
+        fleetRef: fleetRefForm,
+      });
+    }
+  }, [selectedAppointment, fleetRefForm, updateFleetRefMutation]);
 
   // Filter and pagination logic
   const filteredAppointments = useMemo(() => {
@@ -164,7 +196,10 @@ export default function FleetAppointmentsTable() {
 
   const handleStatusChange = useCallback(
     (appointmentId: string, newStatus: string) => {
-      updateStatusMutation.mutate({ status: newStatus });
+      updateStatusMutation.mutate({
+        id: appointmentId,
+        status: newStatus,
+      });
     },
     [updateStatusMutation]
   );
@@ -210,12 +245,16 @@ export default function FleetAppointmentsTable() {
                   size="sm"
                   variant="flat"
                 >
-                  {appointment.status}
+                  <div className="flex gap-2">
+                    <p>{appointment.status}</p> <EditIcon />
+                  </div>
                 </Chip>
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Status actions"
-                onAction={(key: React.Key) => handleStatusChange(appointment._id, key as string)}
+                onAction={(key: React.Key) => {
+                  handleStatusChange(appointment._id, key as string);
+                }}
               >
                 <DropdownItem key="Pending">Pending</DropdownItem>
                 <DropdownItem key="Confirmed">Confirmed</DropdownItem>
@@ -246,6 +285,17 @@ export default function FleetAppointmentsTable() {
                   <EyeIcon />
                 </Button>
               </Tooltip>
+              <Tooltip content="Assign a Fleet Ref">
+                <Button
+                  isIconOnly
+                  size="sm"
+                  variant="light"
+                  color="primary"
+                  onPress={() => handleEditFleetRef(appointment)}
+                >
+                  <EditIcon />
+                </Button>
+              </Tooltip>
               <Tooltip color="danger" content="Delete appointment">
                 <Button
                   isIconOnly
@@ -263,7 +313,7 @@ export default function FleetAppointmentsTable() {
           return null;
       }
     },
-    [handleViewDetails, handleDeleteClick, handleStatusChange]
+    [handleViewDetails, handleDeleteClick, handleStatusChange, handleEditFleetRef]
   );
 
   if (isLoading) {
@@ -481,6 +531,60 @@ export default function FleetAppointmentsTable() {
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onDetailsClose}>
               Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Fleet Reference Edit Modal */}
+      <Modal isOpen={isFleetRefOpen} onClose={onFleetRefClose} size="lg">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Assign a Fleet Ref</ModalHeader>
+          <ModalBody>
+            <div className="space-y-4">
+              <Input
+                label="Phone"
+                placeholder="Enter phone number"
+                value={fleetRefForm.phone}
+                onValueChange={(value) => setFleetRefForm((prev) => ({ ...prev, phone: value }))}
+              />
+              <Input
+                label="Email"
+                type="email"
+                placeholder="Enter email address"
+                value={fleetRefForm.email}
+                onValueChange={(value) => setFleetRefForm((prev) => ({ ...prev, email: value }))}
+                isInvalid={fleetRefForm.email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fleetRefForm.email ?? "")}
+                errorMessage={
+                  fleetRefForm.email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fleetRefForm.email ?? "")
+                    ? "Please enter a valid email address"
+                    : ""
+                }
+              />
+              <Input
+                label="Note"
+                placeholder="Enter additional notes (max 200 characters)"
+                value={fleetRefForm.note}
+                onValueChange={(value) => setFleetRefForm((prev) => ({ ...prev, note: value }))}
+                maxLength={200}
+                description={`${(fleetRefForm.note ?? "").length}/200 characters`}
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onFleetRefClose}>
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onPress={handleFleetRefSubmit}
+              isLoading={updateFleetRefMutation.isPending}
+              isDisabled={
+                (fleetRefForm.email !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fleetRefForm.email ?? "")) ||
+                (fleetRefForm.note ?? "").length > 200
+              }
+            >
+              Update Contact
             </Button>
           </ModalFooter>
         </ModalContent>
