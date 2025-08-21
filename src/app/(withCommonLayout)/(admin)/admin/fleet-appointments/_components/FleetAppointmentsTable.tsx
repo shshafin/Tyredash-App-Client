@@ -492,7 +492,7 @@ export default function FleetAppointmentsTable() {
                 {selectedAppointment.fleetRef && (
                   <Card>
                     <CardHeader>
-                      <h4 className="text-large font-semibold">Contact Information</h4>
+                      <h4 className="text-large font-semibold">Assigned Fleet Ref Contact Information</h4>
                     </CardHeader>
                     <Divider />
                     <CardBody className="space-y-2">
@@ -547,6 +547,7 @@ export default function FleetAppointmentsTable() {
                 placeholder="Enter phone number"
                 value={fleetRefForm.phone}
                 onValueChange={(value) => setFleetRefForm((prev) => ({ ...prev, phone: value }))}
+                isInvalid={fleetRefForm.phone !== "" && !/^\+?[1-9]\d{1,14}$/.test(fleetRefForm.phone ?? "")}
               />
               <Input
                 label="Email"
