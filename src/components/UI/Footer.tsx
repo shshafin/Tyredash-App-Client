@@ -29,39 +29,88 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Links Section */}
-        <div>
-          <h4 className="text-lg font-semibold text-white mb-3">Quick Links</h4>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <a
-                href="/"
-                className="hover:text-blue-400 transition duration-200">
-                Home
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-blue-400 transition duration-200">
-                Financing Options
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="hover:text-blue-400 transition duration-200">
-                FAQs
-              </a>
-            </li>
-            <li>
-              <a
-                href="/contact"
-                className="hover:text-blue-400 transition duration-200">
-                Contact Us
-              </a>
-            </li>
-          </ul>
+        {/* Links Sections */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Section 1: Quick Navigation */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-3">
+              Quick Navigation
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a
+                  href="/"
+                  className="hover:text-blue-400 transition duration-200">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/deals"
+                  className="hover:text-blue-400 transition duration-200">
+                  Deals
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/blogs"
+                  className="hover:text-blue-400 transition duration-200">
+                  Tips & Guide
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/appointments"
+                  className="hover:text-blue-400 transition duration-200">
+                  Appointments
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Section 2: Customer Care */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-3">
+              Customer Care
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a
+                  href="/terms"
+                  className="hover:text-blue-400 transition duration-200">
+                  Terms & Conditions
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/privacy"
+                  className="hover:text-blue-400 transition duration-200">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/refund"
+                  className="hover:text-blue-400 transition duration-200">
+                  Refund Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/faq"
+                  className="hover:text-blue-400 transition duration-200">
+                  FAQs
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/contact"
+                  className="hover:text-blue-400 transition duration-200">
+                  Contact Us
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Contact Section */}
