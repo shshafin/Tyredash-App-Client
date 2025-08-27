@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10">
+    <footer className="bg-gray-950 text-gray-300 py-10">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center md:items-start">
@@ -22,8 +22,10 @@ const Footer = () => {
         <div>
           <h4 className="text-lg font-semibold text-white mb-3">About Us</h4>
           <p className="text-sm">
-            We provide flexible financing solutions tailored to meet your needs.
-            Explore our plans and take control of your payments today.
+            At Tires Dash, we specialize in providing flexible financing
+            solutions for all your tire needs. Whether you're looking for new
+            tires or need to replace your current set, we've got you covered
+            with easy and affordable payment options.
           </p>
         </div>
 
@@ -33,33 +35,29 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li>
               <a
-                href="#"
-                className="hover:text-blue-400 transition duration-200"
-              >
+                href="/"
+                className="hover:text-blue-400 transition duration-200">
                 Home
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="hover:text-blue-400 transition duration-200"
-              >
+                className="hover:text-blue-400 transition duration-200">
                 Financing Options
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="hover:text-blue-400 transition duration-200"
-              >
+                className="hover:text-blue-400 transition duration-200">
                 FAQs
               </a>
             </li>
             <li>
               <a
-                href="#"
-                className="hover:text-blue-400 transition duration-200"
-              >
+                href="/contact"
+                className="hover:text-blue-400 transition duration-200">
                 Contact Us
               </a>
             </li>
@@ -75,24 +73,22 @@ const Footer = () => {
             <li>
               <span className="font-semibold">Email:</span>{" "}
               <a
-                href="mailto:info@company.com"
-                className="hover:text-blue-400 transition duration-200"
-              >
-                info@company.com
+                href="mailto:info@tiresdash.com"
+                className="hover:text-blue-400 transition duration-200">
+                info@tiresdash.com
               </a>
             </li>
             <li>
               <span className="font-semibold">Phone:</span>{" "}
               <a
-                href="tel:+18001234567"
-                className="hover:text-blue-400 transition duration-200"
-              >
-                +1 (800) 123-4567
+                href="tel:+15612323230"
+                className="hover:text-blue-400 transition duration-200">
+                561-232-3230
               </a>
             </li>
             <li>
-              <span className="font-semibold">Address:</span> 123 Finance
-              Street, City, Country
+              <span className="font-semibold">Address:</span> Boynton Beach, FL,
+              USA
             </li>
           </ul>
         </div>
@@ -100,11 +96,15 @@ const Footer = () => {
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm">
         <p>© 2025 Tires Dash. All rights reserved.</p>
         <p>
-          <a href="#" className="hover:text-blue-400 transition duration-200">
+          <a
+            href="#"
+            className="hover:text-blue-400 transition duration-200">
             Privacy Policy
           </a>{" "}
           |{" "}
-          <a href="#" className="hover:text-blue-400 transition duration-200">
+          <a
+            href="#"
+            className="hover:text-blue-400 transition duration-200">
             Terms of Service
           </a>
         </p>

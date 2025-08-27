@@ -107,13 +107,20 @@ export const Navbar = () => {
 
   return (
     <>
-      <HeroUINavbar maxWidth="2xl" position="sticky" height={150}>
+      <HeroUINavbar
+        maxWidth="2xl"
+        position="sticky"
+        height={150}>
         {/* Main navbar layout */}
         <div className="hidden md:flex items-center justify-between w-full px-4">
           {/* Left: Logo */}
           <div className="flex items-center justify-start">
-            <NavbarBrand as="li" className="gap-2 max-w-fit">
-              <NextLink href="/" className="flex items-center gap-1">
+            <NavbarBrand
+              as="li"
+              className="gap-2 max-w-fit">
+              <NextLink
+                href="/"
+                className="flex items-center gap-1">
                 <Logo />
               </NextLink>
             </NavbarBrand>
@@ -123,10 +130,15 @@ export const Navbar = () => {
           <div className="hidden md:flex justify-center flex-grow flex-col gap-2">
             <div className="flex justify-center items-center gap-3 md:gap-2">
               {/* Need Help Button */}
-              <button className="px-3 py-1 bg-gradient-to-r from-gray-100 to-gray-300 text-gray-700 rounded-md flex items-center space-x-2 shadow-md hover:shadow-lg transition-shadow duration-300 text-sm md:text-xs">
-                <Phone className="h-4 w-4" />
-                <span>Need Help?</span>
-              </button>
+              <NextLink
+                href="/contact"
+                className={linkStyles()}>
+                {" "}
+                <button className="px-3 py-1 bg-gradient-to-r from-gray-100 to-gray-300 text-gray-700 rounded-md flex items-center space-x-2 shadow-md hover:shadow-lg transition-shadow duration-300 text-sm md:text-xs">
+                  <Phone className="h-4 w-4" />
+                  <span>Need Help?</span>
+                </button>
+              </NextLink>
 
               <ThemeSwitch className="hidden sm:block" />
             </div>
@@ -142,21 +154,30 @@ export const Navbar = () => {
               <NavbarLogin />
               <div
                 className="flex items-center gap-2 border-x border-gray-500 px-2 cursor-pointer hover:text-primary transition-colors relative"
-                onClick={handleOpenVehicleModal}
-              >
+                onClick={handleOpenVehicleModal}>
                 <Car size={16} />
                 <span className="text-sm md:text-xs md:hidden lg:flex">
                   {latestModel || "My Vehicles"}
                 </span>
               </div>
-              <div title="Wishlist" className="flex items-center gap-2 border-r pr-2 border-gray-500">
+              <div
+                title="Wishlist"
+                className="flex items-center gap-2 border-r pr-2 border-gray-500">
                 <Link href="/wishlist">
-                  <Heart size={16} className="text-orange-600" />
+                  <Heart
+                    size={16}
+                    className="text-orange-600"
+                  />
                 </Link>
               </div>
-              <div title="Cart" className="flex items-center gap-2">
+              <div
+                title="Cart"
+                className="flex items-center gap-2">
                 <Link href="/cart">
-                  <ShoppingCart size={16} className="text-orange-600" />
+                  <ShoppingCart
+                    size={16}
+                    className="text-orange-600"
+                  />
                 </Link>
               </div>
             </div>
@@ -175,9 +196,18 @@ export const Navbar = () => {
         {/* Mobile nav */}
         <NavbarContent className="md:hidden px-4">
           <div className="w-full flex justify-between items-center">
-            <NavbarBrand as="li" className="gap-3 max-w-fit">
-              <NextLink href="/" className="flex items-center gap-1">
-                <Image src={"/logo.png"} height={80} width={80} alt="logo" />
+            <NavbarBrand
+              as="li"
+              className="gap-3 max-w-fit">
+              <NextLink
+                href="/"
+                className="flex items-center gap-1">
+                <Image
+                  src={"/logo.png"}
+                  height={80}
+                  width={80}
+                  alt="logo"
+                />
               </NextLink>
             </NavbarBrand>
             <div className="flex items-center gap-2">
@@ -205,8 +235,7 @@ export const Navbar = () => {
             {/* My Vehicles */}
             <div
               className="flex items-center mt-2 gap-2 px-2 cursor-pointer hover:text-primary transition-colors"
-              onClick={handleOpenVehicleModal}
-            >
+              onClick={handleOpenVehicleModal}>
               <Car size={16} />
               <span className="text-sm">{latestModel || "My Vehicles"}</span>
             </div>

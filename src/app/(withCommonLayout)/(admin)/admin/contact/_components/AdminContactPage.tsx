@@ -22,9 +22,10 @@ import {
 } from "@heroui/table";
 import { Tooltip } from "@heroui/tooltip";
 import React, { useEffect, useMemo, useState } from "react";
+import { useGetContacts } from "@/src/hooks/contact.hook";
 
-export default function FleetSupportTable() {
-  const supportQuery = useGetAllSupportRequests();
+export default function InquiryTable() {
+  const supportQuery = useGetContacts(undefined);
 
   const list = supportQuery?.data?.data || [];
 
@@ -79,36 +80,21 @@ export default function FleetSupportTable() {
 
   const renderCell = (item: any, columnKey: string) => {
     switch (columnKey) {
-      case "issueType":
-        return <span className="text-sm">{item.issueType}</span>;
-      case "priority":
-        return <span className="text-sm">{item.priority}</span>;
-      case "subject":
-        return <span className="text-sm font-medium">{item.subject}</span>;
-      case "message":
-        return <span className="text-sm">{item.message}</span>;
+      case "name":
+        return <span className="text-sm">{item.name}</span>;
+      case "address":
+        return <span className="text-sm">{item.address}</span>;
+      case "contactInfo":
+        return <span className="text-sm font-medium">{item.contactInfo}</span>;
+      case "description":
+        return <span className="text-sm">{item.description}</span>;
       case "createdAt":
         return (
           <span className="text-sm">
             {item.createdAt ? new Date(item.createdAt).toLocaleString() : "-"}
           </span>
         );
-      //   case "files":
-      //     return (
-      //       <div className="flex flex-col">
-      //         {(item.files || []).length === 0 ? (
-      //           <span className="text-xs text-default-400">No files</span>
-      //         ) : (
-      //           (item.files || []).map((f: string, idx: number) => (
-      //             <a key={idx} href={f} className="text-sm text-blue-600 underline" target="_blank" rel="noreferrer">
-      //               {f.split("/").pop()}
-      //             </a>
-      //           ))
-      //         )}
-      //       </div>
-      //     );
-      case "status":
-        return <span className="text-sm">{item.status}</span>;
+
       case "actions":
         return (
           <div className="flex items-center justify-center gap-2">
@@ -127,25 +113,17 @@ export default function FleetSupportTable() {
   };
 
   const columns = [
-    { name: "TYPE", uid: "issueType" },
-    { name: "PRIORITY", uid: "priority" },
-    { name: "SUBJECT", uid: "subject" },
-    // { name: "MESSAGE", uid: "message" },
-    // { name: "FILES", uid: "files" },
+    { name: "NAME", uid: "name" },
+    { name: "ADDRESS", uid: "address" },
+    { name: "CONTACTINFO", uid: "contactInfo" },
+    { name: "DESCRIPTION", uid: "description" },
     { name: "CREATED", uid: "createdAt" },
-    { name: "STATUS", uid: "status" },
     { name: "ACTIONS", uid: "actions" },
   ];
 
   return (
     <div className="w-full space-y-4">
       <div className="flex items-center gap-3">
-        <Input
-          placeholder="Search support requests..."
-          size="sm"
-          value={searchTerm}
-          onChange={(e: any) => setSearchTerm(e.target.value)}
-        />
         <div className="ml-auto flex items-center gap-2">
           <label className="text-sm text-default-500">Rows:</label>
           <select
@@ -165,9 +143,9 @@ export default function FleetSupportTable() {
 
       <div className="overflow-x-auto rounded-lg">
         {supportQuery.isLoading ? (
-          <div className="p-6 text-center">Loading support requests...</div>
+          <div className="p-6 text-center">Loading Inquiries...</div>
         ) : list.length === 0 ? (
-          <div className="p-6 text-center">No support requests available</div>
+          <div className="p-6 text-center">No Inquiries available</div>
         ) : (
           <>
             <Table
@@ -301,64 +279,40 @@ export default function FleetSupportTable() {
           {(close) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Support Request Details
+                Inquiry Details
               </ModalHeader>
               <ModalBody>
                 {selectedRequest ? (
                   <div className="space-y-3">
                     <div>
-                      <label className="text-xs text-default-500">
-                        Issue Type
-                      </label>
+                      <label className="text-xs text-default-500">Name</label>
                       <div className="text-sm font-medium">
-                        {selectedRequest.issueType}
+                        {selectedRequest.name}
                       </div>
                     </div>
 
                     <div>
                       <label className="text-xs text-default-500">
-                        Priority
+                        Address
                       </label>
-                      <div className="text-sm">{selectedRequest.priority}</div>
+                      <div className="text-sm">{selectedRequest.address}</div>
                     </div>
 
                     <div>
                       <label className="text-xs text-default-500">
-                        Subject
+                        Contact Info
                       </label>
                       <div className="text-sm font-medium">
-                        {selectedRequest.subject}
+                        {selectedRequest.contactInfo}
                       </div>
                     </div>
 
                     <div>
                       <label className="text-xs text-default-500">
-                        Message
+                        Description
                       </label>
-                      <div className="text-sm">{selectedRequest.message}</div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs text-default-500">Files</label>
-                      <div className="flex flex-col">
-                        {(selectedRequest.files || []).length === 0 ? (
-                          <span className="text-xs text-default-400">
-                            No files
-                          </span>
-                        ) : (
-                          (selectedRequest.files || []).map(
-                            (f: string, idx: number) => (
-                              <a
-                                key={idx}
-                                href={f}
-                                className="text-sm text-blue-600 underline"
-                                target="_blank"
-                                rel="noreferrer">
-                                {f.split("/").pop()}
-                              </a>
-                            )
-                          )
-                        )}
+                      <div className="text-sm">
+                        {selectedRequest.description}
                       </div>
                     </div>
 
@@ -371,11 +325,6 @@ export default function FleetSupportTable() {
                           ? new Date(selectedRequest.createdAt).toLocaleString()
                           : "-"}
                       </div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs text-default-500">Status</label>
-                      <div className="text-sm">{selectedRequest.status}</div>
                     </div>
                   </div>
                 ) : (

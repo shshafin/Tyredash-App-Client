@@ -5,7 +5,9 @@ import { axiosInstance } from "@/src/lib/AxiosInstance";
 // Get discounted tires by Brand
 export const getDiscountedTiresByBrand = async (brandId: string) => {
   try {
-    const { data } = await axiosInstance.get(`/deals/discounted-tires/${brandId}`);
+    const { data } = await axiosInstance.get(
+      `/deals/discounted-tires/${brandId}`
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -16,7 +18,9 @@ export const getDiscountedTiresByBrand = async (brandId: string) => {
 // Get discounted wheels by Brand
 export const getDiscountedWheelsByBrand = async (brandId: string) => {
   try {
-    const { data } = await axiosInstance.get(`/deals/discounted-wheels/${brandId}`);
+    const { data } = await axiosInstance.get(
+      `/deals/discounted-wheels/${brandId}`
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -27,7 +31,9 @@ export const getDiscountedWheelsByBrand = async (brandId: string) => {
 // Get discounted products by Brand
 export const getDiscountedProductsByBrand = async (brandId: string) => {
   try {
-    const { data } = await axiosInstance.get(`/deals/discounted-products/${brandId}`);
+    const { data } = await axiosInstance.get(
+      `/deals/discounted-products/${brandId}`
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -38,9 +44,13 @@ export const getDiscountedProductsByBrand = async (brandId: string) => {
 // Apply deal to a tire
 export const applyDealToTire = async (tireId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(`/deals/apply-deal-to-tire/${tireId}`, dealData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const { data } = await axiosInstance.post(
+      `/deals/apply-deal-to-tire/${tireId}`,
+      dealData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -51,9 +61,13 @@ export const applyDealToTire = async (tireId: string, dealData: any) => {
 // Apply deal to a wheel
 export const applyDealToWheel = async (wheelId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(`/deals/apply-deal-to-wheel/${wheelId}`, dealData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const { data } = await axiosInstance.post(
+      `/deals/apply-deal-to-wheel/${wheelId}`,
+      dealData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -64,9 +78,13 @@ export const applyDealToWheel = async (wheelId: string, dealData: any) => {
 // Apply deal to a product
 export const applyDealToProduct = async (productId: string, dealData: any) => {
   try {
-    const { data } = await axiosInstance.post(`/deals/apply-deal-to-product/${productId}`, dealData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const { data } = await axiosInstance.post(
+      `/deals/apply-deal-to-product/${productId}`,
+      dealData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     return data;
   } catch (error) {
     console.error(error);

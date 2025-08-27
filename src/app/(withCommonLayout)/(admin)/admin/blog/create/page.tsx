@@ -2,7 +2,12 @@
 
 import { Button } from "@heroui/button";
 import FXInput from "@/src/components/form/FXInput";
-import { FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useState } from "react";
@@ -21,13 +26,14 @@ export default function CreateBlogPage() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreviews, setImagePreviews] = useState<string[] | []>([]);
 
-  const { mutate: handleCreateBlog, isPending: createBlogPending } = useCreateBlog({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
-      toast.success("Blog created successfully");
-      router.push("/admin/blog");
-    },
-  });
+  const { mutate: handleCreateBlog, isPending: createBlogPending } =
+    useCreateBlog({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
+        toast.success("Blog created successfully");
+        router.push("/admin/blog");
+      },
+    });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     // Validate that an image is selected
@@ -75,18 +81,33 @@ export default function CreateBlogPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">Create New Blog</h1>
-        <Button color="default" variant="bordered" onPress={() => router.back()}>
+        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
+          Create New Blog
+        </h1>
+        <Button
+          color="default"
+          variant="bordered"
+          onPress={() => router.back()}>
           ← Back
         </Button>
       </div>
 
       <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6">
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FXInput label="Blog Title" name="title" required />
-              <FXInput label="Category" name="category" required />
+              <FXInput
+                label="Blog Title"
+                name="title"
+                required
+              />
+              <FXInput
+                label="Category"
+                name="category"
+                required
+              />
             </div>
 
             <div className="w-full">
@@ -94,7 +115,9 @@ export default function CreateBlogPage() {
                 label="Blog Description"
                 placeholder="Enter blog description..."
                 minRows={4}
-                {...register("description", { required: "Description is required" })}
+                {...register("description", {
+                  required: "Description is required",
+                })}
                 required
               />
             </div>
@@ -102,12 +125,18 @@ export default function CreateBlogPage() {
             <div className="w-full">
               <label
                 htmlFor="image"
-                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-              >
+                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
                 <span className="text-md font-medium">Upload Blog Image *</span>
                 <UploadCloud className="size-6" />
               </label>
-              <input className="hidden" id="image" type="file" onChange={handleImageChange} accept="image/*" required />
+              <input
+                className="hidden"
+                id="image"
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+                required
+              />
             </div>
 
             {imagePreviews.length > 0 && (
@@ -115,8 +144,7 @@ export default function CreateBlogPage() {
                 {imagePreviews.map((imageDataUrl: string, index: number) => (
                   <div
                     key={index}
-                    className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                  >
+                    className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                     <img
                       alt={`Preview ${index}`}
                       className="h-full w-full object-cover rounded-md"
@@ -130,10 +158,17 @@ export default function CreateBlogPage() {
             <Divider className="my-6" />
 
             <div className="flex gap-4 justify-end">
-              <Button color="default" variant="bordered" onPress={() => router.back()}>
+              <Button
+                color="default"
+                variant="bordered"
+                onPress={() => router.back()}>
                 Cancel
               </Button>
-              <Button color="primary" type="submit" disabled={createBlogPending} className="px-8">
+              <Button
+                color="primary"
+                type="submit"
+                disabled={createBlogPending}
+                className="px-8">
                 {createBlogPending ? "Creating..." : "Create Blog"}
               </Button>
             </div>

@@ -15,11 +15,11 @@ export const siteConfig = {
       href: "/wheel",
       hasDropdown: true,
     },
-    {
-      label: "ACCESSORIES",
-      href: "/accessories",
-      // hasDropdown: true,
-    },
+    // {
+    //   label: "ACCESSORIES",
+    //   href: "/accessories",
+    //   // hasDropdown: true,
+    // },
     {
       label: "APPOINTMENT",
       href: "/appointment",
@@ -28,11 +28,11 @@ export const siteConfig = {
       label: "TIPS & GUIDE",
       href: "/tips-guide",
     },
-    {
-      label: "FINANCING",
-      href: "/financing",
-      // hasDropdown: true,
-    },
+    // {
+    //   label: "FINANCING",
+    //   href: "/financing",
+    //   // hasDropdown: true,
+    // },
     {
       label: "FLEET",
       href: "/fleet",

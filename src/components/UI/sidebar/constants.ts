@@ -274,6 +274,16 @@ export const adminLinks: IAdminLinks[] = [
     ],
   },
   {
+    label: "Inquiries",
+    links: [
+      {
+        href: "/admin/contact",
+        label: "All Inquiries",
+        icon: React.createElement(List, { className: "w-5 h-5" }),
+      },
+    ],
+  },
+  {
     label: "Fleet Appointments",
     links: [
       {
