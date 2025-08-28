@@ -222,10 +222,14 @@ export const Navbar = () => {
         <NavbarMenu>
           <div className="mx-4 mt-2 flex flex-col gap-2">
             {/* Need Help Button */}
-            <button className="px-3 py-2 bg-gradient-to-r from-gray-100 to-gray-300 text-gray-700 rounded-md flex items-center gap-2 shadow-sm text-sm">
-              <Phone className="h-5 w-5" />
-              <span>Need Help?</span>
-            </button>
+            <NextLink
+              href="/contact"
+              className={linkStyles()}>
+              <button className="px-3 py-2 bg-gradient-to-r from-gray-100 to-gray-300 text-gray-700 rounded-md flex items-center gap-2 shadow-sm text-sm">
+                <Phone className="h-5 w-5" />
+                <span>Need Help?</span>
+              </button>
+            </NextLink>
 
             {/* Divider */}
             <div className="border-t border-gray-500 my-2" />

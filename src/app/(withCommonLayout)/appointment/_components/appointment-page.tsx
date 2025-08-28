@@ -1117,7 +1117,7 @@ const SuccessStep = () => {
     <CardBody className="text-center py-12">
       <div
         ref={printRef}
-        className="flex flex-col items-center space-y-6">
+        className="flex flex-col items-center space-y-6 pt-8">
         <div className="bg-green-100 p-6 rounded-full">
           <CheckCircle className="h-16 w-16 text-green-600" />
         </div>

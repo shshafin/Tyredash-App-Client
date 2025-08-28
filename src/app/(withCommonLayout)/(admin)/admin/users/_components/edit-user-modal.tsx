@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Modal, ModalContent, ModalHeader, ModalBody } from "@heroui/modal"
-import { Button } from "@heroui/button"
-import { Select, SelectItem } from "@heroui/select"
-import { FormProvider } from "react-hook-form"
-import FXInput from "@/src/components/form/FXInput"
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@heroui/modal";
+import { Button } from "@heroui/button";
+import { Select, SelectItem } from "@heroui/select";
+import { FormProvider } from "react-hook-form";
+import FXInput from "@/src/components/form/FXInput";
 
 const EditUserModal = ({
   isOpen,
@@ -15,39 +15,42 @@ const EditUserModal = ({
   updateUserPending,
   defaultValues,
 }: any) => {
-  if (!defaultValues) return null
+  if (!defaultValues) return null;
 
   const roleOptions = [
     { value: "user", label: "User" },
     { value: "admin", label: "Admin" },
-  ]
+  ];
 
   const countryOptions = [
     { value: "USA", label: "United States" },
     { value: "CA", label: "Canada" },
     { value: "UK", label: "United Kingdom" },
     { value: "AU", label: "Australia" },
-  ]
+  ];
 
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={() => {
-        onOpenChange()
-        methods.reset()
+        onOpenChange();
+        methods.reset();
       }}
-      size="2xl"
-    >
+      size="2xl">
       <ModalContent>
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1">Edit User</ModalHeader>
             <ModalBody className="mb-5">
               <FormProvider {...methods}>
-                <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-6">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="max-w-2xl mx-auto space-y-6">
                   {/* Personal Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Personal Information</h3>
+                    <h3 className="text-lg font-semibold">
+                      Personal Information
+                    </h3>
                     <div className="flex flex-wrap gap-4">
                       <div className="flex-1 min-w-[200px]">
                         <FXInput
@@ -77,7 +80,12 @@ const EditUserModal = ({
                         />
                       </div>
                       <div className="flex-1 min-w-[200px]">
-                        <FXInput label="Phone" name="phone" defaultValue={defaultValues?.phone} required={true} />
+                        <FXInput
+                          label="Phone"
+                          name="phone"
+                          defaultValue={defaultValues?.phone}
+                          required={true}
+                        />
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-4">
@@ -86,8 +94,7 @@ const EditUserModal = ({
                           label="Role"
                           placeholder="Select role"
                           {...methods.register("role")}
-                          defaultSelectedKeys={[defaultValues?.role || "user"]}
-                        >
+                          defaultSelectedKeys={[defaultValues?.role || "user"]}>
                           {roleOptions.map((role) => (
                             <SelectItem key={role.value}>
                               {role.label}
@@ -108,7 +115,9 @@ const EditUserModal = ({
 
                   {/* Address Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Address Information</h3>
+                    <h3 className="text-lg font-semibold">
+                      Address Information
+                    </h3>
                     <div className="flex flex-wrap gap-4">
                       <div className="flex-1 min-w-[300px]">
                         <FXInput
@@ -128,10 +137,20 @@ const EditUserModal = ({
                     </div>
                     <div className="flex flex-wrap gap-4">
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="City" name="city" defaultValue={defaultValues?.city} required={true} />
+                        <FXInput
+                          label="City"
+                          name="city"
+                          defaultValue={defaultValues?.city}
+                          required={true}
+                        />
                       </div>
                       <div className="flex-1 min-w-[150px]">
-                        <FXInput label="State" name="state" defaultValue={defaultValues?.state} required={true} />
+                        <FXInput
+                          label="State"
+                          name="state"
+                          defaultValue={defaultValues?.state}
+                          required={true}
+                        />
                       </div>
                       <div className="flex-1 min-w-[120px]">
                         <FXInput
@@ -144,12 +163,21 @@ const EditUserModal = ({
                     </div>
                     <div className="flex flex-wrap gap-4">
                       <div className="flex-1 min-w-[200px]">
-                        <FXInput label="Country" name="country" defaultValue={defaultValues?.zipCode} required={true} />
+                        <FXInput
+                          label="Country"
+                          name="country"
+                          defaultValue={defaultValues?.zipCode}
+                          required={true}
+                        />
                       </div>
                     </div>
                   </div>
 
-                  <Button color="primary" type="submit" className="w-full px-6 py-2 rounded text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50" disabled={updateUserPending}>
+                  <Button
+                    color="primary"
+                    type="submit"
+                    className="w-full px-6 py-2 rounded text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                    disabled={updateUserPending}>
                     {updateUserPending ? "Updating..." : "Update User"}
                   </Button>
                 </form>
@@ -159,7 +187,7 @@ const EditUserModal = ({
         )}
       </ModalContent>
     </Modal>
-  )
-}
+  );
+};
 
-export default EditUserModal
+export default EditUserModal;

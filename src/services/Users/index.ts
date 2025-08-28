@@ -38,7 +38,7 @@ export const updateUser = async (id: string, userData: any): Promise<any> => {
     return data;
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to update trim");
+    throw new Error("Failed to update user");
   }
 };
 

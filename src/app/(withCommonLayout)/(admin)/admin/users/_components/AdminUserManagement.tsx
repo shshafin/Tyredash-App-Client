@@ -9,7 +9,13 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/modal";
-import { FieldValues, FormProvider, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  FormProvider,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,7 +25,12 @@ import {
   DataError,
   DataLoading,
 } from "../../_components/DataFetchingStates";
-import { useCreateUser, useDeleteUser, useGetUsers, useUpdateUser } from "@/src/hooks/user.hook";
+import {
+  useCreateUser,
+  useDeleteUser,
+  useGetUsers,
+  useUpdateUser,
+} from "@/src/hooks/user.hook";
 import UsersTable from "./UsersTable";
 import AddUserModal from "./add-user-modal";
 import EditUserModal from "./edit-user-modal";
@@ -79,10 +90,12 @@ export default function AdminUserManagement() {
     handleCreateUser(data as any);
   };
 
-  const onEditSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onEditSubmit: SubmitHandler<FieldValues> = async (data, e) => {
+    e?.preventDefault(); // add this line
     handleUpdateUser(data as any);
   };
-  console.log({selectedUser})
+
+  console.log({ selectedUser });
 
   return (
     <div className="p-6">
@@ -91,12 +104,11 @@ export default function AdminUserManagement() {
           User Management
         </h1>
         <Button
-                  color="primary"
-                  className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                  onPress={onOpen}
-                >
-                  + Add User
-                </Button>
+          color="primary"
+          className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+          onPress={onOpen}>
+          + Add User
+        </Button>
       </div>
       {isLoading && <DataLoading />}
       {isError && <DataError />}
@@ -148,7 +160,9 @@ const DeleteUserModal = ({
   deleteUserPending,
 }: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {() => (
           <>
@@ -167,16 +181,14 @@ const DeleteUserModal = ({
               <Button
                 variant="bordered"
                 className="rounded"
-                onPress={onOpenChange}
-              >
+                onPress={onOpenChange}>
                 Cancel
               </Button>
               <Button
                 color="danger"
                 onPress={handleDeleteUser}
                 disabled={deleteUserPending}
-                className="rounded"
-              >
+                className="rounded">
                 {deleteUserPending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>

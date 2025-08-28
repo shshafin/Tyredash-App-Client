@@ -59,8 +59,7 @@ const Folder = ({
       {/* Header Section */}
       <button
         onClick={() => onToggle(index)}
-        className="w-full flex justify-between text-justify items-center px-5 py-2 text-sm font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-300 group-hover:bg-gray-50 dark:group-hover:bg-zinc-800 transition-all rounded-t-lg backdrop-blur-sm bg-white/30 dark:bg-zinc-900/50"
-      >
+        className="w-full flex justify-between text-justify items-center px-5 py-2 text-sm font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-300 group-hover:bg-gray-50 dark:group-hover:bg-zinc-800 transition-all rounded-t-lg backdrop-blur-sm bg-white/30 dark:bg-zinc-900/50">
         <span>{label}</span>
         {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
       </button>
@@ -79,12 +78,10 @@ const Folder = ({
                       isActive
                         ? "text-white bg-purple-600"
                         : "text-gray-600 dark:text-zinc-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-zinc-700"
-                    }`}
-                  >
+                    }`}>
                     {link.icon && (
                       <span
-                        className={`text-sm  ${isActive ? "text-white" : "text-purple-600 dark:text-purple-300"}`}
-                      >
+                        className={`text-sm  ${isActive ? "text-white" : "text-purple-600 dark:text-purple-300"}`}>
                         {link.icon}
                       </span>
                     )}

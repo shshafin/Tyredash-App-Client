@@ -1,39 +1,47 @@
-"use client"
+"use client";
 
-import { useUser } from "@/src/context/user.provider"
-import { useGetMyWishlist, useRemoveItemFromWishlist } from "@/src/hooks/wishlist.hook"
-import { useAddItemToCart } from "@/src/hooks/cart.hook"
-import { Button } from "@heroui/button"
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card"
-import { useQueryClient } from "@tanstack/react-query"
-import { Heart, ShoppingCart, Trash2, Loader2, ArrowRight } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { toast } from "sonner"
+import { useUser } from "@/src/context/user.provider";
+import {
+  useGetMyWishlist,
+  useRemoveItemFromWishlist,
+} from "@/src/hooks/wishlist.hook";
+import { useAddItemToCart } from "@/src/hooks/cart.hook";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
+import { useQueryClient } from "@tanstack/react-query";
+import { Heart, ShoppingCart, Trash2, Loader2, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "sonner";
 
 const WishlistPage = () => {
-  const queryClient = useQueryClient()
-  const { user } = useUser()
+  const queryClient = useQueryClient();
+  const { user } = useUser();
   const { data, isLoading, isError } = useGetMyWishlist();
 
-  const { items: wishlistItems = [], totalItems = 0 } = data?.data || {}
-  console.log({data}, 'wishlist')
-  const hasNoWishlist = !data?.data || !wishlistItems || wishlistItems.length === 0
+  const { items: wishlistItems = [], totalItems = 0 } = data?.data || {};
+  console.log({ data }, "wishlist");
+  const hasNoWishlist =
+    !data?.data || !wishlistItems || wishlistItems.length === 0;
 
-  const { mutate: handleRemoveFromWishlist, isPending: removeFromWishlistPending } = useRemoveItemFromWishlist({
+  const {
+    mutate: handleRemoveFromWishlist,
+    isPending: removeFromWishlistPending,
+  } = useRemoveItemFromWishlist({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_WISHLIST"] })
-      toast.success("Item removed from wishlist")
-    }
-  })
-
-  const { mutate: handleAddToCart, isPending: addToCartPending } = useAddItemToCart({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_CART"] })
-      toast.success("Item added to cart successfully")
+      queryClient.invalidateQueries({ queryKey: ["GET_WISHLIST"] });
+      toast.success("Item removed from wishlist");
     },
-    userId: user?._id,
-  })
+  });
+
+  const { mutate: handleAddToCart, isPending: addToCartPending } =
+    useAddItemToCart({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_CART"] });
+        toast.success("Item added to cart successfully");
+      },
+      userId: user?._id,
+    });
 
   if (isLoading) {
     return (
@@ -41,16 +49,23 @@ const WishlistPage = () => {
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <span className="ml-2">Loading your wishlist...</span>
       </div>
-    )
+    );
   }
 
   if (isError) {
     return (
       <div className="flex h-[50vh] flex-col items-center justify-center gap-4">
-        <p className="text-xl font-semibold text-red-500">Failed to load wishlist</p>
-        <Button onPress={() => queryClient.invalidateQueries({ queryKey: ["wishlist"] })}>Try Again</Button>
+        <p className="text-xl font-semibold text-red-500">
+          Failed to load wishlist
+        </p>
+        <Button
+          onPress={() =>
+            queryClient.invalidateQueries({ queryKey: ["wishlist"] })
+          }>
+          Try Again
+        </Button>
       </div>
-    )
+    );
   }
 
   if (hasNoWishlist) {
@@ -64,14 +79,16 @@ const WishlistPage = () => {
             Save items you love to your wishlist and add them to cart later.
           </p>
           <Link href="/">
-            <Button size="lg" className="gap-2">
+            <Button
+              size="lg"
+              className="gap-2">
               Continue Shopping
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -85,7 +102,9 @@ const WishlistPage = () => {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {wishlistItems?.map((item: any, index: number) => (
-          <Card key={index} className="group relative overflow-hidden">
+          <Card
+            key={index}
+            className="group relative overflow-hidden">
             {/* Remove from wishlist button */}
             <Button
               variant="ghost"
@@ -97,8 +116,7 @@ const WishlistPage = () => {
                   productId: item?.product?._id,
                 })
               }
-              disabled={removeFromWishlistPending}
-            >
+              disabled={removeFromWishlistPending}>
               <Trash2 className="h-4 w-4 text-red-500" />
             </Button>
 
@@ -115,10 +133,16 @@ const WishlistPage = () => {
 
             <CardBody className="p-4">
               <div className="space-y-2">
-                <h3 className="font-semibold text-lg line-clamp-2">{item.product?.name}</h3>
-                <p className="text-sm text-gray-500 capitalize">{item.productType}</p>
+                <h3 className="font-semibold text-lg line-clamp-2">
+                  {item.product?.name}
+                </h3>
+                <p className="text-sm text-gray-500 capitalize">
+                  {item.productType}
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xl font-bold">${item?.product?.price.toFixed(2)}</span>
+                  <span className="text-xl font-bold">
+                    ${item?.product?.price.toFixed(2)}
+                  </span>
                   {item?.product?.stockQuantity > 0 ? (
                     <span className="text-sm text-green-600">In Stock</span>
                   ) : (
@@ -138,8 +162,7 @@ const WishlistPage = () => {
                     quantity: 1,
                   })
                 }
-                disabled={addToCartPending || item.availableStock === 0}
-              >
+                disabled={addToCartPending || item.availableStock === 0}>
                 <ShoppingCart className="h-4 w-4" />
                 {item.availableStock === 0 ? "Out of Stock" : "Add to Cart"}
               </Button>
@@ -151,14 +174,17 @@ const WishlistPage = () => {
       {/* Continue Shopping Section */}
       <div className="mt-12 text-center">
         <Link href="/">
-          <Button variant="ghost" size="lg" className="gap-2">
+          <Button
+            variant="ghost"
+            size="lg"
+            className="gap-2">
             Continue Shopping
             <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default WishlistPage
+export default WishlistPage;

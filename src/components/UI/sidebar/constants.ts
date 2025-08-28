@@ -49,22 +49,37 @@ export const userLinks: IUserLinks[] = [
       {
         href: "/profile",
         label: "Profile",
-        icon: React.createElement(UserIcon, { className: "w-5 h-5" }), // User icon for profile
+        icon: React.createElement(UserIcon, { className: "w-5 h-5" }),
       },
+    ],
+  },
+  {
+    label: "Settings",
+    links: [
       {
         href: "/profile/settings",
         label: "Settings",
-        icon: React.createElement(SettingsIcon, { className: "w-5 h-5" }), // Settings icon
+        icon: React.createElement(SettingsIcon, { className: "w-5 h-5" }),
       },
+    ],
+  },
+  {
+    label: "Orders",
+    links: [
       {
         href: "/profile/order",
         label: "Orders",
-        icon: React.createElement(ShoppingBag, { className: "w-5 h-5" }), // Settings icon
+        icon: React.createElement(ShoppingBag, { className: "w-5 h-5" }),
       },
+    ],
+  },
+  {
+    label: "Change Password",
+    links: [
       {
         href: "/profile/change-password",
         label: "Change Password",
-        icon: React.createElement(Lock, { className: "w-5 h-5" }), // Lock icon
+        icon: React.createElement(Lock, { className: "w-5 h-5" }),
       },
     ],
   },
