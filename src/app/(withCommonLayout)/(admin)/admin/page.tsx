@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 import GlassCardsCollection from "./_components/GlassCardsCollection";
 

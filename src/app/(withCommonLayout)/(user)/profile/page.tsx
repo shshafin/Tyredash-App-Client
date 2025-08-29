@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 
 import LatestSystemActivitiesSkeleton from "../../(admin)/admin/_components/LatestSystemActivitiesSkeleton";
