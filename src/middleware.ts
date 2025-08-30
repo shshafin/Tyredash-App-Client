@@ -18,6 +18,7 @@ export async function middleware(request: NextRequest) {
 
   // const user = await getCurrentUser();
   const accessToken = (await cookies()).get("accessToken")?.value;
+  console.log(accessToken, "accessToken from middleware");
 
   if (!accessToken) return null;
 
