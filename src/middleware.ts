@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getCurrentUser } from "./services/AuthService";
+import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
 
 const AuthRoutes = ["/login", "/register"];
 
@@ -8,20 +10,25 @@ type Role = keyof typeof roleBasedRoutes;
 
 const roleBasedRoutes = {
   user: [/^\/profile/, /^\/cart/], // user can access /profile and /cart
-  admin: [/^\/admin/, /^\/cart/],             // admin can access /admin
+  admin: [/^\/admin/, /^\/cart/], // admin can access /admin
 };
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const user = await getCurrentUser();
+  // const user = await getCurrentUser();
+  const accessToken = (await cookies()).get("access_token")?.value;
+
+  if (!accessToken) return null;
+
+  const user = jwtDecode<any>(accessToken);
 
   if (!user) {
     if (AuthRoutes.includes(pathname)) {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, request.url),
+        new URL(`/login?redirect=${pathname}`, request.url)
       );
     }
   }

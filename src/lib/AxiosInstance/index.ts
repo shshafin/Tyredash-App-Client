@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 
 export const axiosInstance = axios.create({
   baseURL: envConfig.base_Api,
+  withCredentials: true,
 });
 
 // Add a request interceptor to attach token

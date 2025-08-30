@@ -10,10 +10,10 @@ import { FieldValues } from "react-hook-form";
 export const registerUser = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/users/create", userData);
-    if (data?.success) {
-      (await cookies()).set("access_token", data?.data?.accessToken);
-      (await cookies()).set("refresh_token", data?.data?.refreshToken);
-    }
+    // if (data?.success) {
+    //   (await cookies()).set("access_token", data?.data?.accessToken);
+    //   (await cookies()).set("refresh_token", data?.data?.refreshToken);
+    // }
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -25,19 +25,19 @@ export const loginUser = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", userData);
 
-    if (data?.success) {
-      // Save the tokens to cookies
-      (await cookies()).set("access_token", data?.data?.accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-      (await cookies()).set("refresh_token", data?.data?.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-    }
+    // if (data?.success) {
+    //   // Save the tokens to cookies
+    //   (await cookies()).set("access_token", data?.data?.accessToken, {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "strict",
+    //   });
+    //   (await cookies()).set("refresh_token", data?.data?.refreshToken, {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "strict",
+    //   });
+    // }
     return data;
   } catch (error: any) {
     console.error("Login error: ", error);
