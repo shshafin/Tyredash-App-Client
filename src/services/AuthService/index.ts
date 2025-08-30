@@ -79,6 +79,7 @@ export const getCurrentUser = async () => {
   // if (cachedUser) return cachedUser; // Return cached user data if available
 
   const accessToken = (await cookies()).get("accessToken")?.value;
+  console.log(accessToken, "accessToken from AuthService");
 
   if (!accessToken) return null;
 
