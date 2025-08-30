@@ -96,10 +96,6 @@ export const getCurrentUser = async () => {
   console.log(res, "res from AuthService");
   console.log(res?.data?.data, "res?.data?.data from AuthService");
 
-  // if (data?.data) {
-  //   cachedUser = data.data; // Cache the user data
-  // }
-
   return res?.data?.data;
 };
 
