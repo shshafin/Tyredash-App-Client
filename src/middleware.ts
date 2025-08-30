@@ -9,8 +9,8 @@ const AuthRoutes = ["/login", "/register"];
 type Role = keyof typeof roleBasedRoutes;
 
 const roleBasedRoutes = {
-  user: [/^\/profile/, /^\/cart/], // user can access /profile and /cart
-  admin: [/^\/admin/, /^\/cart/], // admin can access /admin
+  user: [/^\/profile/], // user can access /profile and /cart
+  admin: [/^\/admin/], // admin can access /admin
 };
 
 export async function middleware(request: NextRequest) {
@@ -46,12 +46,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/profile",
-    "/profile/:page*",
-    "/admin",
-    "/admin/:page*",
-    "/cart",
-    "/cart/:page*", // in case you have nested cart routes
-  ],
+  matcher: ["/profile", "/profile/:page*", "/admin", "/admin/:page*"],
 };
