@@ -84,20 +84,22 @@ export const getCurrentUser = async () => {
   if (!accessToken) return null;
 
   const decodedToken = jwtDecode<any>(accessToken);
+  console.log(decodedToken, "decodedToken from AuthService");
 
   if (!decodedToken?.userEmail) {
     return null;
   }
 
   // Fetch the user data from API
-  const { data } =
+  const res =
     (await axiosInstance.get(`/users/${decodedToken.userEmail}`)) || {};
+  console.log(res, "res from AuthService");
 
   // if (data?.data) {
   //   cachedUser = data.data; // Cache the user data
   // }
 
-  return data?.data;
+  return res?.data?.data;
 };
 
 export const changePassword = async (passwordData: any): Promise<any> => {
