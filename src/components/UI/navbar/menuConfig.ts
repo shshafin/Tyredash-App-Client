@@ -8,5 +8,13 @@ export const menuConfig: any = {
     // { key: "createPost", label: "Create Post", path: "/profile/create-post" },
     { key: "settings", label: "Settings", path: "/profile/settings" },
   ],
+  fleet_user: [
+    {
+      key: "dashboard",
+      label: "Profile",
+      path: "https://fleet.tiresdash.com/",
+    },
+  ],
+
   common: [{ key: "logout", label: "Logout", path: null, isDanger: true }],
 };

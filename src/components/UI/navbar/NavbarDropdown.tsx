@@ -80,7 +80,7 @@ import { useRouter } from "next/navigation";
 const NavbarDropdown: React.FC = () => {
   const { setIsLoading: userLoading, user, setUser } = useUser();
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     userLoading(true);
     setUser(null);
     await logoutUser();
