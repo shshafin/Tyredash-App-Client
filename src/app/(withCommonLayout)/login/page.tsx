@@ -5,6 +5,7 @@ import FXInput from "@/src/components/form/FXInput";
 import Loading from "@/src/components/UI/Loading";
 import { useUser } from "@/src/context/user.provider";
 import { useUserLogin } from "@/src/hooks/auth.hook";
+import { axiosInstance } from "@/src/lib/AxiosInstance";
 import loginValidationSchema from "@/src/schemas/login.schema";
 import { Button } from "@heroui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,8 +23,16 @@ const LoginPage = () => {
   console.log(isSuccess);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    userLoading(true);
-    handleUserLogin(data);
+    // userLoading(true);
+    // handleUserLogin(data);
+    try {
+      await axiosInstance.post("/auth/login", data, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {}
   };
 
   useEffect(() => {
