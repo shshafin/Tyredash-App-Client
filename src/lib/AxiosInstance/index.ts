@@ -12,7 +12,7 @@ export const axiosInstance = axios.create({
 // Add a request interceptor to attach token
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = (await cookies()).get("access_token")?.value;
+    const accessToken = (await cookies()).get("accessToken")?.value;
     if (accessToken) {
       config.headers["Authorization"] = accessToken;
     }

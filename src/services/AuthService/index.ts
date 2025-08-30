@@ -11,7 +11,7 @@ export const registerUser = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/users/create", userData);
     // if (data?.success) {
-    //   (await cookies()).set("access_token", data?.data?.accessToken);
+    //   (await cookies()).set("accessToken", data?.data?.accessToken);
     //   (await cookies()).set("refresh_token", data?.data?.refreshToken);
     // }
     return data;
@@ -27,7 +27,7 @@ export const loginUser = async (userData: FieldValues) => {
 
     // if (data?.success) {
     //   // Save the tokens to cookies
-    //   (await cookies()).set("access_token", data?.data?.accessToken, {
+    //   (await cookies()).set("accessToken", data?.data?.accessToken, {
     //     httpOnly: true,
     //     secure: true,
     //     sameSite: "strict",
@@ -52,7 +52,7 @@ export const loginUser = async (userData: FieldValues) => {
 export const logoutUser = async () => {
   const cookieStore = await cookies(); // ✅ Await this!
 
-  cookieStore.set("access_token", "", {
+  cookieStore.set("accessToken", "", {
     // httpOnly: true,
     // secure: true,
     // sameSite: "strict",
@@ -60,7 +60,7 @@ export const logoutUser = async () => {
     expires: new Date(0),
   });
 
-  cookieStore.set("refresh_token", "", {
+  cookieStore.set("refreshToken", "", {
     // httpOnly: true,
     // secure: true,
     // sameSite: "strict",
@@ -78,7 +78,7 @@ export const logoutUser = async () => {
 export const getCurrentUser = async () => {
   // if (cachedUser) return cachedUser; // Return cached user data if available
 
-  const accessToken = (await cookies()).get("access_token")?.value;
+  const accessToken = (await cookies()).get("accessToken")?.value;
 
   if (!accessToken) return null;
 
