@@ -93,7 +93,8 @@ export const getCurrentUser = async () => {
   // Fetch the user data from API
   const res =
     (await axiosInstance.get(`/users/${decodedToken.userEmail}`)) || {};
-  console.log(res, "res from AuthService");
+  // console.log(res, "res from AuthService");
+  console.log(res?.data?.data, "res?.data?.data from AuthService");
 
   // if (data?.data) {
   //   cachedUser = data.data; // Cache the user data
