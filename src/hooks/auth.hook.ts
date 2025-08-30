@@ -29,14 +29,14 @@ export const useUserLogin = () => {
     mutationFn: async (userData) => await loginUser(userData),
     onSuccess: async (data) => {
       // Save tokens after login using js-cookie
-      Cookies.set("accessToken", data.accessToken, {
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("refreshToken", data.refreshToken, {
-        secure: true,
-        sameSite: "strict",
-      });
+      // Cookies.set("accessToken", data.accessToken, {
+      //   secure: true,
+      //   sameSite: "strict",
+      // });
+      // Cookies.set("refreshToken", data.refreshToken, {
+      //   secure: true,
+      //   sameSite: "strict",
+      // });
       toast.success("Login Successful!");
     },
     onError: (error) => {
