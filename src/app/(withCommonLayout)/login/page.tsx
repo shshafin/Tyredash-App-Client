@@ -23,16 +23,24 @@ const LoginPage = () => {
   console.log(isSuccess);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // userLoading(true);
-    // handleUserLogin(data);
     try {
-      await axiosInstance.post("/auth/login", data, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    } catch (error) {}
+      const response = await fetch(
+        "https://api.tiresdash.com/api/v1/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+
+    console.log(data);
   };
 
   useEffect(() => {
