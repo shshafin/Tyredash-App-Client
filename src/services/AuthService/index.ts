@@ -79,12 +79,10 @@ export const getCurrentUser = async () => {
   // if (cachedUser) return cachedUser; // Return cached user data if available
 
   const accessToken = (await cookies()).get("accessToken")?.value;
-  console.log(accessToken, "accessToken from AuthService");
 
   if (!accessToken) return null;
 
   const decodedToken = jwtDecode<any>(accessToken);
-  console.log(decodedToken, "decodedToken from AuthService");
 
   if (!decodedToken?.userEmail) {
     return null;
