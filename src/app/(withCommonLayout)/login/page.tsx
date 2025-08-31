@@ -24,15 +24,12 @@ const LoginPage = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      const response = await fetch(
-        "https://api.tiresdash.com/api/v1/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
 
       const result = await response.json();
       console.log(result);

@@ -1,35 +1,40 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@heroui/button"
-import { HelpCircle, Loader2 } from 'lucide-react'
-import { useGetTireWidths } from "@/src/hooks/tireWidth.hook"
-import { useGetTireRatios } from "@/src/hooks/tireRatio.hook"
-import { useGetTireDiameters } from "@/src/hooks/tireDiameter.hook"
-import { useGetWheelWidths } from "@/src/hooks/wheelWidth.hook"
-import { useGetWheelRatios } from "@/src/hooks/wheelRatio.hook"
-import { useGetWheelDiameters } from "@/src/hooks/wheelDiameter.hook"
+import { useState, useEffect } from "react";
+import { Button } from "@heroui/button";
+import { HelpCircle, Loader2 } from "lucide-react";
+import { useGetTireWidths } from "@/src/hooks/tireWidth.hook";
+import { useGetTireRatios } from "@/src/hooks/tireRatio.hook";
+import { useGetTireDiameters } from "@/src/hooks/tireDiameter.hook";
+import { useGetWheelWidths } from "@/src/hooks/wheelWidth.hook";
+import { useGetWheelRatios } from "@/src/hooks/wheelRatio.hook";
+import { useGetWheelDiameters } from "@/src/hooks/wheelDiameter.hook";
+import Link from "next/link";
 
 interface SizeSelectorProps {
-  setMainStep: (step: any) => void
-  selectedSize: any
-  setSelectedSize: (size: any) => void
+  setMainStep: (step: any) => void;
+  selectedSize: any;
+  setSelectedSize: (size: any) => void;
 }
 
-const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelectorProps) => {
-  const [activeStep, setActiveStep] = useState(1)
-  const [selectedWidth, setSelectedWidth] = useState<any>(null)
-  const [selectedRatio, setSelectedRatio] = useState<any>(null)
-  const [selectedDiameter, setSelectedDiameter] = useState<any>(null)
-  const [productType, setProductType] = useState("tire")
-  const [showAllWidths, setShowAllWidths] = useState(false)
+const SizeSelector = ({
+  setMainStep,
+  selectedSize,
+  setSelectedSize,
+}: SizeSelectorProps) => {
+  const [activeStep, setActiveStep] = useState(1);
+  const [selectedWidth, setSelectedWidth] = useState<any>(null);
+  const [selectedRatio, setSelectedRatio] = useState<any>(null);
+  const [selectedDiameter, setSelectedDiameter] = useState<any>(null);
+  const [productType, setProductType] = useState("tire");
+  const [showAllWidths, setShowAllWidths] = useState(false);
 
   // Tire size hooks
   const {
     data: tireWidths = {},
     isLoading: tireWidthsLoading,
     isError: tireWidthsError,
-  } = useGetTireWidths({})
+  } = useGetTireWidths({});
 
   const {
     data: tireRatios = {},
@@ -48,7 +53,7 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
     data: wheelWidths = {},
     isLoading: wheelWidthsLoading,
     isError: wheelWidthsError,
-  } = useGetWheelWidths({})
+  } = useGetWheelWidths({});
 
   const {
     data: wheelRatios = {},
@@ -63,55 +68,68 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
   } = useGetWheelDiameters({});
 
   // Determine current options and loading/error states based on product type
-  const widthOptions = productType === "tire" ? tireWidths?.data || [] : wheelWidths?.data || []
-  const ratioOptions = productType === "tire" ? tireRatios?.data || [] : wheelRatios?.data || []
-  const diameterOptions = productType === "tire" ? tireDiameters?.data || [] : wheelDiameters?.data || []
-  const isWidthLoading = productType === "tire" ? tireWidthsLoading : wheelWidthsLoading
-  const isRatioLoading = productType === "tire" ? tireRatiosLoading : wheelRatiosLoading
-  const isDiameterLoading = productType === "tire" ? tireDiametersLoading : wheelDiametersLoading
+  const widthOptions =
+    productType === "tire" ? tireWidths?.data || [] : wheelWidths?.data || [];
+  const ratioOptions =
+    productType === "tire" ? tireRatios?.data || [] : wheelRatios?.data || [];
+  const diameterOptions =
+    productType === "tire"
+      ? tireDiameters?.data || []
+      : wheelDiameters?.data || [];
+  const isWidthLoading =
+    productType === "tire" ? tireWidthsLoading : wheelWidthsLoading;
+  const isRatioLoading =
+    productType === "tire" ? tireRatiosLoading : wheelRatiosLoading;
+  const isDiameterLoading =
+    productType === "tire" ? tireDiametersLoading : wheelDiametersLoading;
 
-  const isWidthError = productType === "tire" ? tireWidthsError : wheelWidthsError
-  const isRatioError = productType === "tire" ? tireRatiosError : wheelRatiosError
-  const isDiameterError = productType === "tire" ? tireDiametersError : wheelDiametersError
+  const isWidthError =
+    productType === "tire" ? tireWidthsError : wheelWidthsError;
+  const isRatioError =
+    productType === "tire" ? tireRatiosError : wheelRatiosError;
+  const isDiameterError =
+    productType === "tire" ? tireDiametersError : wheelDiametersError;
 
   const isLoading =
     isWidthLoading ||
     (activeStep === 2 && isRatioLoading) ||
-    (activeStep === 3 && isDiameterLoading)
+    (activeStep === 3 && isDiameterLoading);
 
   const isError =
     isWidthError ||
     (activeStep === 2 && isRatioError) ||
-    (activeStep === 3 && isDiameterError)
+    (activeStep === 3 && isDiameterError);
 
   // Limit displayed widths if there are many
-  const displayedWidths = showAllWidths ? widthOptions : widthOptions.slice(0, 18)
+  const displayedWidths = showAllWidths
+    ? widthOptions
+    : widthOptions.slice(0, 18);
 
   // Reset selections when product type changes
   useEffect(() => {
-    setSelectedWidth("")
-    setSelectedRatio("")
-    setSelectedDiameter("")
-    setActiveStep(1)
-    setShowAllWidths(false)
-  }, [productType])
+    setSelectedWidth("");
+    setSelectedRatio("");
+    setSelectedDiameter("");
+    setActiveStep(1);
+    setShowAllWidths(false);
+  }, [productType]);
 
   const handleWidthSelect = (width: string) => {
-    setSelectedWidth(width)
-    setSelectedRatio("")
-    setSelectedDiameter("")
-    setActiveStep(2)
-  }
+    setSelectedWidth(width);
+    setSelectedRatio("");
+    setSelectedDiameter("");
+    setActiveStep(2);
+  };
 
   const handleRatioSelect = (ratio: string) => {
-    setSelectedRatio(ratio)
-    setSelectedDiameter("")
-    setActiveStep(3)
-  }
+    setSelectedRatio(ratio);
+    setSelectedDiameter("");
+    setActiveStep(3);
+  };
 
   const handleDiameterSelect = (diameter: string) => {
-    setSelectedDiameter(diameter)
-  }
+    setSelectedDiameter(diameter);
+  };
 
   const handleViewProducts = () => {
     setSelectedSize({
@@ -119,26 +137,26 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
       ratio: selectedRatio,
       diameter: selectedDiameter,
       productType,
-    })
+    });
     // Navigate to results or next step
-    setMainStep(3)
-  }
+    setMainStep(3);
+  };
 
-  const canProceed = selectedWidth && selectedRatio && selectedDiameter
+  const canProceed = selectedWidth && selectedRatio && selectedDiameter;
 
   const resetToStep = (step: number) => {
-    setActiveStep(step)
+    setActiveStep(step);
     if (step === 1) {
-      setSelectedWidth("")
-      setSelectedRatio("")
-      setSelectedDiameter("")
+      setSelectedWidth("");
+      setSelectedRatio("");
+      setSelectedDiameter("");
     } else if (step === 2) {
-      setSelectedRatio("")
-      setSelectedDiameter("")
+      setSelectedRatio("");
+      setSelectedDiameter("");
     } else if (step === 3) {
-      setSelectedDiameter("")
+      setSelectedDiameter("");
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
@@ -147,18 +165,20 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
         <div className="flex bg-gray-100 rounded-lg p-1">
           <Button
             className={`px-8 py-2 rounded-md transition-colors ${
-              productType === "tire" ? "bg-slate-600 text-white" : "bg-transparent text-gray-600 hover:bg-gray-200"
+              productType === "tire"
+                ? "bg-slate-600 text-white"
+                : "bg-transparent text-gray-600 hover:bg-gray-200"
             }`}
-            onPress={() => setProductType("tire")}
-          >
+            onPress={() => setProductType("tire")}>
             Tire
           </Button>
           <Button
             className={`px-8 py-2 rounded-md transition-colors ${
-              productType === "wheel" ? "bg-slate-600 text-white" : "bg-transparent text-gray-600 hover:bg-gray-200"
+              productType === "wheel"
+                ? "bg-slate-600 text-white"
+                : "bg-transparent text-gray-600 hover:bg-gray-200"
             }`}
-            onPress={() => setProductType("wheel")}
-          >
+            onPress={() => setProductType("wheel")}>
             Wheel
           </Button>
         </div>
@@ -169,13 +189,17 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
         <div className="flex items-center gap-2">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer ${
-              activeStep >= 1 ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"
+              activeStep >= 1
+                ? "bg-orange-500 text-white"
+                : "bg-gray-200 text-gray-500"
             }`}
-            onClick={() => resetToStep(1)}
-          >
+            onClick={() => resetToStep(1)}>
             1
           </div>
-          <span className={`font-medium ${activeStep >= 1 ? "text-gray-800" : "text-gray-400"}`}>Width</span>
+          <span
+            className={`font-medium ${activeStep >= 1 ? "text-gray-800" : "text-gray-400"}`}>
+            Width
+          </span>
         </div>
 
         <div className="w-8 h-0.5 bg-gray-300"></div>
@@ -183,13 +207,17 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
         <div className="flex items-center gap-2">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer ${
-              activeStep >= 2 ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"
+              activeStep >= 2
+                ? "bg-orange-500 text-white"
+                : "bg-gray-200 text-gray-500"
             }`}
-            onClick={() => selectedWidth && resetToStep(2)}
-          >
+            onClick={() => selectedWidth && resetToStep(2)}>
             2
           </div>
-          <span className={`font-medium ${activeStep >= 2 ? "text-gray-800" : "text-gray-400"}`}>Ratio</span>
+          <span
+            className={`font-medium ${activeStep >= 2 ? "text-gray-800" : "text-gray-400"}`}>
+            Ratio
+          </span>
         </div>
 
         <div className="w-8 h-0.5 bg-gray-300"></div>
@@ -197,23 +225,28 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
         <div className="flex items-center gap-2">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer ${
-              activeStep >= 3 ? "bg-orange-500 text-white" : "bg-gray-200 text-gray-500"
+              activeStep >= 3
+                ? "bg-orange-500 text-white"
+                : "bg-gray-200 text-gray-500"
             }`}
-            onClick={() => selectedRatio && resetToStep(3)}
-          >
+            onClick={() => selectedRatio && resetToStep(3)}>
             3
           </div>
-          <span className={`font-medium ${activeStep >= 3 ? "text-gray-800" : "text-gray-400"}`}>Diameter</span>
+          <span
+            className={`font-medium ${activeStep >= 3 ? "text-gray-800" : "text-gray-400"}`}>
+            Diameter
+          </span>
         </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          className="ml-4 text-blue-600 gap-1"
-          startContent={<HelpCircle className="h-4 w-4" />}
-        >
-          need help?
-        </Button>
+        <Link href={"/contact"}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="ml-4 text-blue-600 gap-1"
+            startContent={<HelpCircle className="h-4 w-4" />}>
+            need help?
+          </Button>
+        </Link>
       </div>
 
       {/* Selected Size Display */}
@@ -223,11 +256,13 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
             Selected Size:{" "}
             {productType === "tire" ? (
               <>
-                {selectedWidth?.width || "___"}/{selectedRatio?.ratio || "__"}R{selectedDiameter?.diameter || "__"}
+                {selectedWidth?.width || "___"}/{selectedRatio?.ratio || "__"}R
+                {selectedDiameter?.diameter || "__"}
               </>
             ) : (
               <>
-                {selectedWidth?.width || "___"}/{selectedRatio?.ratio || "__"}x{selectedDiameter?.diameter || "__"}
+                {selectedWidth?.width || "___"}/{selectedRatio?.ratio || "__"}x
+                {selectedDiameter?.diameter || "__"}
               </>
             )}
           </div>
@@ -237,7 +272,7 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
       {/* Step 1: Width Selection */}
       {activeStep === 1 && (
         <div>
-          <h3 className="text-xl font-semibold text-center mb-6">
+          <h3 className="text-xl font-semibold text-gray-700 text-center mb-6">
             Select {productType === "tire" ? "Tire" : "Wheel"} Width
           </h3>
 
@@ -248,7 +283,9 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
           ) : isWidthError ? (
             <div className="text-center py-8">
               <p className="text-red-500 mb-4">Failed to load width options</p>
-              <Button color="primary" onPress={() => window.location.reload()}>
+              <Button
+                color="primary"
+                onPress={() => window.location.reload()}>
                 Retry
               </Button>
             </div>
@@ -261,11 +298,10 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
                     variant="bordered"
                     className={`h-12 ${
                       selectedWidth === width?._id
-                        ? "border-orange-500 bg-orange-50 text-orange-600"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "border-orange-500 bg-orange-50 text-orange-600 "
+                        : "border-gray-300 hover:border-gray-400 text-gray-700"
                     }`}
-                    onPress={() => handleWidthSelect(width)}
-                  >
+                    onPress={() => handleWidthSelect(width)}>
                     {width?.width}
                     {productType === "wheel" && '"'}
                   </Button>
@@ -273,14 +309,19 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
               </div>
               {widthOptions.length > 18 && !showAllWidths && (
                 <div className="text-center">
-                  <Button variant="ghost" className="text-blue-600" onPress={() => setShowAllWidths(true)}>
+                  <Button
+                    variant="ghost"
+                    className="text-blue-600"
+                    onPress={() => setShowAllWidths(true)}>
                     + see all
                   </Button>
                 </div>
               )}
             </>
           ) : (
-            <div className="text-center py-8 text-gray-500">No width options available</div>
+            <div className="text-center py-8 text-gray-700">
+              No width options available
+            </div>
           )}
         </div>
       )}
@@ -288,7 +329,7 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
       {/* Step 2: Ratio Selection (Both Tires and Wheels) */}
       {activeStep === 2 && (
         <div>
-          <h3 className="text-xl font-semibold text-center mb-6">
+          <h3 className="text-xl text-gray-700 font-semibold text-center mb-6">
             Select {productType === "tire" ? "Aspect Ratio" : "Wheel Ratio"}
           </h3>
 
@@ -299,7 +340,9 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
           ) : isRatioError ? (
             <div className="text-center py-8">
               <p className="text-red-500 mb-4">Failed to load ratio options</p>
-              <Button color="primary" onPress={() => window.location.reload()}>
+              <Button
+                color="primary"
+                onPress={() => window.location.reload()}>
                 Retry
               </Button>
             </div>
@@ -312,16 +355,17 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
                   className={`h-12 ${
                     selectedRatio === ratio?._id
                       ? "border-orange-500 bg-orange-50 text-orange-600"
-                      : "border-gray-300 hover:border-gray-400"
+                      : "border-gray-300 hover:border-gray-400 text-gray-700"
                   }`}
-                  onPress={() => handleRatioSelect(ratio)}
-                >
+                  onPress={() => handleRatioSelect(ratio)}>
                   {ratio?.ratio}
                 </Button>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">No ratio options available for the selected width</div>
+            <div className="text-center py-8 text-gray-700">
+              No ratio options available for the selected width
+            </div>
           )}
         </div>
       )}
@@ -329,7 +373,9 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
       {/* Step 3: Diameter Selection */}
       {activeStep === 3 && (
         <div>
-          <h3 className="text-xl font-semibold text-center mb-6">Select Rim Diameter</h3>
+          <h3 className="text-xl font-semibold text-gray-700 text-center mb-6">
+            Select Rim Diameter
+          </h3>
 
           {isDiameterLoading ? (
             <div className="flex justify-center items-center py-12">
@@ -337,8 +383,12 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
             </div>
           ) : isDiameterError ? (
             <div className="text-center py-8">
-              <p className="text-red-500 mb-4">Failed to load diameter options</p>
-              <Button color="primary" onPress={() => window.location.reload()}>
+              <p className="text-red-500 mb-4">
+                Failed to load diameter options
+              </p>
+              <Button
+                color="primary"
+                onPress={() => window.location.reload()}>
                 Retry
               </Button>
             </div>
@@ -351,16 +401,15 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
                   className={`h-12 ${
                     selectedDiameter === diameter?._id
                       ? "border-orange-500 bg-orange-50 text-orange-600"
-                      : "border-gray-300 hover:border-gray-400"
+                      : "border-gray-300 hover:border-gray-400 text-gray-700"
                   }`}
-                  onPress={() => handleDiameterSelect(diameter)}
-                >
+                  onPress={() => handleDiameterSelect(diameter)}>
                   {diameter?.diameter}"
                 </Button>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-700">
               No diameter options available for the selected width and ratio
             </div>
           )}
@@ -374,14 +423,13 @@ const SizeSelector = ({ setMainStep, selectedSize, setSelectedSize }: SizeSelect
             color="primary"
             size="lg"
             className="px-12 py-3 bg-red-400 hover:bg-red-500"
-            onPress={handleViewProducts}
-          >
+            onPress={handleViewProducts}>
             VIEW {productType.toUpperCase()}
           </Button>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SizeSelector
+export default SizeSelector;

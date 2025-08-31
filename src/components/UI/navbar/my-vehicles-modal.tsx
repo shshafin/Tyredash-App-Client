@@ -53,7 +53,7 @@ export function VehicleModal({
         if (savedVehicles) {
           const parsedVehicles = JSON.parse(savedVehicles);
           setVehicles(
-            Array.isArray(parsedVehicles) ? parsedVehicles : [parsedVehicles],
+            Array.isArray(parsedVehicles) ? parsedVehicles : [parsedVehicles]
           );
         } else {
           setVehicles([]);
@@ -107,7 +107,10 @@ export function VehicleModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="lg">
       <ModalContent>
         <ModalHeader className="flex items-center gap-2">
           <Car className="h-5 w-5 text-primary" />
@@ -117,7 +120,10 @@ export function VehicleModal({
         <ModalBody>
           {loading ? (
             <div className="flex justify-center items-center py-8">
-              <Spinner color="primary" size="lg" />
+              <Spinner
+                color="primary"
+                size="lg"
+              />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-6 text-center">
@@ -138,7 +144,9 @@ export function VehicleModal({
           ) : (
             <div className="space-y-4">
               {vehicles.map((vehicle, index) => (
-                <Card key={index} className="border border-default-200">
+                <Card
+                  key={index}
+                  className="border border-default-200">
                   <CardBody>
                     <div className="flex justify-between items-start">
                       <div>
@@ -161,8 +169,7 @@ export function VehicleModal({
                         variant="light"
                         size="sm"
                         startContent={<Trash2 className="h-4 w-4" />}
-                        onPress={() => handleRemoveClick(index)}
-                      >
+                        onPress={() => handleRemoveClick(index)}>
                         Remove
                       </Button>
                     </div>
@@ -176,7 +183,9 @@ export function VehicleModal({
           {showConfirmation && removingIndex !== null && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                <h3 className="text-lg font-semibold mb-2">Remove Vehicle</h3>
+                <h3 className="text-lg text-black font-semibold mb-2">
+                  Remove Vehicle
+                </h3>
                 <p className="text-gray-600 mb-4">
                   Are you sure you want to remove this vehicle?
                   {vehicles[removingIndex] && (
@@ -189,13 +198,14 @@ export function VehicleModal({
                 </p>
                 <div className="flex justify-end gap-2">
                   <Button
-                    color="default"
+                    color="success"
                     variant="light"
-                    onPress={cancelRemove}
-                  >
+                    onPress={cancelRemove}>
                     Cancel
                   </Button>
-                  <Button color="danger" onPress={confirmRemove}>
+                  <Button
+                    color="danger"
+                    onPress={confirmRemove}>
                     Remove
                   </Button>
                 </div>
@@ -205,7 +215,10 @@ export function VehicleModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button color="default" variant="light" onPress={onClose}>
+          <Button
+            color="default"
+            variant="light"
+            onPress={onClose}>
             Close
           </Button>
         </ModalFooter>
