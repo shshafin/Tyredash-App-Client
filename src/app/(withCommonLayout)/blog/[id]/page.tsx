@@ -50,7 +50,7 @@ const BlogDetailSkeleton = () => (
   </div>
 );
 
-export default function BlogDetailPage({ params }: { params: { id: string } }) {
+export default function BlogDetailPage({ params }: any) {
   const unwrappedParams = use(params as any); // unwrap the promise
   const id = (unwrappedParams as any).id;
 
