@@ -4,6 +4,7 @@ import {
   createAppointment,
   deleteAppointment,
   getAppointments,
+  getSingleAppointment,
   updateAppointment,
 } from "../services/Appointment";
 
@@ -19,22 +20,21 @@ export const useCreateAppointment = ({ onSuccess }: any) => {
   });
 };
 
-export const useUpdateAppointment = ({ onSuccess, id }: any) => {
-  return useMutation<any, Error, FormData>({
+export const useUpdateAppointment = ({ onSuccess }: any = {}) => {
+  return useMutation<any, Error, { id: string; data: any }>({
     mutationKey: ["UPDATE_APPOINTMENT"],
-    mutationFn: async (appointmentData) =>
-      await updateAppointment(id, appointmentData),
-    onError: (error) => {
-      toast.error(error.message);
+    mutationFn: async ({ id, data }) => {
+      return await updateAppointment(id, data);
     },
+    onError: (error) => toast.error(error.message),
     onSuccess,
   });
 };
 
-export const useDeleteAppointment = ({ onSuccess, id }: any) => {
-  return useMutation<any, Error, FormData>({
+export const useDeleteAppointment = ({ onSuccess }: any = {}) => {
+  return useMutation<any, Error, string>({
     mutationKey: ["DELETE_APPOINTMENT"],
-    mutationFn: async () => await deleteAppointment(id),
+    mutationFn: async (id) => await deleteAppointment(id),
     onError: (error) => {
       toast.error(error.message);
     },
@@ -46,5 +46,13 @@ export const useGetAppointments = (params: any) => {
   return useQuery({
     queryKey: ["GET_APPOINTMENT"],
     queryFn: async () => await getAppointments(params),
+  });
+};
+
+export const useGetSingleAppointment = (id: string) => {
+  return useQuery({
+    queryKey: ["GET_SINGLE_APPOINTMENT", id],
+    queryFn: async () => await getSingleAppointment(id),
+    enabled: !!id, // Only run query when id exists
   });
 };

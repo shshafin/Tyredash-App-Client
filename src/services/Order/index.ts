@@ -12,13 +12,17 @@ export const getSingleOrder = async (id: string): Promise<any> => {
   }
 };
 
-export const createOrder = async ( order: any): Promise<any> => {
+export const createOrder = async (order: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.post(`/order`, {...order}, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const { data } = await axiosInstance.post(
+      `/order`,
+      { ...order },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return data;
   } catch (error) {
@@ -29,11 +33,15 @@ export const createOrder = async ( order: any): Promise<any> => {
 
 export const updateOrderStatus = async (item: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.patch(`/order/${item?.id}/status`, {status: item?.status}, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const { data } = await axiosInstance.patch(
+      `/order/${item?.id}/status`,
+      { status: item?.status },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return data;
   } catch (error) {
@@ -44,7 +52,9 @@ export const updateOrderStatus = async (item: any): Promise<any> => {
 
 export const cancelOrder = async (id: string, info: any): Promise<any> => {
   try {
-    const { data } = await axiosInstance.patch(`/order/${id}/cancel`, {...info});
+    const { data } = await axiosInstance.patch(`/order/${id}/cancel`, {
+      ...info,
+    });
     return data;
   } catch (error) {
     console.error(error);
@@ -61,5 +71,19 @@ export const getAllOrders = async (params: any) => {
     return data;
   } catch (error: any) {
     throw new Error("Failed to get orders!");
+  }
+};
+
+export const deleteOrder = async (id: string): Promise<any> => {
+  try {
+    const { data } = await axiosInstance.delete(`/order/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    throw new Error("Failed to delete order");
   }
 };

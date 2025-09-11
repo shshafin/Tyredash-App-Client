@@ -13,15 +13,15 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { setIsLoading: userLoading } = useUser();
+  const { setUser, isSetUser } = useUser();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
-  console.log(isSuccess);
-
+  // const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+  // console.log(isSuccess);
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const response = await fetch("http://localhost:5000/api/v1/auth/login", {
@@ -32,23 +32,35 @@ const LoginPage = () => {
       });
 
       const result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.error("Login error:", error);
-    }
 
-    console.log(data);
+      if (response.ok && result.success) {
+        setUser(result.data.user);
+        toast.success("Login successful!");
+
+        // redirect + reload
+        // window.location.href = "/";
+        router.push(redirect || "/");
+      } else {
+        toast.error(result.message || "Login failed!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      router.push((redirect as string) || "/");
-    }
-  }, [isSuccess, redirect, router]);
+  // const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  //   handleUserLogin(data);
+  // };
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     router.push((redirect as string) || "/");
+  //   }
+  // }, [isSuccess, redirect, router]);
 
   return (
     <>
-      {isPending && <Loading />}
+      {/* {isPending && <Loading />} */}
       <div className="flex h-[calc(100vh-200px)] w-full flex-col items-center justify-center px-4">
         <h3 className="my-2 text-2xl font-bold">Login with TyreDash</h3>
         <p className="mb-4">Welcome Back! Let&lsquo;s Get Started</p>

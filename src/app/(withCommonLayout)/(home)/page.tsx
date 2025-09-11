@@ -1,4 +1,4 @@
-import BlogSection from "@/src/components/modules/home/Blog";
+import BlogSection from "@/src/components/modules/home/blog/page";
 import Deals from "@/src/components/modules/home/Deals";
 import FinancingSection from "@/src/components/modules/home/Financing";
 import Landing from "@/src/components/modules/home/Landing";

@@ -26,7 +26,7 @@ export const siteConfig = {
     },
     {
       label: "TIPS & GUIDE",
-      href: "/tips-guide",
+      href: "/blog",
     },
     // {
     //   label: "FINANCING",
@@ -64,7 +64,7 @@ export const siteConfig = {
     },
     {
       label: "TIPS & GUIDE",
-      href: "/tips-guide",
+      href: "/blog",
     },
     // {
     //   label: "FINANCING",

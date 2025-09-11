@@ -43,7 +43,10 @@ export const getFleetNewsById = async (id: string): Promise<any> => {
   }
 };
 
-export const updateFleetNews = async (newsData: any, id: string): Promise<any> => {
+export const updateFleetNews = async (
+  newsData: any,
+  id: string
+): Promise<any> => {
   try {
     const { data } = await axiosInstance.patch(`/fleet-news/${id}`, newsData, {
       headers: {

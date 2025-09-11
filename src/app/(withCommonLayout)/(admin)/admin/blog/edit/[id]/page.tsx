@@ -2,7 +2,12 @@
 
 import { Button } from "@heroui/button";
 import FXInput from "@/src/components/form/FXInput";
-import { FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -10,7 +15,11 @@ import { UploadCloud } from "lucide-react";
 import { Divider } from "@heroui/divider";
 import { useGetSingleBlog, useUpdateBlog } from "@/src/hooks/blog.hook";
 import { useRouter, useParams } from "next/navigation";
-import { DataEmpty, DataError, DataLoading } from "../../../_components/DataFetchingStates";
+import {
+  DataEmpty,
+  DataError,
+  DataLoading,
+} from "../../../_components/DataFetchingStates";
 import { envConfig } from "@/src/config/envConfig";
 import Image from "next/image";
 import { Textarea } from "@heroui/input";
@@ -29,15 +38,18 @@ export default function EditBlogPage() {
 
   const { data: blog, isLoading, isError } = useGetSingleBlog(blogId);
 
-  const { mutate: handleUpdateBlog, isPending: updateBlogPending } = useUpdateBlog({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
-      queryClient.invalidateQueries({ queryKey: ["GET_SINGLE_BLOG", blogId] });
-      toast.success("Blog updated successfully");
-      router.push("/admin/blog");
-    },
-    id: blogId,
-  });
+  const { mutate: handleUpdateBlog, isPending: updateBlogPending } =
+    useUpdateBlog({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
+        queryClient.invalidateQueries({
+          queryKey: ["GET_SINGLE_BLOG", blogId],
+        });
+        toast.success("Blog updated successfully");
+        router.push("/admin/blog");
+      },
+      id: blogId,
+    });
 
   // Reset form with blog data when loaded
   useEffect(() => {
@@ -52,17 +64,10 @@ export default function EditBlogPage() {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("category", data.category);
 
-    formData.append(
-      "data",
-      JSON.stringify({
-        title: data.title,
-        description: data.description,
-        category: data.category,
-      })
-    );
-
-    // Only append file if a new image is selected
     if (imageFiles.length > 0) {
       formData.append("file", imageFiles[0]);
     }
@@ -94,18 +99,33 @@ export default function EditBlogPage() {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">Edit Blog</h1>
-        <Button color="default" variant="bordered" onPress={() => router.back()}>
+        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
+          Edit Blog
+        </h1>
+        <Button
+          color="default"
+          variant="bordered"
+          onPress={() => router.back()}>
           ← Back
         </Button>
       </div>
 
       <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6">
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FXInput label="Blog Title" name="title" required />
-              <FXInput label="Category" name="category" required />
+              <FXInput
+                label="Blog Title"
+                name="title"
+                required
+              />
+              <FXInput
+                label="Category"
+                name="category"
+                required
+              />
             </div>
 
             <div className="w-full">
@@ -113,7 +133,9 @@ export default function EditBlogPage() {
                 label="Blog Description"
                 placeholder="Enter blog description..."
                 minRows={4}
-                {...register("description", { required: "Description is required" })}
+                {...register("description", {
+                  required: "Description is required",
+                })}
                 required
               />
             </div>
@@ -121,18 +143,27 @@ export default function EditBlogPage() {
             <div className="w-full">
               <label
                 htmlFor="image"
-                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-              >
-                <span className="text-md font-medium">Upload New Blog Image (Optional)</span>
+                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
+                <span className="text-md font-medium">
+                  Upload New Blog Image (Optional)
+                </span>
                 <UploadCloud className="size-6" />
               </label>
-              <input className="hidden" id="image" type="file" onChange={handleImageChange} accept="image/*" />
+              <input
+                className="hidden"
+                id="image"
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
             </div>
 
             {/* Show current image if no new image is selected */}
             {imagePreviews.length === 0 && blog.data.image && (
               <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Current Image:</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Current Image:
+                </p>
                 <div className="flex gap-5 my-5 flex-wrap">
                   <div className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                     <Image
@@ -150,13 +181,14 @@ export default function EditBlogPage() {
             {/* Show new image previews */}
             {imagePreviews.length > 0 && (
               <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">New Image Preview:</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  New Image Preview:
+                </p>
                 <div className="flex gap-5 my-5 flex-wrap">
                   {imagePreviews.map((imageDataUrl: string, index: number) => (
                     <div
                       key={index}
-                      className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                    >
+                      className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                       <img
                         alt={`Preview ${index}`}
                         className="h-full w-full object-cover rounded-md"
@@ -171,10 +203,17 @@ export default function EditBlogPage() {
             <Divider className="my-6" />
 
             <div className="flex gap-4 justify-end">
-              <Button color="default" variant="bordered" onPress={() => router.back()}>
+              <Button
+                color="default"
+                variant="bordered"
+                onPress={() => router.back()}>
                 Cancel
               </Button>
-              <Button color="primary" type="submit" disabled={updateBlogPending} className="px-8">
+              <Button
+                color="primary"
+                type="submit"
+                disabled={updateBlogPending}
+                className="px-8">
                 {updateBlogPending ? "Updating..." : "Update Blog"}
               </Button>
             </div>

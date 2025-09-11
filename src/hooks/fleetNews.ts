@@ -1,7 +1,12 @@
 import { getFleetNewsById } from "./../services/News/index";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createFleetNews, deleteFleetNews, updateFleetNews, getAllFleetNews } from "../services/News";
+import {
+  createFleetNews,
+  deleteFleetNews,
+  updateFleetNews,
+  getAllFleetNews,
+} from "../services/News";
 
 export const useGetAllFleetNews = () => {
   return useQuery({

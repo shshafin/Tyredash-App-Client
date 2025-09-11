@@ -53,14 +53,14 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="/blogs"
+                  href="/blog"
                   className="hover:text-blue-400 transition duration-200">
                   Tips & Guide
                 </a>
               </li>
               <li>
                 <a
-                  href="/appointments"
+                  href="/appointment"
                   className="hover:text-blue-400 transition duration-200">
                   Appointments
                 </a>
@@ -146,13 +146,13 @@ const Footer = () => {
         <p>© 2025 Tires Dash. All rights reserved.</p>
         <p>
           <a
-            href="#"
+            href="/privacy"
             className="hover:text-blue-400 transition duration-200">
             Privacy Policy
           </a>{" "}
           |{" "}
           <a
-            href="#"
+            href="/terms"
             className="hover:text-blue-400 transition duration-200">
             Terms of Service
           </a>

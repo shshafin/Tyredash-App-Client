@@ -88,14 +88,17 @@ const StatusBadge = ({
 
   return (
     <span
-      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(status, type)}`}
-    >
+      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(status, type)}`}>
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 };
 
-export default function OrderTable({ orders }: any) {
+export default function OrderTable({
+  orders,
+  setSelectedOrder,
+  onDeleteOpen,
+}: any) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -177,15 +180,12 @@ export default function OrderTable({ orders }: any) {
               key={order._id} // not order.status — key should be unique per item, not per value
               selectedKeys={[order.status]} // controlled selected value
               onChange={(e) => {
-                handleStatusChange(order._id, e.target.value)
+                handleStatusChange(order._id, e.target.value);
               }}
               className="min-w-[120px]"
-              isDisabled={isUpdatingStatus}
-            >
+              isDisabled={isUpdatingStatus}>
               {orderStatusOptions.map((option) => (
-                <SelectItem key={option.value}>
-                  {option.label}
-                </SelectItem>
+                <SelectItem key={option.value}>{option.label}</SelectItem>
               ))}
             </Select>
           </div>
@@ -193,7 +193,10 @@ export default function OrderTable({ orders }: any) {
 
       case "paymentStatus":
         return (
-          <StatusBadge status={order.payment?.paymentStatus} type="payment" />
+          <StatusBadge
+            status={order.payment?.paymentStatus}
+            type="payment"
+          />
         );
 
       case "paymentMethod":
@@ -221,10 +224,9 @@ export default function OrderTable({ orders }: any) {
             <Tooltip content="View Order Details">
               <span
                 onClick={() => {
-                  router.push(`/admin/orders/${order._id}`);
+                  router.push(`/admin/order/${order._id}`);
                 }}
-                className="text-lg text-blue-500 cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-blue-500 cursor-pointer active:opacity-50">
                 <Eye />
               </span>
             </Tooltip>
@@ -240,7 +242,7 @@ export default function OrderTable({ orders }: any) {
               </span>
             </Tooltip> */}
 
-            {order.status === "shipped" && (
+            {/* {order.status === "shipped" && (
               <Tooltip content="Track Order">
                 <span
                   onClick={() => {
@@ -251,17 +253,18 @@ export default function OrderTable({ orders }: any) {
                   <Truck />
                 </span>
               </Tooltip>
-            )}
+            )} */}
 
-            <Tooltip content="Delete Order" className="bg-rose-600">
+            <Tooltip
+              content="Delete Order"
+              className="bg-rose-600">
               <span
                 onClick={() => {
                   // Handle delete order
-                  // setSelectedOrder(order);
-                  // onDeleteOpen();
+                  setSelectedOrder(order);
+                  onDeleteOpen();
                 }}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -280,8 +283,7 @@ export default function OrderTable({ orders }: any) {
           {(column: any) => (
             <TableColumn
               key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-            >
+              align={column.uid === "actions" ? "center" : "start"}>
               {column.name}
             </TableColumn>
           )}

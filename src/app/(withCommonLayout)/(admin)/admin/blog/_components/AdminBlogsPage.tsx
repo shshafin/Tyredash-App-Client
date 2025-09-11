@@ -3,12 +3,23 @@
 import { useDeleteBlog, useGetBlogs } from "@/src/hooks/blog.hook";
 import { IBlog } from "@/src/types";
 import { Button } from "@heroui/button";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@heroui/modal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DataEmpty, DataError, DataLoading } from "../../_components/DataFetchingStates";
+import {
+  DataEmpty,
+  DataError,
+  DataLoading,
+} from "../../_components/DataFetchingStates";
 import BlogsTable from "./BlogsTable";
 
 export default function AdminBlogsPage() {
@@ -23,15 +34,16 @@ export default function AdminBlogsPage() {
 
   const [selectedBlog, setSelectedBlog] = useState<IBlog | null>(null);
 
-  const { mutate: handleDeleteBlog, isPending: deleteBlogPending } = useDeleteBlog({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
-      toast.success("Blog deleted successfully");
-      setSelectedBlog(null);
-      onDeleteClose();
-    },
-    id: selectedBlog?._id,
-  });
+  const { mutate: handleDeleteBlog, isPending: deleteBlogPending } =
+    useDeleteBlog({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_BLOGS"] });
+        toast.success("Blog deleted successfully");
+        setSelectedBlog(null);
+        onDeleteClose();
+      },
+      id: selectedBlog?._id,
+    });
 
   const { data: blogs, isLoading, isError } = useGetBlogs({});
 
@@ -47,19 +59,25 @@ export default function AdminBlogsPage() {
     if (page > totalPages) setPage(1);
   }, [totalItems, pageSize, totalPages, page]);
 
-  const paginatedBlogs = blogs ? { ...blogs, data: blogs.data.slice((page - 1) * pageSize, page * pageSize) } : blogs;
+  const paginatedBlogs = blogs
+    ? {
+        ...blogs,
+        data: blogs.data.slice((page - 1) * pageSize, page * pageSize),
+      }
+    : blogs;
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">Blog Management</h1>
+        <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
+          Blog Management
+        </h1>
         <div className="flex gap-2">
           <Button
             color="primary"
             variant="bordered"
             className="px-6 py-2 rounded-full text-sm font-medium transition-all transform bg-gradient-to-r from-purple-500 to-indigo-600 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 text-white"
-            onPress={() => router.push("/admin/blog/create")}
-          >
+            onPress={() => router.push("/admin/blog/create")}>
             + Add Blog
           </Button>
         </div>
@@ -80,10 +98,11 @@ export default function AdminBlogsPage() {
                   setPageSize(Number(e.target.value));
                   setPage(1);
                 }}
-                className="border rounded px-2 py-1"
-              >
+                className="border rounded px-2 py-1">
                 {pageSizeOptions.map((opt) => (
-                  <option key={opt} value={opt}>
+                  <option
+                    key={opt}
+                    value={opt}>
                     {opt}
                   </option>
                 ))}
@@ -97,22 +116,24 @@ export default function AdminBlogsPage() {
                 variant="bordered"
                 className="rounded disabled:opacity-50"
                 onPress={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
+                disabled={page === 1}>
                 Prev
               </Button>
               <Button
                 className="rounded disabled:opacity-50"
                 variant="bordered"
                 onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-              >
+                disabled={page === totalPages}>
                 Next
               </Button>
             </div>
           </div>
 
-          <BlogsTable blogs={paginatedBlogs} onDeleteOpen={onDeleteOpen} setSelectedBlog={setSelectedBlog} />
+          <BlogsTable
+            blogs={paginatedBlogs}
+            onDeleteOpen={onDeleteOpen}
+            setSelectedBlog={setSelectedBlog}
+          />
         </>
       )}
 
@@ -128,19 +149,37 @@ export default function AdminBlogsPage() {
   );
 }
 
-const DeleteBlogModal = ({ isOpen, onOpenChange, handleDeleteBlog, deleteBlogPending, selectedBlog }: any) => {
+const DeleteBlogModal = ({
+  isOpen,
+  onOpenChange,
+  handleDeleteBlog,
+  deleteBlogPending,
+  selectedBlog,
+}: any) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Confirm Delete</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">
+              Confirm Delete
+            </ModalHeader>
             <ModalBody>
-              <p>Are you sure you want to delete the blog "{selectedBlog?.title}"?</p>
-              <p className="text-sm text-danger">This action cannot be undone.</p>
+              <p>
+                Are you sure you want to delete the blog "{selectedBlog?.title}
+                "?
+              </p>
+              <p className="text-sm text-danger">
+                This action cannot be undone.
+              </p>
             </ModalBody>
             <ModalFooter>
-              <Button color="default" variant="light" onPress={onClose}>
+              <Button
+                color="default"
+                variant="light"
+                onPress={onClose}>
                 Cancel
               </Button>
               <Button
@@ -148,8 +187,7 @@ const DeleteBlogModal = ({ isOpen, onOpenChange, handleDeleteBlog, deleteBlogPen
                 onPress={() => {
                   handleDeleteBlog();
                 }}
-                disabled={deleteBlogPending}
-              >
+                disabled={deleteBlogPending}>
                 {deleteBlogPending ? "Deleting..." : "Delete"}
               </Button>
             </ModalFooter>

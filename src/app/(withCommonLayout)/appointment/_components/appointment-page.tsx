@@ -342,9 +342,6 @@ const ServicesStep = ({ appointmentData, setAppointmentData, onNext }: any) => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-lg font-bold text-red-600">
-                        {service.price}
-                      </span>
                       <Checkbox
                         isSelected={
                           appointmentData.services.mostPopularServices[

@@ -1,4 +1,6 @@
 "use client";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import type { ThemeProviderProps } from "next-themes";
 import * as React from "react";
@@ -32,7 +34,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         <HeroUIProvider navigate={router.push}>
-          <Toaster richColors position="top-center" closeButton />
+          <Toaster
+            richColors
+            position="top-center"
+            closeButton
+          />
           <NextThemesProvider {...themeProps}>
             {/* Wrap children with a fragment */}
             <>{children}</>

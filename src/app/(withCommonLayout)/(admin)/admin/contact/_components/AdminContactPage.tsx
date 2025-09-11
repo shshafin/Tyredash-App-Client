@@ -1,9 +1,7 @@
 "use client";
 
-import { useGetAllSupportRequests } from "@/src/hooks/fleetSupport.hook";
 import { Eye } from "lucide-react";
 import { Button } from "@heroui/button";
-import { Input } from "@heroui/input";
 import {
   Modal,
   ModalBody,
@@ -123,22 +121,25 @@ export default function InquiryTable() {
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="ml-auto flex items-center gap-2">
-          <label className="text-sm text-default-500">Rows:</label>
-          <select
-            value={rowsPerPage}
-            onChange={(e) => setRowsPerPage(Number(e.target.value))}
-            className="h-8 px-2 rounded border bg-white dark:bg-gray-800">
-            {[5, 10, 20, 50].map((n) => (
-              <option
-                key={n}
-                value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="flex items-center justify-end gap-3">
+        <label
+          htmlFor="rows"
+          className="text-sm font-medium text-gray-600 dark:text-gray-300">
+          Rows per page:
+        </label>
+        <select
+          id="rows"
+          value={rowsPerPage}
+          onChange={(e) => setRowsPerPage(Number(e.target.value))}
+          className="h-9 px-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          {[5, 10, 20, 50].map((n) => (
+            <option
+              key={n}
+              value={n}>
+              {n}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="overflow-x-auto rounded-lg">
@@ -148,9 +149,7 @@ export default function InquiryTable() {
           <div className="p-6 text-center">No Inquiries available</div>
         ) : (
           <>
-            <Table
-              aria-label="Fleet Support Table"
-              className="border rounded-md">
+            <Table aria-label="Fleet Support Table">
               <TableHeader columns={columns}>
                 {(column: any) => (
                   <TableColumn

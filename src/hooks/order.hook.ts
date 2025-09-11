@@ -1,10 +1,24 @@
-import { useQuery, useMutation, useQueryClient, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+  UseMutationResult,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
-import { cancelOrder, createOrder, getAllOrders, getSingleOrder, updateOrderStatus } from "../services/Order";
-
+import {
+  cancelOrder,
+  createOrder,
+  deleteOrder,
+  getAllOrders,
+  getSingleOrder,
+  updateOrderStatus,
+} from "../services/Order";
 
 // Query: Get single product by ID
-export const useGetSingleOrder = (productId: string | undefined): UseQueryResult<any, Error> => {
+export const useGetSingleOrder = (
+  productId: string | undefined
+): UseQueryResult<any, Error> => {
   return useQuery({
     queryKey: ["GET_SINGLE_ORDER", productId],
     queryFn: async () => {
@@ -15,7 +29,9 @@ export const useGetSingleOrder = (productId: string | undefined): UseQueryResult
   });
 };
 // Mutation: create order
-export const useCreateOrder = ({onSuccess}: any):  UseMutationResult<any, Error>=> {
+export const useCreateOrder = ({
+  onSuccess,
+}: any): UseMutationResult<any, Error> => {
   return useMutation({
     mutationKey: ["CREATE_ORDER"],
     mutationFn: async (order: any) => await createOrder(order),
@@ -27,16 +43,14 @@ export const useCreateOrder = ({onSuccess}: any):  UseMutationResult<any, Error>
 };
 
 // Mutation: UPDATE ORDER STATUS
-export const useUpdateOrderStatus = (
-  {onSuccess} : any
-) => {
+export const useUpdateOrderStatus = ({ onSuccess }: any) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["UPDATE_ORDER_STATUS"],
     mutationFn: async (item: any) => await updateOrderStatus(item),
     onSuccess: () => {
       toast.success("Order updated successfully");
-      queryClient.invalidateQueries({queryKey: ["GET_ORDERS"]});
+      queryClient.invalidateQueries({ queryKey: ["GET_ORDERS"] });
       onSuccess?.();
     },
     onError: (error: any) => {
@@ -46,17 +60,14 @@ export const useUpdateOrderStatus = (
 };
 
 // Mutation: CANCEL ORDER
-export const useCancelOrder = (
-  {id,
-  onSuccess} : any
-) => {
+export const useCancelOrder = ({ id, onSuccess }: any) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["CANCEL_ORDER"],
     mutationFn: async (item: any) => await cancelOrder(id, item),
     onSuccess: () => {
       toast.success("Order canceled successfully");
-      queryClient.invalidateQueries({queryKey: ["GET_ORDERS", id]});
+      queryClient.invalidateQueries({ queryKey: ["GET_ORDERS", id] });
       onSuccess?.();
     },
     onError: (error: any) => {
@@ -70,5 +81,16 @@ export const useGetAllOrders = (params: any) => {
   return useQuery({
     queryKey: ["GET_ORDERS", params],
     queryFn: async () => await getAllOrders(params),
+  });
+};
+
+export const useDeleteOrder = ({ onSuccess, id }: any) => {
+  return useMutation<any, Error, FormData>({
+    mutationKey: ["DELETE_ORDER"],
+    mutationFn: async () => await deleteOrder(id),
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess,
   });
 };

@@ -11,7 +11,7 @@ export const createAppointment = async (appointmentData: any): Promise<any> => {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     return data;
@@ -23,19 +23,14 @@ export const createAppointment = async (appointmentData: any): Promise<any> => {
 
 export const updateAppointment = async (
   id: string,
-  appointmentData: any,
+  appointmentData: any
 ): Promise<any> => {
   try {
     const { data } = await axiosInstance.patch(
       `/appointments/${id}`,
       appointmentData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+      { headers: { "Content-Type": "application/json" } }
     );
-
     return data;
   } catch (error) {
     console.error(error);
@@ -56,6 +51,16 @@ export const deleteAppointment = async (id: string): Promise<any> => {
 export const getAppointments = async (params: any) => {
   try {
     const { data } = await axiosInstance.get("/appointments", { params });
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getSingleAppointment = async (appointmentId: any) => {
+  try {
+    const { data } = await axiosInstance.get(`/appointments/${appointmentId}`);
 
     return data;
   } catch (error: any) {

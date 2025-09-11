@@ -1,6 +1,8 @@
 "use server";
 
+import { envConfig } from "@/src/config/envConfig";
 import { axiosInstance } from "@/src/lib/AxiosInstance";
+import { axiosInstanceClient } from "@/src/lib/AxiosInstance/axiosInstance.client";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -25,28 +27,21 @@ export const loginUser = async (userData: FieldValues) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", userData);
 
-    // if (data?.success) {
-    //   // Save the tokens to cookies
-    //   (await cookies()).set("accessToken", data?.data?.accessToken, {
-    //     httpOnly: true,
-    //     secure: true,
-    //     sameSite: "strict",
-    //   });
-    //   (await cookies()).set("refresh_token", data?.data?.refreshToken, {
-    //     httpOnly: true,
-    //     secure: true,
-    //     sameSite: "strict",
-    //   });
-    // }
+    if (!data?.success) {
+      throw new Error(data?.message || "Login failed");
+    }
+
+    console.log(data, "data from loginUser");
     return data;
   } catch (error: any) {
-    console.error("Login error: ", error);
+    console.error("Login error:", error);
     throw new Error(
-      error?.response?.data?.message || "An error occurred during login."
+      error?.response?.data?.message ||
+        error?.message ||
+        "An error occurred during login."
     );
   }
 };
-
 // ! Logout User
 
 export const logoutUser = async () => {

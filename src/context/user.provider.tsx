@@ -22,6 +22,7 @@ interface IUserProviderValues {
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean | null>(null);
 
   const handleUser = async () => {
     const user = await getCurrentUser();
@@ -29,10 +30,13 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(user);
     setIsLoading(false);
   };
+  console.log(user, "user from user.provider");
 
   useEffect(() => {
-    handleUser();
-  }, [isLoading]);
+    if (!user) {
+      handleUser();
+    }
+  }, [isLoading, user]);
   return (
     <UserContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
       {children}

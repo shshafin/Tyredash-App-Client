@@ -7,6 +7,7 @@ const config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
+  safelist: ["bg-purple-500", "bg-pink-500", "bg-pink-100"],
   theme: {
     extend: {
       fontFamily: {

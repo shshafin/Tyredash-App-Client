@@ -2,7 +2,12 @@
 
 import { Button } from "@heroui/button";
 import FXInput from "@/src/components/form/FXInput";
-import { FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import {
+  FieldValues,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -12,7 +17,11 @@ import { Select, SelectItem } from "@heroui/select";
 import { useGetSingleDeal, useUpdateDeal } from "@/src/hooks/deals.hook";
 import { useGetBrands } from "@/src/hooks/brand.hook";
 import { useRouter, useParams } from "next/navigation";
-import { DataEmpty, DataError, DataLoading } from "../../../_components/DataFetchingStates";
+import {
+  DataEmpty,
+  DataError,
+  DataLoading,
+} from "../../../_components/DataFetchingStates";
 import { envConfig } from "@/src/config/envConfig";
 import Image from "next/image";
 
@@ -31,27 +40,30 @@ export default function EditDealPage() {
   const { data: deal, isLoading, isError } = useGetSingleDeal(dealId);
   const { data: brands } = useGetBrands({});
 
-  const { mutate: handleUpdateDeal, isPending: updateDealPending } = useUpdateDeal({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_ALL_DEALS"] });
-      queryClient.invalidateQueries({ queryKey: ["GET_SINGLE_DEAL", dealId] });
-      toast.success("Deal updated successfully");
-      router.push("/admin/deals");
-    },
-    id: dealId,
-  });
+  const { mutate: handleUpdateDeal, isPending: updateDealPending } =
+    useUpdateDeal({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_ALL_DEALS"] });
+        queryClient.invalidateQueries({
+          queryKey: ["GET_SINGLE_DEAL", dealId],
+        });
+        toast.success("Deal updated successfully");
+        router.push("/admin/deals");
+      },
+      id: dealId,
+    });
 
   // Reset form with deal data when loaded
   useEffect(() => {
     if (deal?.data) {
       reset({
-        title: deal.data.title,
-        description: deal.data.description,
-        discountPercentage: deal.data.discountPercentage,
-        brand: deal.data.brand._id,
-        applicableProducts: deal.data.applicableProducts,
-        validFrom: new Date(deal.data.validFrom).toISOString().split("T")[0],
-        validTo: new Date(deal.data.validTo).toISOString().split("T")[0],
+        title: deal?.data?.title,
+        description: deal?.data?.description,
+        discountPercentage: deal?.data?.discountPercentage,
+        brand: deal?.data.brand?._id,
+        applicableProducts: deal?.data?.applicableProducts,
+        validFrom: new Date(deal?.data?.validFrom).toISOString().split("T")[0],
+        validTo: new Date(deal?.data?.validTo).toISOString().split("T")[0],
       });
     }
   }, [deal, reset]);
@@ -67,12 +79,12 @@ export default function EditDealPage() {
     formData.append(
       "data",
       JSON.stringify({
-        title: data.title,
-        description: data.description,
-        discountPercentage: data.discountPercentage,
-        brand: data.brand,
-        validFrom: data.validFrom,
-        validTo: data.validTo,
+        title: data?.title,
+        description: data?.description,
+        discountPercentage: data?.discountPercentage,
+        brand: data?.brand,
+        validFrom: data?.validFrom,
+        validTo: data?.validTo,
         applicableProducts: reformApplicableProducts,
       })
     );
@@ -112,26 +124,47 @@ export default function EditDealPage() {
         <h1 className="text-md md:text-3xl font-semibold text-gray-900 dark:text-white">
           Edit Deal: {deal.data.title}
         </h1>
-        <Button color="default" variant="bordered" onPress={() => router.back()}>
+        <Button
+          color="default"
+          variant="bordered"
+          onPress={() => router.back()}>
           ← Back
         </Button>
       </div>
 
       <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6">
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FXInput label="Deal Title" name="title" required />
-              <FXInput label="Description" name="description" required />
-              <FXInput label="Discount Percentage" name="discountPercentage" type="number" required />
+              <FXInput
+                label="Deal Title"
+                name="title"
+                required
+              />
+              <FXInput
+                label="Description"
+                name="description"
+                required
+              />
+              <FXInput
+                label="Discount Percentage"
+                name="discountPercentage"
+                type="number"
+                required
+              />
 
               <Select
                 label="Brand"
                 isRequired
-                defaultSelectedKeys={[deal.data.brand._id]}
-                {...methods.register("brand", { required: "Brand is required" })}
-              >
-                {brands?.data?.map((brand: any) => <SelectItem key={brand._id}>{brand.name}</SelectItem>)}
+                defaultSelectedKeys={[deal?.data?.brand?._id]}
+                {...methods.register("brand", {
+                  required: "Brand is required",
+                })}>
+                {brands?.data?.map((brand: any) => (
+                  <SelectItem key={brand?._id}>{brand?.name}</SelectItem>
+                ))}
               </Select>
 
               <Select
@@ -139,16 +172,27 @@ export default function EditDealPage() {
                 selectionMode="multiple"
                 isRequired
                 defaultSelectedKeys={deal.data.applicableProducts}
-                {...methods.register("applicableProducts", { required: "At least one product type is required" })}
-              >
+                {...methods.register("applicableProducts", {
+                  required: "At least one product type is required",
+                })}>
                 <SelectItem key="tire">Tires</SelectItem>
                 <SelectItem key="wheel">Wheels</SelectItem>
                 <SelectItem key="product">Products</SelectItem>
               </Select>
 
               <div className="md:col-span-2 grid grid-cols-2 gap-4">
-                <FXInput label="Valid From" name="validFrom" type="date" required />
-                <FXInput label="Valid To" name="validTo" type="date" required />
+                <FXInput
+                  label="Valid From"
+                  name="validFrom"
+                  type="date"
+                  required
+                />
+                <FXInput
+                  label="Valid To"
+                  name="validTo"
+                  type="date"
+                  required
+                />
               </div>
             </div>
 
@@ -171,12 +215,19 @@ export default function EditDealPage() {
             <div className="w-full">
               <label
                 htmlFor="image"
-                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100"
-              >
-                <span className="text-md font-medium">Upload New Image (Optional)</span>
+                className="flex h-20 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-default-200 bg-default-50 text-default-500 shadow-sm transition hover:border-default-400 hover:bg-default-100">
+                <span className="text-md font-medium">
+                  Upload New Image (Optional)
+                </span>
                 <UploadCloud className="size-6" />
               </label>
-              <input className="hidden" id="image" type="file" onChange={handleImageChange} accept="image/*" />
+              <input
+                className="hidden"
+                id="image"
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
             </div>
 
             {imagePreviews.length > 0 && (
@@ -184,8 +235,7 @@ export default function EditDealPage() {
                 {imagePreviews.map((imageDataUrl: string, index: number) => (
                   <div
                     key={index}
-                    className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2"
-                  >
+                    className="relative size-32 rounded-xl border-2 border-dashed border-default-300 p-2">
                     <img
                       alt={`Preview ${index}`}
                       className="h-full w-full object-cover rounded-md"
@@ -199,10 +249,17 @@ export default function EditDealPage() {
             <Divider className="my-6" />
 
             <div className="flex gap-4 justify-end">
-              <Button color="default" variant="bordered" onPress={() => router.back()}>
+              <Button
+                color="default"
+                variant="bordered"
+                onPress={() => router.back()}>
                 Cancel
               </Button>
-              <Button color="primary" type="submit" disabled={updateDealPending} className="px-8">
+              <Button
+                color="primary"
+                type="submit"
+                disabled={updateDealPending}
+                className="px-8">
                 {updateDealPending ? "Updating..." : "Update Deal"}
               </Button>
             </div>

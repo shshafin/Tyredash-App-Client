@@ -1,180 +1,201 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useGetSingleWheel } from "@/src/hooks/wheel.hook"
-import { useUser } from "@/src/context/user.provider"
-import { Button } from "@heroui/button"
-import { Card, CardBody } from "@heroui/card"
-import { Chip } from "@heroui/chip"
-import { Tabs, Tab } from "@heroui/tabs"
-import { ShoppingCart, Heart, Star, Shield, Truck, ArrowLeft, Plus, Minus, Check, Info, Settings } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { toast } from "sonner"
-import { useQueryClient } from "@tanstack/react-query"
-import { useAddItemToCart } from "@/src/hooks/cart.hook"
-import { useAddItemToWishlist } from "@/src/hooks/wishlist.hook"
-import { useGetProductReview, useCreateReview, useUpdateReview, useDeleteReview } from "@/src/hooks/review.hook"
-import { redirect } from "next/navigation"
+import { useState } from "react";
+import { useGetSingleWheel } from "@/src/hooks/wheel.hook";
+import { useUser } from "@/src/context/user.provider";
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { Tabs, Tab } from "@heroui/tabs";
+import {
+  ShoppingCart,
+  Heart,
+  Star,
+  Shield,
+  Truck,
+  ArrowLeft,
+  Plus,
+  Minus,
+  Check,
+  Info,
+  Settings,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAddItemToCart } from "@/src/hooks/cart.hook";
+import { useAddItemToWishlist } from "@/src/hooks/wishlist.hook";
+import {
+  useGetProductReview,
+  useCreateReview,
+  useUpdateReview,
+  useDeleteReview,
+} from "@/src/hooks/review.hook";
+import { redirect } from "next/navigation";
 
 interface WheelData {
-  _id: string
-  name: string
-  year: { year: number }
-  make: { make: string; logo: string }
-  model: { model: string }
-  trim: { trim: string }
-  tireSize: { tireSize: string }
-  drivingType: { title: string; subTitle: string }
-  brand: { name: string; logo: string; description: string }
-  category: { name: string; image: string }
-  description: string
-  images: string[]
-  price: number
-  discountPrice: number
-  stockQuantity: number
-  warranty: string
+  _id: string;
+  name: string;
+  year: { year: number };
+  make: { make: string; logo: string };
+  model: { model: string };
+  trim: { trim: string };
+  tireSize: { tireSize: string };
+  drivingType: { title: string; subTitle: string };
+  brand: { name: string; logo: string; description: string };
+  category: { name: string; image: string };
+  description: string;
+  images: string[];
+  price: number;
+  discountPrice: number;
+  stockQuantity: number;
+  warranty: string;
   // Wheel specifications
-  RimDiameter: number
-  RimWidth: number
-  boltPattern: string
-  offset: number
-  hubBoreSize: number
-  numberOFBolts: number
-  loadCapacity: number
-  loadRating: number
-  finish: string
-  wheelColor: string
-  materialType: string
-  wheelSize: string
-  wheelAccent: string
-  wheelPieces: string
-  wheelWidth: string
-  wheelType: string
+  diameter: { diameter: number };
+  width: { width: number };
+  boltPattern: string;
+  offset: number;
+  hubBoreSize: number;
+  numberOFBolts: number;
+  loadCapacity: number;
+  loadRating: number;
+  finish: string;
+  wheelColor: string;
+  materialType: string;
+  wheelSize: string;
+  wheelAccent: string;
+  wheelPieces: string;
+  wheelWidth: string;
+  wheelType: string;
   // Additional info
-  productLine: string[]
-  conditionInfo: string
-  unitName: string
-  grossWeight: string
-  GTIN: string
-  ATVOffset: string
-  BoltsQuantity: string
-  hubBore: string
-  constructionType: string
+  productLine: string[];
+  conditionInfo: string;
+  unitName: string;
+  grossWeight: string;
+  GTIN: string;
+  ATVOffset: string;
+  BoltsQuantity: string;
+  hubBore: string;
+  constructionType: string;
 }
 
 const SingleWheelPage = ({ params }: { params: { id: string } }) => {
-  const { user } = useUser()
-  const queryClient = useQueryClient()
-  const { data, isLoading, isError } = useGetSingleWheel(params.id)
-  const wheel: WheelData = data?.data
+  const { user } = useUser();
+  const queryClient = useQueryClient();
+  const { data, isLoading, isError } = useGetSingleWheel(params.id);
+  const wheel: WheelData = data?.data;
 
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [quantity, setQuantity] = useState(1)
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const { mutate: addToCart, isPending: addingToCart } = useAddItemToCart({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_CART"] })
-      toast.success("Added to cart successfully!")
+      queryClient.invalidateQueries({ queryKey: ["GET_CART"] });
+      toast.success("Added to cart successfully!");
     },
     onError: () => {
-      toast.error("Failed to add to cart")
+      toast.error("Failed to add to cart");
     },
     userId: user?._id,
-  })
+  });
 
-  const { mutate: addToWishlist, isPending: addingToWishlist } = useAddItemToWishlist({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["GET_WISHLIST"] })
-      toast.success("Added to wishlist!")
-    },
-    onError: () => {
-      toast.error("Failed to add to wishlist")
-    },
-    userId: user?._id,
-  })
+  const { mutate: addToWishlist, isPending: addingToWishlist } =
+    useAddItemToWishlist({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["GET_WISHLIST"] });
+        toast.success("Added to wishlist!");
+      },
+      onError: () => {
+        toast.error("Failed to add to wishlist");
+      },
+      userId: user?._id,
+    });
 
   // Review hooks and state
   const {
     data: reviewsData,
     isLoading: reviewsLoading,
     refetch: refetchReview,
-  } = useGetProductReview({ id: params.id, productType: "wheel" })
-  const reviews = reviewsData?.data?.reviews || []
-  const reviewStats = reviewsData?.data?.stats || { averageRating: 0, reviewCount: 0, ratingDistribution: {} }
-  console.log({ reviewsData })
+  } = useGetProductReview({ id: params.id, productType: "wheel" });
+  const reviews = reviewsData?.data || [];
+  const totalRating = reviews.reduce(
+    (sum: any, review: any) => sum + review.rating,
+    0
+  );
+  const averageRating = reviews.length ? totalRating / reviews.length : 0;
 
-  const [showReviewForm, setShowReviewForm] = useState<boolean>(false)
-  const [editingReview, setEditingReview] = useState<any>(null)
+  const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
+  const [editingReview, setEditingReview] = useState<any>(null);
   const [reviewForm, setReviewForm] = useState({
     rating: 5,
     comment: "",
-  })
+  });
 
   const { mutate: addReview, isPending: addingReview } = useCreateReview({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] })
-      toast.success("Review added successfully!")
-      setShowReviewForm(false)
-      setReviewForm({ rating: 5, comment: "" })
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] });
+      toast.success("Review added successfully!");
+      setShowReviewForm(false);
+      setReviewForm({ rating: 5, comment: "" });
     },
     onError: () => {
-      toast.error("Failed to add review")
+      toast.error("Failed to add review");
     },
-  })
+  });
 
   const { mutate: updateReview, isPending: updatingReview } = useUpdateReview({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] })
-      toast.success("Review updated successfully!")
-      setEditingReview(null)
-      setShowReviewForm(false)
-      setReviewForm({ rating: 5, comment: "" })
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] });
+      toast.success("Review updated successfully!");
+      setEditingReview(null);
+      setShowReviewForm(false);
+      setReviewForm({ rating: 5, comment: "" });
     },
     onError: () => {
-      toast.error("Failed to update review")
+      toast.error("Failed to update review");
     },
-  })
+  });
 
   const { mutate: deleteReview, isPending: deletingReview } = useDeleteReview({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] })
-      toast.success("Review deleted successfully!")
+      queryClient.invalidateQueries({ queryKey: ["PRODUCT_REVIEWS"] });
+      toast.success("Review deleted successfully!");
     },
     onError: () => {
-      toast.error("Failed to delete review")
+      toast.error("Failed to delete review");
     },
-  })
+  });
 
   const handleAddToCart = () => {
     if (!user) {
-      toast.error("Please login to add items to cart")
-      redirect(`/login?redirect=/wheel/${params.id}`)
-      return
+      toast.error("Please login to add items to cart");
+      redirect(`/login?redirect=/wheel/${params.id}`);
+      return;
     }
     addToCart({
       productType: "wheel",
       productId: wheel._id,
       quantity: quantity,
-    })
-  }
+    });
+  };
 
   const handleAddToWishlist = () => {
     if (!user) {
-      toast.error("Please login to add items to wishlist")
-      redirect(`/login?redirect=/wheel/${params.id}`)
-      return
+      toast.error("Please login to add items to wishlist");
+      redirect(`/login?redirect=/wheel/${params.id}`);
+      return;
     }
     addToWishlist({
       productType: "wheel",
       product: wheel._id,
-    })
-  }
+    });
+  };
 
   const handleSubmitReview = () => {
     if (!user) {
-      toast.error("Please login to add a review")
-      return
+      toast.error("Please login to add a review");
+      return;
     }
 
     if (editingReview) {
@@ -184,65 +205,70 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
           rating: reviewForm.rating,
           comment: reviewForm.comment,
         },
-      })
+      });
     } else {
       addReview({
         product: wheel._id,
         productType: "wheel",
         rating: reviewForm.rating,
         comment: reviewForm.comment,
-      })
+      });
     }
-  }
+  };
 
   const handleEditReview = (review: any) => {
-    setEditingReview(review)
+    setEditingReview(review);
     setReviewForm({
       rating: review.rating,
       comment: review.comment,
-    })
-    setShowReviewForm(true)
-  }
+    });
+    setShowReviewForm(true);
+  };
 
   const handleDeleteReview = (reviewId: any) => {
     if (confirm("Are you sure you want to delete this review?")) {
-      deleteReview(reviewId)
+      deleteReview(reviewId);
     }
-  }
+  };
 
   const handleCancelReview = () => {
-    setShowReviewForm(false)
-    setEditingReview(null)
-    setReviewForm({ rating: 5, comment: "" })
-  }
+    setShowReviewForm(false);
+    setEditingReview(null);
+    setReviewForm({ rating: 5, comment: "" });
+  };
 
-  const renderStars = (rating: any, interactive = false, onRatingChange: any = null) => {
+  const renderStars = (
+    rating: any,
+    interactive = false,
+    onRatingChange: any = null
+  ) => {
     return (
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
             type="button"
-            onClick={() => interactive && onRatingChange && onRatingChange(star)}
+            onClick={() =>
+              interactive && onRatingChange && onRatingChange(star)
+            }
             className={`${interactive ? "cursor-pointer hover:scale-110" : "cursor-default"} transition-transform`}
-            disabled={!interactive}
-          >
+            disabled={!interactive}>
             <Star
               className={`h-5 w-5 ${
-                star <= rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"
+                star <= rating
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "fill-gray-200 text-gray-200"
               }`}
             />
           </button>
         ))}
       </div>
-    )
-  }
-
-  const averageRating = reviewStats.averageRating || 0
+    );
+  };
 
   const discountPercentage = wheel?.discountPrice
     ? Math.round(((wheel.price - wheel.discountPrice) / wheel.price) * 100)
-    : 0
+    : 0;
 
   if (isLoading) {
     return (
@@ -252,7 +278,7 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
           <p>Loading wheel details...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (isError || !wheel) {
@@ -263,21 +289,24 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
           <Button>Back to Wheels</Button>
         </Link>
       </div>
-    )
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Breadcrumb */}
       <div className="mb-6">
-        <Link href="/wheels">
-          <Button variant="ghost" className="gap-2 mb-4">
+        <Link href="/wheel">
+          <Button
+            variant="ghost"
+            className="gap-2 mb-4">
             <ArrowLeft className="h-4 w-4" />
             Back to Wheels
           </Button>
         </Link>
         <div className="text-sm text-gray-500">
-          <span>Wheels</span> / <span>{wheel.brand.name}</span> / <span>{wheel.name}</span>
+          <span>Wheels</span> / <span>{wheel.brand.name}</span> /{" "}
+          <span>{wheel.name}</span>
         </div>
       </div>
 
@@ -303,8 +332,7 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                 onClick={() => setSelectedImage(index)}
                 className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border-2 ${
                   selectedImage === index ? "border-primary" : "border-gray-200"
-                }`}
-              >
+                }`}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}${image}`}
                   alt={`${wheel.name} ${index + 1}`}
@@ -330,7 +358,9 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
             </div>
             <div>
               <p className="text-sm text-gray-500">{wheel.brand.name}</p>
-              <Chip size="sm" variant="flat">
+              <Chip
+                size="sm"
+                variant="flat">
                 {wheel.category.name}
               </Chip>
             </div>
@@ -354,16 +384,19 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                   <span className="text-gray-500">Make:</span> {wheel.make.make}
                 </div>
                 <div>
-                  <span className="text-gray-500">Model:</span> {wheel.model.model}
+                  <span className="text-gray-500">Model:</span>{" "}
+                  {wheel.model.model}
                 </div>
                 <div>
                   <span className="text-gray-500">Trim:</span> {wheel.trim.trim}
                 </div>
                 <div>
-                  <span className="text-gray-500">Driving Type:</span> {wheel.drivingType.title}
+                  <span className="text-gray-500">Driving Type:</span>{" "}
+                  {wheel.drivingType.title}
                 </div>
                 <div>
-                  <span className="text-gray-500">Tire Size:</span> {wheel.tireSize.tireSize}
+                  <span className="text-gray-500">Tire Size:</span>{" "}
+                  {wheel.tireSize.tireSize}
                 </div>
               </div>
             </CardBody>
@@ -378,22 +411,28 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
               </h3>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
-                  <span className="text-gray-500">Rim Diameter:</span> {wheel.RimDiameter}"
+                  <span className="text-gray-500">Rim Diameter:</span>{" "}
+                  {wheel.diameter.diameter}"
                 </div>
                 <div>
-                  <span className="text-gray-500">Rim Width:</span> {wheel.RimWidth}"
+                  <span className="text-gray-500">Rim Width:</span>{" "}
+                  {wheel.width.width}"
                 </div>
                 <div>
-                  <span className="text-gray-500">Bolt Pattern:</span> {wheel.boltPattern}
+                  <span className="text-gray-500">Bolt Pattern:</span>{" "}
+                  {wheel.boltPattern}
                 </div>
                 <div>
-                  <span className="text-gray-500">Offset:</span> {wheel.offset}mm
+                  <span className="text-gray-500">Offset:</span> {wheel.offset}
+                  mm
                 </div>
                 <div>
-                  <span className="text-gray-500">Hub Bore:</span> {wheel.hubBoreSize}mm
+                  <span className="text-gray-500">Hub Bore:</span>{" "}
+                  {wheel.hubBoreSize}mm
                 </div>
                 <div>
-                  <span className="text-gray-500">Number of Bolts:</span> {wheel.numberOFBolts}
+                  <span className="text-gray-500">Number of Bolts:</span>{" "}
+                  {wheel.numberOFBolts}
                 </div>
               </div>
             </CardBody>
@@ -404,14 +443,22 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
             <div className="flex items-center gap-3">
               {wheel.discountPrice ? (
                 <>
-                  <span className="text-3xl font-bold text-green-600">${wheel.discountPrice.toFixed(2)}</span>
-                  <span className="text-xl text-gray-500 line-through">${wheel.price.toFixed(2)}</span>
-                  <Chip color="danger" size="sm">
+                  <span className="text-3xl font-bold text-green-600">
+                    ${wheel.discountPrice.toFixed(2)}
+                  </span>
+                  <span className="text-xl text-gray-500 line-through">
+                    ${wheel.price.toFixed(2)}
+                  </span>
+                  <Chip
+                    color="danger"
+                    size="sm">
                     Save ${(wheel.price - wheel.discountPrice).toFixed(2)}
                   </Chip>
                 </>
               ) : (
-                <span className="text-3xl font-bold">${wheel.price.toFixed(2)}</span>
+                <span className="text-3xl font-bold">
+                  ${wheel.price.toFixed(2)}
+                </span>
               )}
             </div>
             <p className="text-sm text-gray-500">Price per wheel</p>
@@ -422,7 +469,9 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
             {wheel.stockQuantity > 0 ? (
               <>
                 <Check className="h-5 w-5 text-green-500" />
-                <span className="text-green-600 font-medium">In Stock ({wheel.stockQuantity} available)</span>
+                <span className="text-green-600 font-medium">
+                  In Stock ({wheel.stockQuantity} available)
+                </span>
               </>
             ) : (
               <span className="text-red-500 font-medium">Out of Stock</span>
@@ -437,17 +486,17 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                 size="sm"
                 variant="bordered"
                 onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                disabled={quantity <= 1}
-              >
+                disabled={quantity <= 1}>
                 <Minus className="h-4 w-4" />
               </Button>
               <span className="w-12 text-center font-medium">{quantity}</span>
               <Button
                 size="sm"
                 variant="bordered"
-                onPress={() => setQuantity(Math.min(wheel.stockQuantity, quantity + 1))}
-                disabled={quantity >= wheel.stockQuantity}
-              >
+                onPress={() =>
+                  setQuantity(Math.min(wheel.stockQuantity, quantity + 1))
+                }
+                disabled={quantity >= wheel.stockQuantity}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -459,12 +508,15 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
               size="lg"
               className="flex-1 gap-2 py-2 px-3 bg-gradient-to-r from-orange-600 to-orange-400 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg text-sm font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 flex items-center"
               onPress={handleAddToCart}
-              disabled={addingToCart || wheel.stockQuantity === 0}
-            >
+              disabled={addingToCart || wheel.stockQuantity === 0}>
               <ShoppingCart className="h-5 w-5" />
               {addingToCart ? "Adding..." : "Add to Cart"}
             </Button>
-            <Button variant="bordered" size="lg" onPress={handleAddToWishlist} disabled={addingToWishlist}>
+            <Button
+              variant="bordered"
+              size="lg"
+              onPress={handleAddToWishlist}
+              disabled={addingToWishlist}>
               <Heart className="h-5 w-5" />
             </Button>
           </div>
@@ -493,8 +545,12 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
 
       {/* Detailed Information Tabs */}
       <div className="mt-12">
-        <Tabs aria-label="Wheel Information" className="w-full">
-          <Tab key="specifications" title="Specifications">
+        <Tabs
+          aria-label="Wheel Information"
+          className="w-full">
+          <Tab
+            key="specifications"
+            title="Specifications">
             <Card>
               <CardBody className="p-6">
                 <div className="grid gap-6 md:grid-cols-2">
@@ -503,11 +559,11 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Rim Diameter:</span>
-                        <span>{wheel.RimDiameter}"</span>
+                        <span>{wheel.diameter.diameter}"</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Rim Width:</span>
-                        <span>{wheel.RimWidth}"</span>
+                        <span>{wheel.width.width}"</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Wheel Size:</span>
@@ -524,7 +580,9 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-4">Bolt Pattern & Fitment</h3>
+                    <h3 className="font-semibold mb-4">
+                      Bolt Pattern & Fitment
+                    </h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Bolt Pattern:</span>
@@ -574,7 +632,9 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-4">Performance & Ratings</h3>
+                    <h3 className="font-semibold mb-4">
+                      Performance & Ratings
+                    </h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span>Load Capacity:</span>
@@ -603,7 +663,9 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
             </Card>
           </Tab>
 
-          <Tab key="warranty" title="Warranty & Support">
+          <Tab
+            key="warranty"
+            title="Warranty & Support">
             <Card>
               <CardBody className="p-6">
                 <div className="space-y-4">
@@ -637,17 +699,22 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
             </Card>
           </Tab>
 
-          <Tab key="reviews" title={`Reviews (${reviewStats.reviewCount || 0})`}>
+          <Tab
+            key="reviews"
+            title={`Reviews (${reviews?.length || 0})`}>
             <Card>
               <CardBody className="p-6">
                 {/* Reviews Summary */}
                 <div className="mb-6 pb-6 border-b">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="text-3xl font-bold">{averageRating}</div>
+                    <div className="text-3xl font-bold">
+                      {averageRating.toFixed(1)}
+                    </div>
                     <div>
                       {renderStars(Math.round(averageRating))}
                       <p className="text-sm text-gray-500 mt-1">
-                        Based on {reviewStats.reviewCount || 0} review{reviewStats.reviewCount !== 1 ? "s" : ""}
+                        Based on {reviews.length} review
+                        {reviews.length !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
@@ -677,7 +744,10 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                   )} */}
 
                   {user && !showReviewForm && (
-                    <Button color="primary" onPress={() => setShowReviewForm(true)} className="gap-2">
+                    <Button
+                      color="primary"
+                      onPress={() => setShowReviewForm(true)}
+                      className="gap-2">
                       <Plus className="h-4 w-4" />
                       Write a Review
                     </Button>
@@ -688,39 +758,53 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                 {showReviewForm && (
                   <Card className="mb-6">
                     <CardBody className="p-4">
-                      <h3 className="font-semibold mb-4">{editingReview ? "Edit Review" : "Write a Review"}</h3>
+                      <h3 className="font-semibold mb-4">
+                        {editingReview ? "Edit Review" : "Write a Review"}
+                      </h3>
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium mb-2">Rating</label>
+                          <label className="block text-sm font-medium mb-2">
+                            Rating
+                          </label>
                           {renderStars(reviewForm.rating, true, (rating: any) =>
-                            setReviewForm((prev) => ({ ...prev, rating })),
+                            setReviewForm((prev) => ({ ...prev, rating }))
                           )}
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2">Comment</label>
+                          <label className="block text-sm font-medium mb-2">
+                            Comment
+                          </label>
                           <textarea
                             value={reviewForm.comment}
-                            onChange={(e) => setReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
+                            onChange={(e) =>
+                              setReviewForm((prev) => ({
+                                ...prev,
+                                comment: e.target.value,
+                              }))
+                            }
                             placeholder="Share your experience with this wheel..."
                             className="w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
                             rows={4}
                             maxLength={500}
                           />
-                          <p className="text-xs text-gray-500 mt-1">{reviewForm.comment.length}/500 characters</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {reviewForm.comment.length}/500 characters
+                          </p>
                         </div>
                         <div className="flex gap-2">
                           <Button
                             color="primary"
                             onPress={handleSubmitReview}
-                            disabled={addingReview || updatingReview}
-                          >
+                            disabled={addingReview || updatingReview}>
                             {addingReview || updatingReview
                               ? "Submitting..."
                               : editingReview
                                 ? "Update Review"
                                 : "Submit Review"}
                           </Button>
-                          <Button variant="bordered" onPress={handleCancelReview}>
+                          <Button
+                            variant="bordered"
+                            onPress={handleCancelReview}>
                             Cancel
                           </Button>
                         </div>
@@ -738,25 +822,35 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                     </div>
                   ) : reviews.length === 0 ? (
                     <div className="text-center py-8">
-                      <p className="text-gray-500">No reviews yet. Be the first to review this wheel!</p>
+                      <p className="text-gray-500">
+                        No reviews yet. Be the first to review this wheel!
+                      </p>
                     </div>
                   ) : (
                     reviews.map((review: any) => (
-                      <Card key={review._id} className="border">
+                      <Card
+                        key={review._id}
+                        className="border">
                         <CardBody className="p-4">
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                                <span className="text-sm font-medium">{review.user?.firstName?.charAt(0) || "U"}</span>
+                                <span className="text-sm font-medium">
+                                  {review.user?.firstName?.charAt(0) || "U"}
+                                </span>
                               </div>
                               <div>
                                 <p className="font-medium">
-                                  {review.user?.firstName + " " + review?.user?.lastName || "Anonymous"}
+                                  {review.user?.firstName +
+                                    " " +
+                                    review?.user?.lastName || "Anonymous"}
                                 </p>
                                 <div className="flex items-center gap-2">
                                   {renderStars(review.rating)}
                                   <span className="text-sm text-gray-500">
-                                    {new Date(review.createdAt).toLocaleDateString()}
+                                    {new Date(
+                                      review.createdAt
+                                    ).toLocaleDateString()}
                                   </span>
                                 </div>
                               </div>
@@ -764,7 +858,10 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
 
                             {user && user._id === review.user?._id && (
                               <div className="flex gap-2">
-                                <Button size="sm" variant="light" onPress={() => handleEditReview(review)}>
+                                <Button
+                                  size="sm"
+                                  variant="light"
+                                  onPress={() => handleEditReview(review)}>
                                   Edit
                                 </Button>
                                 <Button
@@ -772,15 +869,16 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
                                   variant="light"
                                   color="danger"
                                   onPress={() => handleDeleteReview(review._id)}
-                                  disabled={deletingReview}
-                                >
+                                  disabled={deletingReview}>
                                   Delete
                                 </Button>
                               </div>
                             )}
                           </div>
 
-                          {review.comment && <p className="text-gray-700">{review.comment}</p>}
+                          {review.comment && (
+                            <p className="text-gray-700">{review.comment}</p>
+                          )}
                         </CardBody>
                       </Card>
                     ))
@@ -792,7 +890,7 @@ const SingleWheelPage = ({ params }: { params: { id: string } }) => {
         </Tabs>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SingleWheelPage
+export default SingleWheelPage;

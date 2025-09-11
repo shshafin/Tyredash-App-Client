@@ -1,5 +1,12 @@
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/table";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@heroui/table";
 import { Tooltip } from "@heroui/tooltip";
 import { Chip } from "@heroui/chip";
 import { DeleteIcon, EditIcon } from "@/src/icons";
@@ -23,7 +30,11 @@ interface BlogsTableProps {
   onDeleteOpen: () => void;
 }
 
-export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: BlogsTableProps) {
+export default function BlogsTable({
+  blogs,
+  setSelectedBlog,
+  onDeleteOpen,
+}: BlogsTableProps) {
   const router = useRouter();
   const renderCell = (blog: IBlog, columnKey: any) => {
     const cellValue = blog[columnKey as keyof IBlog];
@@ -38,7 +49,11 @@ export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: Blo
 
       case "category":
         return (
-          <Chip className="capitalize" color="primary" size="sm" variant="flat">
+          <Chip
+            className="capitalize"
+            color="primary"
+            size="sm"
+            variant="flat">
             {blog.category}
           </Chip>
         );
@@ -46,7 +61,9 @@ export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: Blo
       case "description":
         return (
           <div className="flex flex-col">
-            <p className="text-sm text-default-400">{blog?.description?.substring(0, 100)}...</p>
+            <p className="text-sm text-default-400">
+              {blog?.description?.substring(0, 100)}...
+            </p>
           </div>
         );
 
@@ -81,19 +98,19 @@ export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: Blo
             <Tooltip content="Edit Blog">
               <span
                 onClick={() => router.push(`/admin/blog/edit/${blog._id}`)}
-                className="text-lg text-blue-500 cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-blue-500 cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Delete" className="bg-rose-600">
+            <Tooltip
+              content="Delete"
+              className="bg-rose-600">
               <span
                 onClick={() => {
                   setSelectedBlog(blog);
                   onDeleteOpen();
                 }}
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-              >
+                className="text-lg text-danger cursor-pointer active:opacity-50">
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -109,7 +126,9 @@ export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: Blo
       <Table aria-label="Blogs Table">
         <TableHeader columns={columns}>
           {(column: any) => (
-            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}>
               {column.name}
             </TableColumn>
           )}
@@ -117,7 +136,11 @@ export default function BlogsTable({ blogs, setSelectedBlog, onDeleteOpen }: Blo
         <TableBody items={blogs.data}>
           {(item: IBlog) => (
             <TableRow key={item._id}>
-              {(columnKey: any) => <TableCell>{renderCell(item, columnKey) as React.ReactNode}</TableCell>}
+              {(columnKey: any) => (
+                <TableCell>
+                  {renderCell(item, columnKey) as React.ReactNode}
+                </TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>
