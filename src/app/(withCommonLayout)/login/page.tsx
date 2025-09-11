@@ -7,6 +7,7 @@ import { useUser } from "@/src/context/user.provider";
 import { useUserLogin } from "@/src/hooks/auth.hook";
 import { axiosInstance } from "@/src/lib/AxiosInstance";
 import loginValidationSchema from "@/src/schemas/login.schema";
+import setAccessToken from "@/src/server-cookie/SetAccessToken";
 import { Button } from "@heroui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -24,7 +25,7 @@ const LoginPage = () => {
   // console.log(isSuccess);
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
+      const response = await fetch("https://api.tiresdash.com/api/v1", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -32,6 +33,8 @@ const LoginPage = () => {
       });
 
       const result = await response.json();
+      await setAccessToken(result.data.accessToken, "accessToken");
+      await setAccessToken(result.data.refreshToken, "refreshToken");
 
       if (response.ok && result.success) {
         setUser(result.data.user);
