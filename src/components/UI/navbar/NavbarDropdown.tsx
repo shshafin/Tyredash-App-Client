@@ -85,7 +85,7 @@ const NavbarDropdown: React.FC = () => {
   const handleLogout = async () => {
     userLoading(true);
     setUser(null);
-    await logoutUser();
+    // await logoutUser();
     await logout(router);
   };
 
