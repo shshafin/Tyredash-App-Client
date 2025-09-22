@@ -19,7 +19,7 @@ const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
       router.push(path);
     } else if (onLogout) {
       await onLogout();
-      // await logoutUser(router);
+      await logoutUser(router);
     }
   };
 
