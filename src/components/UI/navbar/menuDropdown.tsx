@@ -16,9 +16,10 @@ const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
 
   const handleNavigation = async (path: string | null) => {
     if (path) {
-      await logoutUser(router);
+      router.push(path);
     } else if (onLogout) {
       onLogout();
+      await logoutUser(router);
     }
   };
 
@@ -36,10 +37,7 @@ const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
         {menuItems.map(({ key, label, path, isDanger }: any) => (
           <DropdownItem
             key={key}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNavigation(path);
-            }}
+            onPress={() => handleNavigation(path)}
             className={isDanger ? "text-danger" : ""}
             color={isDanger ? "danger" : undefined} // Set undefined if no danger color
           >
