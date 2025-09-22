@@ -45,26 +45,18 @@ export const loginUser = async (userData: FieldValues) => {
 // ! Logout User
 
 export const logoutUser = async () => {
-  const cookieStore = await cookies(); // ✅ Await this!
-
-  cookieStore.set("accessToken", "", {
-    // httpOnly: true,
-    // secure: true,
-    // sameSite: "strict",
-    // path: "/",
-    expires: new Date(0),
-  });
-
-  cookieStore.set("refreshToken", "", {
-    // httpOnly: true,
-    // secure: true,
-    // sameSite: "strict",
-    // path: "/",
-    expires: new Date(0),
-  });
-  redirect("/login");
-
-  // window.location.href = "/login"; // Redirect to login page
+  try {
+    // 🚀 Call API logout endpoint
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/fleet-auth/logout`, {
+      method: "POST",
+      credentials: "include", // so cookies are sent with request
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
 };
 
 // ! Get Current User
