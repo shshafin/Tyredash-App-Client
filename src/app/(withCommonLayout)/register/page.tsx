@@ -29,26 +29,34 @@ const RegisterPage = () => {
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-4 h-[calc(100vh-100px)]">
-      <h3 className="my-2 text-2xl font-bold">Register with TyreDash</h3>
-      <p className="mb-4">Help Lost Items Find Their Way Home</p>
+    <div
+      className="
+    flex w-full flex-col items-center justify-center px-4
+    sm:h-[calc(100vh-100px)]         
+   h-[calc(140vh-100px)]   
+  ">
+      <h3 className="my-2 text-2xl font-bold">Register with TiresDash</h3>
+      <p className="mb-4">
+        Create your account and start managing your tires effortlessly
+      </p>
       <div className="w-full max-w-3xl">
         <FXForm
           onSubmit={onSubmit}
           resolver={zodResolver(registerSchema)}
-          defaultValues={{
-            firstName: "Fahim",
-            lastName: "Hossain",
-            email: "fahim@examplea.com",
-            phone: "01876543210",
-            addressLine1: "Flat 5B, Green City",
-            addressLine2: "Dhanmondi",
-            zipCode: "1209",
-            city: "Dhaka",
-            state: "Dhaka",
-            country: "Bangladesh",
-            password: "12345678", // ✅ Updated: min 8 characters
-          }}>
+          // defaultValues={{
+          //   firstName: "Fahim",
+          //   lastName: "Hossain",
+          //   email: "fahim@examplea.com",
+          //   phone: "01876543210",
+          //   addressLine1: "Flat 5B, Green City",
+          //   addressLine2: "Dhanmondi",
+          //   zipCode: "1209",
+          //   city: "Dhaka",
+          //   state: "Dhaka",
+          //   country: "Bangladesh",
+          //   password: "12345678", // ✅ Updated: min 8 characters
+          // }}
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="py-2">
               <FXInput
