@@ -36,7 +36,10 @@ const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
         {menuItems.map(({ key, label, path, isDanger }: any) => (
           <DropdownItem
             key={key}
-            onPress={() => handleNavigation(path)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNavigation(path);
+            }}
             className={isDanger ? "text-danger" : ""}
             color={isDanger ? "danger" : undefined} // Set undefined if no danger color
           >
