@@ -48,38 +48,78 @@ const RegisterPage = () => {
             state: "Dhaka",
             country: "Bangladesh",
             password: "12345678", // ✅ Updated: min 8 characters
-          }}
-        >
+          }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="py-2">
-              <FXInput name="firstName" label="First Name" required />
+              <FXInput
+                name="firstName"
+                label="First Name"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="lastName" label="Last Name" required />
+              <FXInput
+                name="lastName"
+                label="Last Name"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="email" label="Email" type="email" required />
+              <FXInput
+                name="email"
+                label="Email"
+                type="email"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="phone" label="Phone Number" required />
+              <FXInput
+                name="phone"
+                label="Phone Number"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="addressLine1" label="Address Line 1" required />
+              <FXInput
+                name="addressLine1"
+                label="Address Line 1"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="addressLine2" label="Address Line 2" required />
+              <FXInput
+                name="addressLine2"
+                label="Address Line 2"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="zipCode" label="ZIP Code" required />
+              <FXInput
+                name="zipCode"
+                label="ZIP Code"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="city" label="City" required />
+              <FXInput
+                name="city"
+                label="City"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="state" label="State" required />
+              <FXInput
+                name="state"
+                label="State"
+                required
+              />
             </div>
             <div className="py-2">
-              <FXInput name="country" label="Country" required />
+              <FXInput
+                name="country"
+                label="Country"
+                required
+              />
             </div>
           </div>
 
@@ -95,8 +135,7 @@ const RegisterPage = () => {
           <Button
             className="my-3 w-full rounded-md bg-default-900 font-semibold text-default"
             size="lg"
-            type="submit"
-          >
+            type="submit">
             Register
           </Button>
         </FXForm>

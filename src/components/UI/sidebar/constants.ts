@@ -124,6 +124,11 @@ export const adminLinks: IAdminLinks[] = [
         label: "Users",
         icon: React.createElement(User, { className: "w-5 h-5" }), // File icon for category
       },
+      {
+        href: "/admin/fleet-users",
+        label: "Fleet Users",
+        icon: React.createElement(User, { className: "w-5 h-5" }), // File icon for category
+      },
     ],
   },
   {
@@ -245,6 +250,16 @@ export const adminLinks: IAdminLinks[] = [
         href: "/admin/wheel",
         label: "All Wheels",
         icon: React.createElement(List, { className: "w-5 h-5" }), // List for All Tires
+      },
+    ],
+  },
+  {
+    label: "Product Images",
+    links: [
+      {
+        href: "/admin/upload/image",
+        label: "Upload Images",
+        icon: React.createElement(PlusCircle, { className: "w-5 h-5" }), // PlusCircle for Create
       },
     ],
   },

@@ -110,3 +110,36 @@ export const changePassword = async (passwordData: any): Promise<any> => {
     throw new Error("Failed to change password!");
   }
 };
+
+export const forgotPassword = async (userData: FieldValues) => {
+  try {
+    const { data } = await axiosInstance.post(
+      "/auth/forgot-password",
+      userData
+    );
+    return data;
+  } catch (error: any) {
+    throw new Error("something went wrong");
+  }
+};
+
+export const resetPassword = async (newPassword: string, token: string) => {
+  try {
+    const { data } = await axiosInstance.post(
+      "/auth/reset-password",
+      { newPassword },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+    return data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error.message ||
+      "Something went wrong!";
+    throw new Error(message);
+  }
+};

@@ -4,11 +4,15 @@ import React from "react";
 import { IWheel } from "@/src/types";
 import { useGetAllOrders } from "@/src/hooks/order.hook";
 import OrderTable from "./_components/OrderTable";
-import { DataEmpty, DataError, DataLoading } from "../../../(admin)/admin/_components/DataFetchingStates";
+import {
+  DataEmpty,
+  DataError,
+  DataLoading,
+} from "../../../(admin)/admin/_components/DataFetchingStates";
 
 const Page = () => {
   const { data: orders, isLoading, isError } = useGetAllOrders({});
-  console.log({orders}, 'order_data')
+  console.log({ orders }, "order_data");
 
   return (
     <div>
@@ -21,11 +25,7 @@ const Page = () => {
         </h1>
       )}
 
-      {!isLoading && orders?.data?.length > 0 && (
-        <OrderTable
-          orders={orders}
-        />
-      )}
+      {!isLoading && orders?.data?.length > 0 && <OrderTable orders={orders} />}
     </div>
   );
 };

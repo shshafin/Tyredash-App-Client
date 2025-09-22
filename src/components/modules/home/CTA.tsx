@@ -107,7 +107,7 @@ const CTA = ({ setStep }: any) => {
               <div className="flex-1 w-px bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
               <div className="bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-slate-600 rounded-full p-4 shadow-lg my-4">
                 <span className="text-gray-400 dark:text-gray-500 font-semibold text-lg">
-                  OR
+                  AND
                 </span>
               </div>
               <div className="flex-1 w-px bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
@@ -120,7 +120,7 @@ const CTA = ({ setStep }: any) => {
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
               <div className="bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-600 rounded-full px-6 py-2 shadow-lg mx-4">
                 <span className="text-gray-400 dark:text-gray-500 font-semibold">
-                  OR
+                  AND
                 </span>
               </div>
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />

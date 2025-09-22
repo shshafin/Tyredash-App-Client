@@ -72,17 +72,17 @@ export default function ContactPage() {
           <div className="flex items-center gap-4">
             <Mail className="text-orange-500 dark:text-orange-400 w-6 h-6" />
             <p className="text-gray-700 dark:text-gray-300">
-              support@tiresdash.com
+              info@tiresdash.com
             </p>
           </div>
           <div className="flex items-center gap-4">
             <Phone className="text-orange-500 dark:text-orange-400 w-6 h-6" />
-            <p className="text-gray-700 dark:text-gray-300">+880123456789</p>
+            <p className="text-gray-700 dark:text-gray-300">(561) 232-3230</p>
           </div>
           <div className="flex items-center gap-4">
             <MapPin className="text-orange-500 dark:text-orange-400 w-6 h-6" />
             <p className="text-gray-700 dark:text-gray-300">
-              456 Auto Lane, Dhaka, Bangladesh
+              Boynton Beach, FL, USA
             </p>
           </div>
           <div className="mt-6">

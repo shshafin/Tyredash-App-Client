@@ -41,6 +41,10 @@ export const siteConfig = {
       label: "DEALS",
       href: "/deals",
     },
+    {
+      label: "WHEEL VISUALIZER",
+      href: "/wheel-visualizer",
+    },
   ],
   navMenuItems: [
     {
@@ -78,6 +82,10 @@ export const siteConfig = {
     {
       label: "DEALS",
       href: "/deals",
+    },
+    {
+      label: "WHEEL VISUALIZER",
+      href: "/wheel-visualizer",
     },
   ],
   links: {

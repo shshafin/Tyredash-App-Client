@@ -182,14 +182,14 @@ export const Navbar = () => {
               </div>
             </div>
 
-            <div className="border-t border-gray-500 w-full" />
+            {/* <div className="border-t border-gray-500 w-full" /> */}
 
-            <div className="flex items-center gap-3 md:gap-2">
+            {/* <div className="flex items-center gap-3 md:gap-2">
               <span className="text-sm md:text-xs md:hidden lg:flex">
                 What can we help you find?
               </span>
               <Search size={16} />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -260,10 +260,10 @@ export const Navbar = () => {
             </div>
 
             {/* Search */}
-            <div className="flex items-center gap-2 px-2">
+            {/* <div className="flex items-center gap-2 px-2">
               <Search size={16} />
               <span className="text-sm">What can we help you find?</span>
-            </div>
+            </div> */}
           </div>
         </NavbarMenu>
       </HeroUINavbar>

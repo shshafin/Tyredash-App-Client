@@ -92,6 +92,15 @@ const LoginPage = () => {
               />
             </div>
 
+            {/* 🔹 Forgot password link */}
+            <div className="flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-blue-600 hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
+
             <Button
               className="my-3 w-full rounded-md bg-default-900 font-semibold text-default"
               size="lg"
@@ -100,9 +109,13 @@ const LoginPage = () => {
             </Button>
           </FXForm>
 
-          <div className="text-center">
+          <div className="text-center mt-2">
             Don&lsquo;t have an account?{" "}
-            <Link href={"/register"}>Register</Link>
+            <Link
+              href={"/register"}
+              className="text-blue-600 hover:underline">
+              Register
+            </Link>
           </div>
         </div>
       </div>
