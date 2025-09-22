@@ -9,13 +9,14 @@ import {
 } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
 import { useRouter } from "next/navigation";
+import { logoutUser } from "@/src/server-cookie/logoutUser";
 
 const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
   const router = useRouter();
 
-  const handleNavigation = (path: string | null) => {
+  const handleNavigation = async (path: string | null) => {
     if (path) {
-      router.push(path);
+      await logoutUser(router);
     } else if (onLogout) {
       onLogout();
     }
@@ -24,7 +25,12 @@ const MenuDropdown = ({ menuItems, userName, onLogout }: any) => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        {userName && <Avatar className="cursor-pointer" name={userName} />}
+        {userName && (
+          <Avatar
+            className="cursor-pointer"
+            name={userName}
+          />
+        )}
       </DropdownTrigger>
       <DropdownMenu aria-label="Dynamic Actions">
         {menuItems.map(({ key, label, path, isDanger }: any) => (

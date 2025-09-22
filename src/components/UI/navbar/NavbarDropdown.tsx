@@ -73,17 +73,20 @@
 import React from "react";
 import { useUser } from "@/src/context/user.provider"; // User context
 import { logoutUser } from "@/src/services/AuthService"; // Logout service
+import { logoutUser as logout } from "@/src/server-cookie/logoutUser"; // Logout service
 import { menuConfig } from "./menuConfig";
 import MenuDropdown from "./menuDropdown";
 import { useRouter } from "next/navigation";
 
 const NavbarDropdown: React.FC = () => {
   const { setIsLoading: userLoading, user, setUser } = useUser();
+  const router = useRouter();
 
   const handleLogout = async () => {
     userLoading(true);
     setUser(null);
     await logoutUser();
+    await logout(router);
   };
 
   // Use "any" for menu items if strict typing is not required
