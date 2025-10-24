@@ -26,7 +26,7 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const response = await fetch(
-        "https://tiresdash-server-1.onrender.com/api/v1/auth/login",
+        "https://tiresdash-server-1.onrender.comapi/v1/auth/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

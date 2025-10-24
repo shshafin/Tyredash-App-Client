@@ -260,7 +260,7 @@ const TireProductPage = () => {
   // Extract unique brands and years for filters
   const brands: any = Tires?.data
     ? [
-        ...(new Set(Tires.data.map((tire: any) => tire.brand?.name)) as any),
+        ...(new Set(Tires.data.map((tire: any) => tire.brand.name)) as any),
       ].sort()
     : [];
 
